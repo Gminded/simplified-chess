@@ -1,4 +1,5 @@
 from ChessRules import ChessRules
+from ChessBoard import ChessBoard
 
 class Node:
     def __init__(self, state, old_state):
@@ -8,6 +9,7 @@ class Node:
 
     def availableActions(self, player_color):
         rules = ChessRules()
+        board = ChessBoard()
         my_pawns = []
         row_no = 0
         col_no = 0
@@ -29,6 +31,10 @@ class Node:
             moves =  rules.GetListOfValidMoves( self.old_state, self.state, player_color, pawn)
             moves.insert(0, pawn)
             actions.append( moves )
-
+            #creating node
+            for i in moves[1:]:
+                board.squares = self.state
+                board.MovePiece()
+                successors = Node()
 
         #Move ordering based on the (approximated) utility value
