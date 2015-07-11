@@ -4,6 +4,7 @@ class Node:
     def __init__(self, state, old_state):
         self.state = state
         self.old_state = old_state
+        self.utility = -1
 
     def availableActions(self, player_color):
         rules = ChessRules()
@@ -20,8 +21,14 @@ class Node:
             col_no = 0
 
         #now we have the list of pawns of the current player
+        #Format of actions
+        # [ [ (current_pawn_position), (possible_move), (possible_move) ], [ (current_pawn_position), (possible_move) ], ... ]
         actions = []
+        successors = []
         for pawn in my_pawns:
-            actions.append( rules.GetListOfValidMoves( self.state, player_color, pawn) )
+            moves =  rules.GetListOfValidMoves( self.old_state, self.state, player_color, pawn)
+            moves.insert(0, pawn)
+            actions.append( moves )
 
-        print actions
+
+        #Move ordering based on the (approximated) utility value

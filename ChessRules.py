@@ -38,8 +38,8 @@ class ChessRules:
 		for row in range(8):
 			for col in range(8):
 				d = (row,col)
-				if self.IsLegalMove(board,color,fromTuple,d) and not self.DoesMovePutPlayerInCheck(board,color,fromTuple,d):
-				    legalDestinationSpaces.append(d)
+				if self.IsLegalMove( oldboard, board,color,fromTuple,d) and not self.DoesMovePutPlayerInCheck(board,color,fromTuple,d):
+					legalDestinationSpaces.append(d)
 		return legalDestinationSpaces
 
 
@@ -189,7 +189,7 @@ class ChessRules:
 			for col in range(8):
 				piece = board[row][col]
 				if enemyColor in piece:
-					if self.IsLegalMove(board,enemyColorFull,(row,col),kingTuple):
+					if self.IsLegalMove(None, board,enemyColorFull,(row,col),kingTuple):
 						return True
 		return False
 
