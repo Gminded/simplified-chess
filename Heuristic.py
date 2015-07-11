@@ -1,4 +1,3 @@
-import Node
 import random
 
 class Heuristic:
