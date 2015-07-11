@@ -10,6 +10,7 @@
  """
  
 import string
+import copy
 
 class ChessBoard:
         def __init__(self,setupType=0):
@@ -87,12 +88,6 @@ class ChessBoard:
                         name = name + "king"
                         
                 return name
-
-        # To make a complete copy of the previous state.
-        def complete_copy(self, inList):
-            if isinstance(inList, list):
-                return list( map(unshared_copy, inList) )
-            return inList
         
         def MovePiece(self,moveTuple):
                 fromSquare_r = moveTuple[0][0]
@@ -100,7 +95,7 @@ class ChessBoard:
                 toSquare_r = moveTuple[1][0]
                 toSquare_c = moveTuple[1][1]
 
-                self.oldstate = self.complete_copy(self.state)
+                self.oldstate = copy.copy(self.state)
 
                 fromPiece = self.state[fromSquare_r][fromSquare_c]
                 toPiece = self.state[toSquare_r][toSquare_c]
