@@ -1,7 +1,8 @@
-import Node
 import random
 
 class Heuristic:
-    def HeuristicFunction(self, node):
+
+    @staticmethod
+    def HeuristicFunction( node):
             random.seed(None)
             node.utility = random.randint(1,100)
