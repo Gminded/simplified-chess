@@ -7,33 +7,32 @@
  Copyright (C) 2009 Steve Osborne, srosborne (at) gmail.com
  http://yakinikuman.wordpress.com/
  """
- 
+
 class ChessRules:
-    def IsCheckmate(self,board,color):
-            #returns true if 'color' player is in checkmate
-            #Call GetListOfValidMoves for each piece of current player
-            #If there aren't any valid moves for any pieces, then return true
+	def IsCheckmate(self,board,color):
+		#returns true if 'color' player is in checkmate
+		#Call GetListOfValidMoves for each piece of current player
+		#If there aren't any valid moves for any pieces, then return true
 
-            if color == "black":
-                    myColor = 'b'
-                    enemyColor = 'w'
-            else:
-                    myColor = 'w'
-                    enemyColor = 'b'
+		if color == "black":
+			myColor = 'b'
+			enemyColor = 'w'
+		else:
+			myColor = 'w'
+			enemyColor = 'b'
 
-            myColorValidMoves = [];
-            for row in range(8):
-                    for col in range(8):
-                            piece = board[row][col]
-                            if myColor in piece:
-                                    myColorValidMoves.extend(self.GetListOfValidMoves(board,color,(row,col)))
+		myColorValidMoves = [];
+		for row in range(8):
+			for col in range(8):
+				piece = board[row][col]
+				if myColor in piece:
+					myColorValidMoves.extend(self.GetListOfValidMoves(board,color,(row,col)))
 
-            if len(myColorValidMoves) == 0:
-                    return True
-            else:
-                    return False
+		if len(myColorValidMoves) == 0:
+			return True
+		else:
+			return False
 
-<<<<<<< HEAD
 	def GetListOfValidMoves(self, oldboard, board,color,fromTuple):
 		legalDestinationSpaces = []
 		for row in range(8):
@@ -42,47 +41,9 @@ class ChessRules:
 				if self.IsLegalMove( oldboard, board,color,fromTuple,d) and not self.DoesMovePutPlayerInCheck(board,color,fromTuple,d):
 					legalDestinationSpaces.append(d)
 		return legalDestinationSpaces
-=======
-    def GetListOfValidMoves(self, oldboard, board,color,fromTuple):
-            legalDestinationSpaces = []
-            for row in range(8):
-                    for col in range(8):
-                            d = (row,col)
-                            if self.IsLegalMove(board,color,fromTuple,d) and not self.DoesMovePutPlayerInCheck(board,color,fromTuple,d):
-                                legalDestinationSpaces.append(d)
-            return legalDestinationSpaces
-
-    def IsEnpassantPawn(oldboard, board, coords):
-        row=coords[0]
-        col=coords[1]
-        piece=board[row][col]
-        enpassant=False #will become true if enpassant is possible
-        # left and right of the piece. -1 stands for a square outside of the board.
-        left=-1
-        left=col-1
-        if col+1 <= 7: right=col+1
-        else: right=-1
-        # The following "if" hell finds if an en passant move is possible.
-        if  'P' in piece or 'p' in piece:
-            if 'b' in piece and row==4:
-                if left != -1 and 'wP' == board[row][left]:
-                    if 'wP' == oldboard[6][left] and 'e' == board[6][left]: #the pawn moved by 2 squares
-                        enpassant=True
-                if right != -1 and 'wP' == board[row][right]:
-                    if 'wP' == oldboard[6][right] and 'e' == board[6][right]: #the pawn moved by 2 squares
-                        enpassant=True
-            if 'w' in piece and row==3:
-                if left != -1 and 'bP' == board[row][left]:
-                    if 'bP' == oldboard[0][left] and 'e' == board[0][left]: #the pawn moved by 2 squares
-                        enpassant=True
-                if right != -1 and 'bP' == board[row][right]:
-                    if 'bP' == oldboard[0][right] and 'e' == board[0][right]: #the pawn moved by 2 squares
-                        enpassant=True
-        return enpassant
->>>>>>> 938e8c8bea433a492c995cb61a21541de3e70fe7
 
 
-	def IsLegalMove(self, oldboard, board, color, fromTuple, toTuple):
+	def IsLegalMove(self, oldboard, board,color,fromTuple,toTuple):
 		#print "IsLegalMove with fromTuple:",fromTuple,"and toTuple:",toTuple,"color = ",color
 		fromSquare_r = fromTuple[0]
 		fromSquare_c = fromTuple[1]
@@ -216,7 +177,7 @@ class ChessRules:
 			enemyColorFull = 'black'
 
 		kingTuple = (0,0)
-		#First, get current player's king location    
+		#First, get current player's king location
 		for row in range(8):
 			for col in range(8):
 				piece = board[row][col]
