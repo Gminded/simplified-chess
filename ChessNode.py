@@ -1,13 +1,26 @@
 from ChessRules import ChessRules
-from ChessBoard import ChessBoard
+import ChessBoard
 from Heuristic import Heuristic
 
 
-class Node:
+class ChessNode:
     def __init__(self, state, old_state):
-        self.state = state
-        self.old_state = old_state
+        self.state = ChessBoard.complete_copy(state)
+        self.old_state = ChessBoard.complete_copy(old_state)
         self.utility = -1
+
+    def GetOldState(self):
+        return self.old_state
+
+    def GetState(self):
+        return self.state
+
+    def SetState(self, state):
+        self.old_state = ChessBoard.complete_copy(state)
+        self.state = ChessBoard.complete_copy(state)
+
+    def GetUtility(self):
+        return self.utility
 
     #return successor nodes
     def Actions(self, player_color):

@@ -67,7 +67,7 @@ from ChessPlayer import ChessPlayer
 from ChessGUI_pygame import ChessGUI_pygame
 from ChessRules import ChessRules
 from ChessAI import ChessAI
-from Node import Node
+from ChessNode import ChessNode
 
 
 class PythonChessMain:
@@ -87,6 +87,7 @@ class PythonChessMain:
     def MainLoop(self):
         currentPlayerIndex = 0
         turnCount = 0
+        currentNode = ChessNode(self.Board.GetState(), self.Board.GetState()) #setup initial node
         while True:
             realBoard = self.Board
             board = self.Board.GetState()
@@ -99,11 +100,12 @@ class PythonChessMain:
                 turnCount = turnCount + 1
             #PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
-                moveTuple = self.player[currentPlayerIndex].GetMove()
+                moveTuple = self.player[currentPlayerIndex].GetMove(currentNode, currentColor)
             else:
                 moveTuple = self.Gui.GetPlayerInput(realBoard,currentColor)
 
             moveReport = self.Board.MovePiece(moveTuple)
+            currentNode.SetState( self.Board.GetState() ) #new state and remembering old_state
             self.Gui.PrintMessage(moveReport)
             #END OF PLAY TIME
             currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0

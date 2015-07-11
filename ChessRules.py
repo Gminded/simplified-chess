@@ -26,7 +26,7 @@ class ChessRules:
 			for col in range(8):
 				piece = board[row][col]
 				if myColor in piece:
-					myColorValidMoves.extend(self.GetListOfValidMoves(board,color,(row,col)))
+					myColorValidMoves.extend(self.GetListOfValidMoves(None, board,color,(row,col)))
 
 		if len(myColorValidMoves) == 0:
 			return True

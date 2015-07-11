@@ -10,7 +10,6 @@
 
 from ChessRules import ChessRules
 
-
 class ChessAI:
     def __init__(self, name, color):
         # print "In ChessAI __init__"
@@ -28,5 +27,8 @@ class ChessAI:
     def GetType(self):
         return self.type
 
-    def GetMove(self):
+    def GetMove(self, currentNode, currentColor):
+        pass
+
+    def AlphaBetaSearch(self, Alpha=-1000, Beta=1000, currentNode=None, MaxPlayer=True, depth=0, limit=2):
         pass
