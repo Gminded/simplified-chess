@@ -16,6 +16,7 @@ import string
 def complete_copy(inList):
     if isinstance(inList, list):
         return list( map(complete_copy, inList) )
+    else:
         return inList
 
 class ChessBoard:
