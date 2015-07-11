@@ -92,8 +92,6 @@ class PythonChessMain:
             currentColor = self.player[currentPlayerIndex].GetColor()
             baseMsg = "TURN %s - %s (%s)" % (str(turnCount),self.player[currentPlayerIndex].GetName(),currentColor)
             self.Gui.PrintMessage("-----%s-----" % baseMsg)
-            node = Node(board, board)
-            node.availableActions(currentColor)
             self.Gui.Draw(board)
             # hardcoded so that player 1 is always white
             if currentColor == 'w':

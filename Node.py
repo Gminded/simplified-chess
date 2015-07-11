@@ -8,7 +8,7 @@ class Node:
         self.old_state = old_state
         self.utility = -1
 
-    def availableActions(self, player_color):
+    def Actions(self, player_color):
         rules = ChessRules()
         board = ChessBoard()
         my_pawns = []
@@ -41,7 +41,7 @@ class Node:
                 board.MovePiece(move_tuple)
                 successor = Node(board, self.state)
                 Heuristic.HeuristicFunction( successor )
+                successors.append( successor )
 
-            successors.append( successor )
         successors.sort()
-        print successors
+        return successors
