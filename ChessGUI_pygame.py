@@ -191,6 +191,7 @@ class ChessGUI_pygame:
 
     def GetPlayerInput(self,board,currentColor):
         #returns ((from_row,from_col),(to_row,to_col))
+        state = board.GetState()
         fromSquareChosen = 0
         toSquareChosen = 0
         while not fromSquareChosen or not toSquareChosen:
@@ -213,38 +214,38 @@ class ChessGUI_pygame:
 
 
             if not fromSquareChosen and not toSquareChosen:
-                self.Draw(board)
+                self.Draw(state)
                 if squareClicked != []:
                     (r,c) = squareClicked
-                    if currentColor == 'black' and 'b' in board[r][c]:
-                        if len(self.Rules.GetListOfValidMoves(board,currentColor,squareClicked))>0:
+                    if currentColor == 'black' and 'b' in state[r][c]:
+                        if len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
-                    elif currentColor == 'white' and 'w' in board[r][c]:
-                        if len(self.Rules.GetListOfValidMoves(board,currentColor,squareClicked))>0:
+                    elif currentColor == 'white' and 'w' in state[r][c]:
+                        if len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
 
             elif fromSquareChosen and not toSquareChosen:
-                possibleDestinations = self.Rules.GetListOfValidMoves(board,currentColor,fromTuple)
-                self.Draw(board,possibleDestinations)
+                possibleDestinations = self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,fromTuple)
+                self.Draw(state,possibleDestinations)
                 if squareClicked != []:
                     (r,c) = squareClicked
                     if squareClicked in possibleDestinations:
                         toSquareChosen = 1
                         toTuple = squareClicked
-                    elif currentColor == 'black' and 'b' in board[r][c]:
+                    elif currentColor == 'black' and 'b' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.Rules.GetListOfValidMoves(board,currentColor,squareClicked))>0:
+                        elif len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:
                             fromSquareChosen = 0 #piece is of own color, but no possible moves
-                    elif currentColor == 'white' and 'w' in board[r][c]:
+                    elif currentColor == 'white' and 'w' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.Rules.GetListOfValidMoves(board,currentColor,squareClicked))>0:
+                        elif len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:

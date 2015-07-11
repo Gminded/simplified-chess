@@ -88,6 +88,7 @@ class PythonChessMain:
         currentPlayerIndex = 0
         turnCount = 0
         while True:
+            realBoard = self.Board
             board = self.Board.GetState()
             currentColor = self.player[currentPlayerIndex].GetColor()
             baseMsg = "TURN %s - %s (%s)" % (str(turnCount),self.player[currentPlayerIndex].GetName(),currentColor)
@@ -100,7 +101,7 @@ class PythonChessMain:
             if self.player[currentPlayerIndex].GetType() == 'AI':
                 moveTuple = self.player[currentPlayerIndex].GetMove()
             else:
-                moveTuple = self.Gui.GetPlayerInput(board,currentColor)
+                moveTuple = self.Gui.GetPlayerInput(realBoard,currentColor)
 
             moveReport = self.Board.MovePiece(moveTuple)
             self.Gui.PrintMessage(moveReport)
