@@ -37,10 +37,11 @@ class Node:
             #creating nodes
             for i in moves[1:]:
                 board.squares = self.state
-                move_tuple = moves[0:1], i
-                print move_tuple
+                move_tuple = moves[0], i
                 board.MovePiece(move_tuple)
                 successor = Node(board, self.state)
                 Heuristic.HeuristicFunction( successor )
 
             successors.append( successor )
+        successors.sort()
+        print successors
