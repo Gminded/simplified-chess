@@ -67,6 +67,7 @@ from ChessPlayer import ChessPlayer
 from ChessGUI_pygame import ChessGUI_pygame
 from ChessRules import ChessRules
 from ChessAI import ChessAI
+from Node import Node
 
 
 class PythonChessMain:
@@ -83,7 +84,6 @@ class PythonChessMain:
         self.guitype = 'pygame'
         self.Gui = ChessGUI_pygame()
 
-
     def MainLoop(self):
         currentPlayerIndex = 0
         turnCount = 0
@@ -92,9 +92,11 @@ class PythonChessMain:
             currentColor = self.player[currentPlayerIndex].GetColor()
             baseMsg = "TURN %s - %s (%s)" % (str(turnCount),self.player[currentPlayerIndex].GetName(),currentColor)
             self.Gui.PrintMessage("-----%s-----" % baseMsg)
+            node = Node(board, board)
+            node.availableActions(currentColor)
             self.Gui.Draw(board)
             # hardcoded so that player 1 is always white
-            if currentColor == 'white':
+            if currentColor == 'w':
                 turnCount = turnCount + 1
             #PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
