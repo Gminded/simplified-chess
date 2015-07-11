@@ -22,11 +22,3 @@ class ChessPlayer:
 	
 	def GetType(self):
 		return self.type
-		
-if __name__ == "__main__":
-	
-	p = ChessPlayer("Kasparov","black")
-	
-	print p.GetName()
-	print p.GetColor()
-	print p.GetType()

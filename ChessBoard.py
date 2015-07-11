@@ -50,7 +50,6 @@ class ChessBoard:
 						['e','e','e','e','e','e','e','e']]
 						
 		if setupType == 0:
-			#self.squares[0] = ['bR','bT','bB','bQ','bK','bB','bT','bR']
 			self.squares[0] = ['e','e','e','e','bK','e','e','e']
 			self.squares[1] = ['bP','bP','bP','bP','bP','bP','bP','bP']
 			self.squares[2] = ['e','e','e','e','e','e','e','e']
@@ -58,50 +57,7 @@ class ChessBoard:
 			self.squares[4] = ['e','e','e','e','e','e','e','e']
 			self.squares[5] = ['e','e','e','e','e','e','e','e']
 			self.squares[6] = ['wP','wP','wP','wP','wP','wP','wP','wP']
-			#self.squares[7] = ['wR','wT','wB','wQ','wK','wB','wT','wR']
 			self.squares[7] = ['e','e','e','e','wK','e','e','e']
-
-		#Debugging set-ups
-		#Testing IsLegalMove
-		if setupType == 1:
-			self.squares[0] = ['bR','bT','bB','bQ','bK','bB','bT','bR']
-			self.squares[1] = ['e','e','e','e','e','e','e','e']
-			self.squares[2] = ['e','e','e','e','e','e','e','e']
-			self.squares[3] = ['e','e','e','e','e','e','e','e']
-			self.squares[4] = ['e','e','e','e','e','e','e','e']
-			self.squares[5] = ['e','e','e','e','e','e','e','e']
-			self.squares[6] = ['wP','wP','wP','wP','wP','wP','wP','wP']
-			self.squares[7] = ['wR','wT','wB','wQ','wK','wB','wT','wR']
-
-		#Testing IsInCheck, Checkmate
-		if setupType == 2:
-			self.squares[0] = ['e','e','e','e','e','e','e','e']
-			self.squares[1] = ['e','e','e','e','e','e','e','e']
-			self.squares[2] = ['e','e','e','e','bK','e','e','e']
-			self.squares[3] = ['e','e','e','e','bR','e','e','e']
-			self.squares[4] = ['e','e','bB','e','e','e','wR','e']
-			self.squares[5] = ['e','e','e','e','e','e','e','e']
-			self.squares[6] = ['wB','e','e','e','e','e','e','e']
-			self.squares[7] = ['e','e','e','wK','wQ','e','wT','e']
-
-		#Testing Defensive AI
-		if setupType == 3:
-			self.squares[0] = ['e','e','e','e','e','e','e','e']
-			self.squares[1] = ['e','e','e','e','e','e','e','e']
-			self.squares[2] = ['e','e','e','e','bK','e','e','e']
-			self.squares[3] = ['e','e','e','e','bR','e','e','e']
-			self.squares[4] = ['e','e','bB','e','e','e','wR','e']
-			self.squares[5] = ['e','e','e','e','e','e','e','e']
-			self.squares[6] = ['e','e','e','e','e','e','e','e']
-			self.squares[7] = ['e','e','e','wK','wQ','e','wT','e']			
-			
-#    def GetCompactState(self):
-#        board = self.squares
-#        WhitePieces = []
-#        for r in range(8):
-#            for c in range(8):
-#                if 'w' in board[r][c]:
-
 
 	def GetState(self):
 		return self.squares
@@ -184,20 +140,3 @@ class ChessBoard:
 		messageString = string.upper(messageString[0])+messageString[1:len(messageString)]
 		
 		return messageString
-
-if __name__ == "__main__":
-	
-	cb = ChessBoard(0)
-	board1 = cb.GetState()
-	for r in range(8):
-		for c in range(8):
-			print board1[r][c],
-		print ""
-		
-	print "Move piece test..."
-	cb.MovePiece(((0,0),(4,4)))
-	board2 = cb.GetState()
-	for r in range(8):
-		for c in range(8):
-			print board2[r][c],
-		print ""

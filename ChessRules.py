@@ -234,11 +234,3 @@ class ChessRules:
 			return False
 		else:
 			return self.IsClearPath(board,newTuple,toTuple)
-			
-if __name__ == "__main__":
-	from ChessBoard import ChessBoard
-	cb = ChessBoard()
-	rules = ChessRules()
-	print rules.IsCheckmate(cb.GetState(),"white")
-	print rules.IsClearPath(cb.GetState(),(0,0),(5,5))
-	print rules.IsClearPath(cb.GetState(),(1,1),(5,5))

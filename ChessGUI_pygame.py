@@ -20,74 +20,53 @@ from ScrollingTextBox import ScrollingTextBox
 from ChessBoard import ChessBoard
 
 class ChessGUI_pygame:
-	def __init__(self,graphicStyle=1):
+	def __init__(self):
 		os.environ['SDL_VIDEO_CENTERED'] = '1' #should center pygame window on the screen
 		self.Rules = ChessRules()
 		pygame.init()
-		pygame.display.init()
-		self.screen = pygame.display.set_mode((850,500))
+		self.screen = pygame.display.set_mode((850,800), pygame.DOUBLEBUF)
 		self.boardStart_x = 50
 		self.boardStart_y = 50
 		pygame.display.set_caption('Python Chess')
 
 		self.textBox = ScrollingTextBox(self.screen,525,825,50,450)
-		self.LoadImages(graphicStyle)
-		#pygame.font.init() - should be already called by pygame.init()
+		self.LoadImages()
 		self.fontDefault = pygame.font.Font( None, 20 )
+
 		
 		
 
-	def LoadImages(self,graphicStyle):
-		if graphicStyle == 0:
-			self.square_size = 50 #all images must be images 50 x 50 pixels
-			self.white_square = pygame.image.load(os.path.join("images","white_square.png")).convert()
-			self.brown_square = pygame.image.load(os.path.join("images","brown_square.png")).convert()
-			self.cyan_square = pygame.image.load(os.path.join("images","cyan_square.png")).convert()
-			#"convert()" is supposed to help pygame display the images faster.  It seems to mess up transparency - makes it all black!
-			#And, for this chess program, the images don't need to change that fast.
-			self.black_pawn = pygame.image.load(os.path.join("images","blackPawn.png")) 
-			self.black_rook = pygame.image.load(os.path.join("images","blackRook.png"))
-			self.black_knight = pygame.image.load(os.path.join("images","blackKnight.png"))
-			self.black_bishop = pygame.image.load(os.path.join("images","blackBishop.png"))
-			self.black_king = pygame.image.load(os.path.join("images","blackKing.png"))
-			self.black_queen = pygame.image.load(os.path.join("images","blackQueen.png"))
-			self.white_pawn = pygame.image.load(os.path.join("images","whitePawn.png"))
-			self.white_rook = pygame.image.load(os.path.join("images","whiteRook.png"))
-			self.white_knight = pygame.image.load(os.path.join("images","whiteKnight.png"))
-			self.white_bishop = pygame.image.load(os.path.join("images","whiteBishop.png"))
-			self.white_king = pygame.image.load(os.path.join("images","whiteKing.png"))
-			self.white_queen = pygame.image.load(os.path.join("images","whiteQueen.png"))
-		elif graphicStyle == 1:
-			self.square_size = 50
-			self.white_square = pygame.image.load(os.path.join("images","white_square.png")).convert()
-			self.brown_square = pygame.image.load(os.path.join("images","brown_square.png")).convert()
-			self.cyan_square = pygame.image.load(os.path.join("images","cyan_square.png")).convert()
+	def LoadImages(self):
+		self.square_size = 50
+		self.white_square = pygame.image.load(os.path.join("images","white_square.png")).convert()
+		self.brown_square = pygame.image.load(os.path.join("images","brown_square.png")).convert()
+		self.cyan_square = pygame.image.load(os.path.join("images","cyan_square.png")).convert()
 			
-			self.black_pawn = pygame.image.load(os.path.join("images","Chess_tile_pd.png")).convert()
-			self.black_pawn = pygame.transform.scale(self.black_pawn, (self.square_size,self.square_size))
-			self.black_rook = pygame.image.load(os.path.join("images","Chess_tile_rd.png")).convert()
-			self.black_rook = pygame.transform.scale(self.black_rook, (self.square_size,self.square_size))
-			self.black_knight = pygame.image.load(os.path.join("images","Chess_tile_nd.png")).convert()
-			self.black_knight = pygame.transform.scale(self.black_knight, (self.square_size,self.square_size))
-			self.black_bishop = pygame.image.load(os.path.join("images","Chess_tile_bd.png")).convert()
-			self.black_bishop = pygame.transform.scale(self.black_bishop, (self.square_size,self.square_size))
-			self.black_king = pygame.image.load(os.path.join("images","Chess_tile_kd.png")).convert()
-			self.black_king = pygame.transform.scale(self.black_king, (self.square_size,self.square_size))
-			self.black_queen = pygame.image.load(os.path.join("images","Chess_tile_qd.png")).convert()
-			self.black_queen = pygame.transform.scale(self.black_queen, (self.square_size,self.square_size))
+		self.black_pawn = pygame.image.load(os.path.join("images","Chess_tile_pd.png")).convert()
+		self.black_pawn = pygame.transform.scale(self.black_pawn, (self.square_size,self.square_size))
+		self.black_rook = pygame.image.load(os.path.join("images","Chess_tile_rd.png")).convert()
+		self.black_rook = pygame.transform.scale(self.black_rook, (self.square_size,self.square_size))
+		self.black_knight = pygame.image.load(os.path.join("images","Chess_tile_nd.png")).convert()
+		self.black_knight = pygame.transform.scale(self.black_knight, (self.square_size,self.square_size))
+		self.black_bishop = pygame.image.load(os.path.join("images","Chess_tile_bd.png")).convert()
+		self.black_bishop = pygame.transform.scale(self.black_bishop, (self.square_size,self.square_size))
+		self.black_king = pygame.image.load(os.path.join("images","Chess_tile_kd.png")).convert()
+		self.black_king = pygame.transform.scale(self.black_king, (self.square_size,self.square_size))
+		self.black_queen = pygame.image.load(os.path.join("images","Chess_tile_qd.png")).convert()
+		self.black_queen = pygame.transform.scale(self.black_queen, (self.square_size,self.square_size))
 
-			self.white_pawn = pygame.image.load(os.path.join("images","Chess_tile_pl.png")).convert()
-			self.white_pawn = pygame.transform.scale(self.white_pawn, (self.square_size,self.square_size))
-			self.white_rook = pygame.image.load(os.path.join("images","Chess_tile_rl.png")).convert()
-			self.white_rook = pygame.transform.scale(self.white_rook, (self.square_size,self.square_size))
-			self.white_knight = pygame.image.load(os.path.join("images","Chess_tile_nl.png")).convert()
-			self.white_knight = pygame.transform.scale(self.white_knight, (self.square_size,self.square_size))
-			self.white_bishop = pygame.image.load(os.path.join("images","Chess_tile_bl.png")).convert()
-			self.white_bishop = pygame.transform.scale(self.white_bishop, (self.square_size,self.square_size))
-			self.white_king = pygame.image.load(os.path.join("images","Chess_tile_kl.png")).convert()
-			self.white_king = pygame.transform.scale(self.white_king, (self.square_size,self.square_size))
-			self.white_queen = pygame.image.load(os.path.join("images","Chess_tile_ql.png")).convert()
-			self.white_queen = pygame.transform.scale(self.white_queen, (self.square_size,self.square_size))
+		self.white_pawn = pygame.image.load(os.path.join("images","Chess_tile_pl.png")).convert()
+		self.white_pawn = pygame.transform.scale(self.white_pawn, (self.square_size,self.square_size))
+		self.white_rook = pygame.image.load(os.path.join("images","Chess_tile_rl.png")).convert()
+		self.white_rook = pygame.transform.scale(self.white_rook, (self.square_size,self.square_size))
+		self.white_knight = pygame.image.load(os.path.join("images","Chess_tile_nl.png")).convert()
+		self.white_knight = pygame.transform.scale(self.white_knight, (self.square_size,self.square_size))
+		self.white_bishop = pygame.image.load(os.path.join("images","Chess_tile_bl.png")).convert()
+		self.white_bishop = pygame.transform.scale(self.white_bishop, (self.square_size,self.square_size))
+		self.white_king = pygame.image.load(os.path.join("images","Chess_tile_kl.png")).convert()
+		self.white_king = pygame.transform.scale(self.white_king, (self.square_size,self.square_size))
+		self.white_queen = pygame.image.load(os.path.join("images","Chess_tile_ql.png")).convert()
+		self.white_queen = pygame.transform.scale(self.white_queen, (self.square_size,self.square_size))
 
 
 	def PrintMessage(self,message):
@@ -189,7 +168,7 @@ class ChessGUI_pygame:
 					self.screen.blit(self.white_queen,(screenX,screenY))
 				if board[r][c] == 'wK':
 					self.screen.blit(self.white_king,(screenX,screenY))
-			
+
 		pygame.display.flip()
 
 	def EndGame(self,board):
@@ -213,6 +192,7 @@ class ChessGUI_pygame:
 		while not fromSquareChosen or not toSquareChosen:
 			squareClicked = []
 			pygame.event.set_blocked(MOUSEMOTION)
+			pygame.event.pump()
 			e = pygame.event.wait()
 			if e.type is KEYDOWN:
 				if e.key is K_ESCAPE:
@@ -226,7 +206,6 @@ class ChessGUI_pygame:
 			if e.type is QUIT: #the "x" kill button
 				pygame.quit()
 				sys.exit(0)
-					
 			
 					
 			if not fromSquareChosen and not toSquareChosen:
@@ -277,41 +256,3 @@ class ChessGUI_pygame:
 		(row,col) = self.ConvertToChessCoords((mouseX,mouseY))
 		if col < 8 and col >= 0 and row < 8 and row >= 0:
 			print "  Chess board units row =",row,"col =",col
-
-	def TestRoutine(self):
-		#test function
-		pygame.event.set_blocked(MOUSEMOTION)
-		while 1:
-			e = pygame.event.wait()
-			if e.type is QUIT:
-				return
-			if e.type is KEYDOWN:
-				if e.key is K_ESCAPE:
-					pygame.quit()
-					return
-			if e.type is MOUSEBUTTONDOWN:
-				(mouseX,mouseY) = pygame.mouse.get_pos()
-				#x is horizontal, y is vertical
-				#(x=0,y=0) is upper-left corner of the screen
-				self.GetClickedSquare(mouseX,mouseY)
-					
-			
-
-
-if __name__ == "__main__":
-	#try out some development / testing stuff if this file is run directly
-	testBoard = [['bR','bT','bB','bQ','bK','bB','bT','bR'],\
-				 ['bP','bP','bP','bP','bP','bP','bP','bP'],\
-				 ['e','e','e','e','e','e','e','e'],\
-				 ['e','e','e','e','e','e','e','e'],\
-				 ['e','e','e','e','e','e','e','e'],\
-				 ['e','e','e','e','e','e','e','e'],\
-				 ['wP','wP','wP','wP','wP','wP','wP','wP'],\
-				 ['wR','wT','wB','wQ','wK','wB','wT','wR']]
-				 
-	validSquares = [(5,2),(1,1),(1,5),(7,6)]
-
-	game = ChessGUI_pygame()
-	game.Draw(testBoard,validSquares)
-	game.TestRoutine()
-	
