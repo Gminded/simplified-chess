@@ -11,36 +11,9 @@
  
 import string
 
-WHITE='white'
-BLACK='black'
-
-class Piece:
-    player = WHITE
-    row = 0
-    col = 0
-    prevRow = 0
-    prevCol = 0
-
-    def __init__(self, colour, coords):
-        self.player=colour
-        row=coords[1]
-        col=coords[2]
-        prevRow=row
-        prevCol=col
-
-    def setCoords(self, coords):
-        self.prevRow = self.row
-        self.prevCol = self.col
-        self.row = coords[1]
-        self.col = coords[2]
-
-    def getCoords(self):
-        return (self.row, self.col)
-
-
 class ChessBoard:
 	def __init__(self,setupType=0):
-		self.squares = [['e','e','e','e','e','e','e','e'],\
+		self.state = [['e','e','e','e','e','e','e','e'],\
 						['e','e','e','e','e','e','e','e'],\
 						['e','e','e','e','e','e','e','e'],\
 						['e','e','e','e','e','e','e','e'],\
@@ -50,17 +23,18 @@ class ChessBoard:
 						['e','e','e','e','e','e','e','e']]
 						
 		if setupType == 0:
-			self.squares[0] = ['e','e','e','e','bK','e','e','e']
-			self.squares[1] = ['bP','bP','bP','bP','bP','bP','bP','bP']
-			self.squares[2] = ['e','e','e','e','e','e','e','e']
-			self.squares[3] = ['e','e','e','e','e','e','e','e']
-			self.squares[4] = ['e','e','e','e','e','e','e','e']
-			self.squares[5] = ['e','e','e','e','e','e','e','e']
-			self.squares[6] = ['wP','wP','wP','wP','wP','wP','wP','wP']
-			self.squares[7] = ['e','e','e','e','wK','e','e','e']
+			self.state[0] = ['e','e','e','e','bK','e','e','e']
+			self.state[1] = ['bP','bP','bP','bP','bP','bP','bP','bP']
+			self.state[2] = ['e','e','e','e','e','e','e','e']
+			self.state[3] = ['e','e','e','e','e','e','e','e']
+			self.state[4] = ['e','e','e','e','e','e','e','e']
+			self.state[5] = ['e','e','e','e','e','e','e','e']
+			self.state[6] = ['wP','wP','wP','wP','wP','wP','wP','wP']
+			self.state[7] = ['e','e','e','e','wK','e','e','e']
+                self.oldstate = self.state
 
 	def GetState(self):
-		return self.squares
+		return self.state
 		
 	def ConvertMoveTupleListToAlgebraicNotation(self,moveTupleList):	
 		newTupleList = []
@@ -113,6 +87,12 @@ class ChessBoard:
 			name = name + "king"
 			
 		return name
+
+        # To make a complete copy of the previous state.
+        def complete_copy(inList):
+            if isinstance(inList, list):
+                return list( map(unshared_copy, inList) )
+                return inList
 	
 	def MovePiece(self,moveTuple):
 		fromSquare_r = moveTuple[0][0]
@@ -120,11 +100,13 @@ class ChessBoard:
 		toSquare_r = moveTuple[1][0]
 		toSquare_c = moveTuple[1][1]
 
-		fromPiece = self.squares[fromSquare_r][fromSquare_c]
-		toPiece = self.squares[toSquare_r][toSquare_c]
+                self.oldstate = complete_copy(self.state)
 
-		self.squares[toSquare_r][toSquare_c] = fromPiece
-		self.squares[fromSquare_r][fromSquare_c] = 'e'
+		fromPiece = self.state[fromSquare_r][fromSquare_c]
+		toPiece = self.state[toSquare_r][toSquare_c]
+
+		self.state[toSquare_r][toSquare_c] = fromPiece
+		self.state[fromSquare_r][fromSquare_c] = 'e'
 
 		fromPiece_fullString = self.GetFullString(fromPiece)
 		toPiece_fullString = self.GetFullString(toPiece)
