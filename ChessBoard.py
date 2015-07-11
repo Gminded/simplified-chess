@@ -11,6 +11,13 @@
  
 import string
 
+
+# To make a complete copy of the previous state.
+def complete_copy(inList):
+    if isinstance(inList, list):
+        return list( map(complete_copy, inList) )
+        return inList
+
 class ChessBoard:
         def __init__(self,setupType=0):
                 self.state = [['e','e','e','e','e','e','e','e'],\
@@ -88,11 +95,6 @@ class ChessBoard:
                         
                 return name
 
-        # To make a complete copy of the previous state.
-        def complete_copy(inList):
-            if isinstance(inList, list):
-                return list( map(unshared_copy, inList) )
-                return inList
         
         def MovePiece(self,moveTuple):
                 fromSquare_r = moveTuple[0][0]
