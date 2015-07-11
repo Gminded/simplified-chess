@@ -33,7 +33,7 @@ class ChessRules:
 		else:
 			return False
 
-	def GetListOfValidMoves(self,board,color,fromTuple):
+	def GetListOfValidMoves(self, oldboard, board,color,fromTuple):
 		legalDestinationSpaces = []
 		for row in range(8):
 			for col in range(8):
@@ -42,7 +42,8 @@ class ChessRules:
 				    legalDestinationSpaces.append(d)
 		return legalDestinationSpaces
 
-	def IsLegalMove(self,board,color,fromTuple,toTuple):
+
+	def IsLegalMove(self, oldboard, board,color,fromTuple,toTuple):
 		#print "IsLegalMove with fromTuple:",fromTuple,"and toTuple:",toTuple,"color = ",color
 		fromSquare_r = fromTuple[0]
 		fromSquare_c = fromTuple[1]
