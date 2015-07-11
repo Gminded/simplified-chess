@@ -13,10 +13,10 @@ import pygame
 from pygame.locals import *
 
 class ScrollingTextBox:
-	def __init__(self,screen,xmin,xmax,ymin,ymax):
+	def __init__(self,screen,xmin,xmax,ymin,ymax, hidpi_factor):
 		self.screen = screen
 		pygame.font.init()
-		self.fontDefault = pygame.font.Font( None, 20 )
+		self.fontDefault = pygame.font.Font( None, 20*hidpi_factor )
 		
 		self.xmin = xmin
 		self.xmax = xmax
