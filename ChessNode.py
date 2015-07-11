@@ -1,12 +1,13 @@
 from ChessRules import ChessRules
-import ChessBoard
+from ChessBoard import ChessBoard
+from ChessBoard import complete_copy
 from Heuristic import Heuristic
 
 
 class ChessNode:
     def __init__(self, state, old_state):
-        self.state = ChessBoard.complete_copy(state)
-        self.old_state = ChessBoard.complete_copy(old_state)
+        self.state = complete_copy(state)
+        self.old_state = complete_copy(old_state)
         self.utility = -1
 
     def GetOldState(self):
@@ -16,8 +17,8 @@ class ChessNode:
         return self.state
 
     def SetState(self, state):
-        self.old_state = ChessBoard.complete_copy(state)
-        self.state = ChessBoard.complete_copy(state)
+        self.old_state = complete_copy(state)
+        self.state = complete_copy(state)
 
     def GetUtility(self):
         return self.utility
@@ -54,7 +55,7 @@ class ChessNode:
                 board.squares = self.state
                 move_tuple = moves[0], i
                 board.MovePiece(move_tuple)
-                successor = Node(board, self.state)
+                successor = ChessNode(board, self.state)
                 Heuristic.HeuristicFunction(successor)
 
                 #ordering (descending)

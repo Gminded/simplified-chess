@@ -113,7 +113,7 @@ class PythonChessMain:
         self.Gui.PrintMessage("CHECKMATE!")
         winnerIndex = (currentPlayerIndex + 1) % 2
         self.Gui.PrintMessage(self.player[winnerIndex].GetName() + " (" + self.player[winnerIndex].GetColor() + ") won the game!")
-        self.Gui.EndGame(board)
+        self.Gui.EndGame(self.Board.GetState())
 
 
 game = PythonChessMain()
