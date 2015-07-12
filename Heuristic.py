@@ -1,7 +1,7 @@
 class Heuristic:
 
     @staticmethod
-    def HeuristicFunction(node, playerColor):
+    def HeuristicFunction(node):
         node.SetUtility(1)
 
     @staticmethod

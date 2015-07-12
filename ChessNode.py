@@ -1,11 +1,11 @@
 from ChessBoard import ChessBoard
 from ChessBoard import complete_copy
 from Heuristic import Heuristic
-
+import copy
 
 class ChessNode:
     def __init__(self, board):
-        self.board = board
+        self.board = complete_copy(board)
         self.utility = -1
         self.moveTuple = None
 
@@ -34,11 +34,11 @@ class ChessNode:
     #return successor nodes
     def Actions(self, player_color, threaded=None, threadIndex=-1, threadTotal=-1):
         if player_color == "white":
-            my_pieces = self.board.whitePawns
+            my_pieces = copy.copy( self.board.whitePawns )
             my_pieces.append(self.board.whiteKing)
         else:
-            my_pieces = self.board.blackPawns
-            my_pieces.append(self.board.whiteKing)
+            my_pieces = copy.copy( self.board.blackPawns )
+            my_pieces.append(self.board.blackKing)
 
         # Format of actions
         # [ [ (current_pawn_position), (possible_move), (possible_move) ], [ (current_pawn_position), (possible_move) ], ... ]

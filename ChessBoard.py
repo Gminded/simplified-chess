@@ -29,8 +29,8 @@ class ChessBoard:
         self.whitePawns = [] # all of the white pawns coordinates expressed as lists
         self.blackPawns = []
         for col in range(0,8):
-            self.whitePawns.append([1,col])
-            self.blackPawns.append([6,col])
+            self.whitePawns.append([6,col])
+            self.blackPawns.append([1,col])
 
         self.state = [  ['bK','e','e','e','e','e','e','e'],\
                         ['wP','e','wP','e','e','e','e','e'],\
@@ -122,6 +122,8 @@ class ChessBoard:
 
             fromPiece = self.state[fromRow][fromCol]
             toPiece = self.state[toRow][toCol]
+            fromCoords = [ fromRow, fromCol ]
+            toCoords = [ toRow, toCol ]
 
             # en passant
             enpassant = False
@@ -148,14 +150,14 @@ class ChessBoard:
             self.state[fromRow][fromCol] = 'e'
             if 'b' in fromPiece:
                 if 'P' in fromPiece:
-                    for i, coords in self.blackPawns:
-                        self.blackPawns[i]=[toRow,toCol]
+                    self.blackPawns.remove( fromCoords )
+                    self.blackPawns.append( toCoords )
                 else:
                     self.blackKing=[toRow,toCol]
             else:
                 if 'P' in fromPiece:
-                    for i, coords in self.whitePawns:
-                        self.whitePawns[i]=[toRow,toCol]
+                    self.whitePawns.remove( fromCoords )
+                    self.whitePawns.append( toCoords )
                 else:
                     self.whiteKing=[toRow,toCol]
 
@@ -186,11 +188,11 @@ class ChessBoard:
         col=fromTuple[1]
         piece = self.state[row][col]
         moves=[]
-        if color=='black':
-            color='b'
+        if color=="black":
+            color="b"
             direction=1
         else:
-            color='w'
+            color="w"
             direction=-1
         if color in piece:
             if 'P' in piece:

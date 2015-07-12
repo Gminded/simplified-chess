@@ -114,7 +114,7 @@ class ChessGUI_pygame:
             current_square = (current_square+1)%2
 
         #draw row/column labels around the edge of the board
-        chessboard_obj = ChessBoard(0)#need a dummy object to access some of ChessBoard's methods....
+        chessboard_obj = self.Board
         color = (255,255,255)#white
         antialias = 1
 
