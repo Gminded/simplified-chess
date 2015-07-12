@@ -62,10 +62,9 @@
 
 """
 
-from ChessBoard import ChessBoard
+from ChessBoard import *
 from ChessPlayer import ChessPlayer
 from ChessGUI_pygame import ChessGUI_pygame
-from ChessRules import *
 from ChessAI import ChessAI
 from ChessNode import ChessNode
 from ChessGameParams import TkinterGameSetupParams
@@ -130,7 +129,7 @@ class PythonChessMain:
                 moveTuple = self.Gui.GetPlayerInput(realBoard,currentColor)
 
             moveReport = self.Board.MovePiece(moveTuple)
-            currentNode.SetState( self.Board.GetState() ) #new state and remembering old_state
+            currentNode.SetState( self.Board.oldstate,self.Board.GetState() ) #new state and remembering old_state?
             self.Gui.PrintMessage(moveReport)
             #END OF PLAY TIME
             currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0

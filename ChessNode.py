@@ -4,7 +4,7 @@ from Heuristic import Heuristic
 
 
 class ChessNode:
-    def __init__(self, state, oldstate):
+    def __init__(self, oldstate, state):
         self.state = state
         self.oldstate = oldstate
         self.utility = -1
@@ -12,6 +12,10 @@ class ChessNode:
 
     def GetState(self):
         return self.state
+
+    def SetState(self,oldstate,state):
+        self.state = complete_copy(state)
+        self.oldstate = complete_copy(oldstate)
 
     def GetUtility(self):
         return self.utility
@@ -52,10 +56,10 @@ class ChessNode:
 
             # creating nodes
             for i in moves[1:]:
-                board.state = self.oldstate
+                board.state = self.state
                 move_tuple = moves[0], i
                 board.MovePiece(move_tuple)
-                successor = ChessNode(board.state, self.state)
+                successor = ChessNode(board.oldstate, board.state)
                 successor.SetMoveTuple(move_tuple)
                 Heuristic.HeuristicFunction(successor)
 

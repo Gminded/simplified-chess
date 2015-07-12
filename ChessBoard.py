@@ -166,11 +166,9 @@ class ChessBoard:
                     for c in [-1,0,1]:
                         if not (r==0 and c==0):
                             moves.append((row+r, col+c))
-            for row in range(8):
-                for col in range(8):
-                    d = (row,col)
-                    if self._IsCorrectMove(color,fromTuple,d) and not self.DoesMovePutPlayerInCheck(color,fromTuple,d):
-                        legalDestinationSpaces.append(d)
+        for toTuple in moves:
+            if self._IsCorrectMove(color,fromTuple,toTuple) and not self.DoesMovePutPlayerInCheck(color,fromTuple,toTuple):
+                legalDestinationSpaces.append(toTuple)
         return legalDestinationSpaces
 
     # Less redundant check for correctness
@@ -179,11 +177,13 @@ class ChessBoard:
         fromCol = fromTuple[1]
         toRow = toTuple[0]
         toCol = toTuple[1]
-        fromPiece = self.state[fromRow][fromCol]
-        toPiece = self.state[toRow][toCol]
         if not (0 <= toRow and toRow <= 7) or\
            not (0 <= toCol and toCol <= 7):
                return False
+        fromPiece = self.state[fromRow][fromCol]
+        toPiece = self.state[toRow][toCol]
+        if color == 'b': enemyColor='w'
+        else: enemyColor='b'
 
         if 'P' in fromPiece:
             #Pawn
@@ -196,7 +196,7 @@ class ChessBoard:
                     #black pawn on starting row can move forward 2 spaces if there is no one directly ahead
                     if self.IsClearPath(fromTuple,toTuple):
                         return True
-                if toCol == fromCol and toPiece == 'e':
+                if fromRow==toRow-1 and toCol == fromCol and toPiece == 'e':
                     #moving forward one space
                     return True
                 if toRow == fromRow+1 and (toCol == fromCol+1 or toCol == fromCol-1) and enemyColor in toPiece:
@@ -212,14 +212,15 @@ class ChessBoard:
                     #white pawn on starting row can move forward 2 spaces if there is no one directly ahead
                     if self.IsClearPath(fromTuple,toTuple):
                         return True
-                if toCol == fromCol and toPiece == 'e':
+                if fromRow==toRow+1 and toCol == fromCol and toPiece == 'e':
                     #moving forward one space
                     return True
                 if toRow == fromRow-1 and (toCol == fromCol+1 or toCol == fromCol-1) and enemyColor in toPiece:
                     #attacking
                     return True
         elif 'K' in fromPiece:
-            return True
+            if toPiece=='e' or enemyColor in toPiece:
+                return True
         return False
 
     def IsEnpassantPawn(self,coords):
