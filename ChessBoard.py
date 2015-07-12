@@ -149,13 +149,15 @@ class ChessBoard:
             if 'b' in fromPiece:
                 if 'P' in fromPiece:
                     for i, coords in self.blackPawns:
-                        self.blackPawns[i]=[toRow,toCol]
+                        if self.blackPawns[i]==[fromRown,fromCol]:
+                            self.blackPawns[i]=[toRow,toCol]
                 else:
                     self.blackKing=[toRow,toCol]
             else:
                 if 'P' in fromPiece:
                     for i, coords in self.whitePawns:
-                        self.whitePawns[i]=[toRow,toCol]
+                        if self.whitePawns[i]==[fromRown,fromCol]:
+                            self.whitePawns[i]=[toRow,toCol]
                 else:
                     self.whiteKing=[toRow,toCol]
 
