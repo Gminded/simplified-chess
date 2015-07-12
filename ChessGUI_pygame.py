@@ -15,15 +15,14 @@ import pygame
 import os
 import sys
 from pygame.locals import *
-from ChessRules import ChessRules
 from ScrollingTextBox import ScrollingTextBox
 from ChessBoard import ChessBoard
 
 class ChessGUI_pygame:
-    def __init__(self):
+    def __init__(self,board):
         os.environ['SDL_VIDEO_CENTERED'] = '1' #should center pygame window on the screen
         pygame.init()
-        self.Rules = ChessRules()
+        self.Board = board
         self.hidpi_factor = pygame.display.Info().current_h / 600
         self.screen = pygame.display.set_mode((850*self.hidpi_factor, 600*self.hidpi_factor), pygame.DOUBLEBUF)
         self.boardStart_x = 50*self.hidpi_factor
@@ -218,16 +217,16 @@ class ChessGUI_pygame:
                 if squareClicked != []:
                     (r,c) = squareClicked
                     if currentColor == 'black' and 'b' in state[r][c]:
-                        if len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
+                        if len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                     elif currentColor == 'white' and 'w' in state[r][c]:
-                        if len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
+                        if len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
 
             elif fromSquareChosen and not toSquareChosen:
-                possibleDestinations = self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,fromTuple)
+                possibleDestinations = self.Board.GetListOfValidMoves(currentColor,fromTuple)
                 self.Draw(state,possibleDestinations)
                 if squareClicked != []:
                     (r,c) = squareClicked
@@ -237,7 +236,7 @@ class ChessGUI_pygame:
                     elif currentColor == 'black' and 'b' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
+                        elif len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:
@@ -245,7 +244,7 @@ class ChessGUI_pygame:
                     elif currentColor == 'white' and 'w' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.Rules.GetListOfValidMoves(board.oldstate,state,currentColor,squareClicked))>0:
+                        elif len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:

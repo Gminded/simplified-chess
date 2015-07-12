@@ -74,7 +74,6 @@ from ChessGameParams import TkinterGameSetupParams
 class PythonChessMain:
     def __init__(self):
         self.Board = ChessBoard(0)
-        self.Rules = ChessRules()
 
     def SetUp(self):
         # players set up
@@ -83,7 +82,7 @@ class PythonChessMain:
         self.player[1] = ChessAI("AI", "black")
         # GUI setup
         self.guitype = 'pygame'
-        self.Gui = ChessGUI_pygame()
+        self.Gui = ChessGUI_pygame(self.Board)
 	GameParams = TkinterGameSetupParams()
 	(player1Name, player1Color, player1Type, player2Name, player2Color, player2Type) = GameParams.GetGameSetupParams()
         self.player = [0,0]
@@ -114,7 +113,7 @@ class PythonChessMain:
         currentPlayerIndex = 0
         turnCount = 0
         currentNode = ChessNode(self.Board.GetState(), self.Board.GetState()) #setup initial node
-        while NONE == self.Rules.TerminalTest(self.Board.oldstate,self.Board.GetState(),self.player[currentPlayerIndex].color):
+        while NONE == self.Board.TerminalTest(self.player[currentPlayerIndex].color):
             realBoard = self.Board
             board = self.Board.GetState()
             currentColor = self.player[currentPlayerIndex].GetColor()
@@ -136,7 +135,7 @@ class PythonChessMain:
             #END OF PLAY TIME
             currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0
 
-        termination = self.Rules.TerminalTest(self.Board.oldstate,self.Board.GetState(),self.player[currentPlayerIndex].color)
+        termination = self.Board.TerminalTest(self.player[currentPlayerIndex].color)
         if termination == DEFEAT:
             winnerIndex = (currentPlayerIndex + 1) % 2
             self.Gui.PrintMessage(self.player[winnerIndex].GetName() + " (" + self.player[winnerIndex].GetColor() + ") won the game!")
