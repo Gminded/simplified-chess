@@ -7,7 +7,7 @@
  Copyright (C) 2009 Steve Osborne, srosborne (at) gmail.com
  http://yakinikuman.wordpress.com/
  """
-
+import threading
 from ChessRules import ChessRules
 from Heuristic import Heuristic
 
@@ -18,6 +18,10 @@ class ChessAI:
         self.color = color
         self.type = 'AI'
         self.Rules = ChessRules()
+        self.alpha = -1000
+        self.beta = 1000
+        self.lock = threading.Lock()
+
 
     def GetName(self):
         return self.name
@@ -28,10 +32,22 @@ class ChessAI:
     def GetType(self):
         return self.type
 
-    def GetMove(self, currentNode):
+    def GetMove(self, currentNode, depth,threaded=False, threadTotal=-1):
         actions = currentNode.Actions("black")
-        bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=4)
         bestMoveTuple = None
+
+        #use multithreading?
+        if not threaded:
+            bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)
+        else:
+            threads = [None] * threadTotal
+            ret_values = [-1000] * threadTotal
+            for i in range(threadTotal):
+                threads[i] = threading.Thread( None, target=self.storeAlphaBetaThreaded, name=None, args=(ret_values, i, currentNode, depth, threadTotal), kwargs={})
+                threads[i].start()
+  #          for i in range(threadTotal):
+ #               threads[i].join()
+            bestMoveUtility = max(ret_values)
 
         #get the best move tuple
         for i in actions:
@@ -39,7 +55,6 @@ class ChessAI:
                 bestMoveTuple = i.GetMoveTuple()
                 break
         return bestMoveTuple
-
 
     def AlphaBetaSearch(self, alpha=-1000, beta=1000, currentNode=None, maxPlayer=True, depth=0):
         if maxPlayer:
@@ -70,3 +85,49 @@ class ChessAI:
                 if v < beta:
                     beta = v
             return beta
+
+    def storeAlphaBetaThreaded(self, data, threadIndex, currentNode, depth, threadTotal):
+        data[threadIndex] = self.AlphaBetaSearchThreaded( currentNode=currentNode, depth=depth, threaded=True, threadTotal=threadTotal, threadIndex=threadIndex)
+        print "thread done"
+
+    def AlphaBetaSearchThreaded(self, currentNode=None, maxPlayer=True, depth=0, threaded=True, threadTotal=1, threadIndex=-1):
+        if maxPlayer:
+            actions = currentNode.Actions("black", threaded=True, threadIndex=threadIndex,threadTotal=threadTotal)
+        else:
+            actions = currentNode.Actions("white", threaded=True, threadIndex=threadIndex,threadTotal=threadTotal)
+
+        #terminal test
+        if depth == 0 or len(actions) == 0:
+            Heuristic.HeuristicFunction(currentNode)
+            return currentNode.utility
+
+        if maxPlayer:
+            v = -1000
+            for node in actions:
+                v = max(v, self.AlphaBetaSearchThreaded( node, False, depth-1, True, threadTotal, threadIndex ) )
+
+                #CS START
+                self.lock.acquire()
+                if v >= self.beta:
+                    return self.beta
+                if v > self.alpha:
+                    self.alpha = v
+                self.lock.release()
+                #CS END
+
+            return self.alpha
+        else:
+            v = 1000
+            for node in actions:
+                v = min(v, self.AlphaBetaSearchThreaded( node, True, depth-1, True, threadTotal, threadIndex ) )
+
+                #CS START
+                self.lock.acquire()
+                if v <= self.alpha:
+                    return self.alpha
+                if v < self.beta:
+                    self.beta = v
+                self.lock.release()
+                #CS END
+
+            return self.beta
