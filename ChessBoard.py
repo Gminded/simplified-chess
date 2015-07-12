@@ -131,11 +131,12 @@ class ChessBoard:
             enpassant = False
             if 'P' in fromPiece and abs(toCol - fromCol) == 1 and 'e' == self.state[toRow][toCol]:
                 capturedPiece = self.state[fromRow][toCol]
+                capturedCoords = [fromRow,toCol]
                 self.state[fromRow][toCol] = 'e'
                 if 'b' in capturedPiece:
-                    self.blackPawns.remove(toCoords)
+                    self.blackPawns.remove(capturedCoords)
                 else:
-                    self.whitePawns.remove(toCoords)
+                    self.whitePawns.remove(capturedCoords)
                 enpassant = True
 
             # capture
@@ -167,7 +168,7 @@ class ChessBoard:
             if enpassant:
                     messageString = fromPiece_fullString+ " moves from "+self.ConvertToAlgebraicNotation(moveTuple[0])+\
                                                 " to "+self.ConvertToAlgebraicNotation(moveTuple[1])+' and captures '+\
-                                                self.ConvertToAlgebraicNotation(capturedCoords)+'with en passant!'
+                                                self.ConvertToAlgebraicNotation(capturedCoords)+' with en passant!'
             elif toPiece == 'e':
                     messageString = fromPiece_fullString+ " moves from "+self.ConvertToAlgebraicNotation(moveTuple[0])+\
                                                 " to "+self.ConvertToAlgebraicNotation(moveTuple[1])
@@ -191,9 +192,11 @@ class ChessBoard:
         if color=='black':
             color='b'
             direction=1
+            myKingCoords=self.blackKing
         else:
             color='w'
             direction=-1
+            myKingCoords=self.whiteKing
         if color in piece:
             if 'P' in piece:
                 moves.append((row+direction, col))
@@ -201,12 +204,23 @@ class ChessBoard:
                 moves.append((row+direction, col+1))
                 moves.append((row+direction*2, col))
             elif 'K' in piece:
-                for r in [-1,0,1]:
-                    for c in [-1,0,1]:
+                addrow=[0]
+                if 0 < row: addrow.append(-1)
+                if row < 7: addrow.append(1)
+                addcol=[0]
+                if 0 < col: addcol.append(-1)
+                if col < 7: addcol.append(1)
+                for r in addrow:
+                    for c in addcol:
                         if not (r==0 and c==0):
                             moves.append((row+r, col+c))
+
         for toTuple in moves:
-            if self._IsCorrectMove(color,fromTuple,toTuple) and not self.DoesMovePutPlayerInCheck(color,fromTuple,toTuple):
+            if 'K' in piece:
+                check=self.DoesMovePutPlayerInCheck(color, toTuple, fromTuple, toTuple)
+            else:
+                check=self.DoesMovePutPlayerInCheck(color, myKingCoords, fromTuple, toTuple)
+            if self._IsCorrectMove(color,fromTuple,toTuple) and not check:
                 legalDestinationSpaces.append(toTuple)
         return legalDestinationSpaces
 
@@ -398,26 +412,80 @@ class ChessBoard:
 
         return False #if none of the other "True"s are hit above
 
-    def DoesMovePutPlayerInCheck(self,color,fromTuple,toTuple):
-            #makes a hypothetical move; returns True if it puts current player into check
-            fromSquare_r = fromTuple[0]
-            fromSquare_c = fromTuple[1]
-            toSquare_r = toTuple[0]
-            toSquare_c = toTuple[1]
-            fromPiece = self.state[fromSquare_r][fromSquare_c]
-            toPiece = self.state[toSquare_r][toSquare_c]
+    def DoesMovePutPlayerInCheck(self,color,myKingCoords,fromTuple,toTuple):
+        # Faster implementation:
+        fromRow=fromTuple[0]
+        fromCol=fromTuple[1]
+        toRow=fromTuple[0]
+        toCol=fromTuple[1]
+        row=myKingCoords[0]
+        col=myKingCoords[1]
+        right = col < 7
+        left = 0 < col
+        down = row < 7
+        up = 0 < row
 
-            #make the move, then test if 'color' is in check
-            self.state[toSquare_r][toSquare_c] = fromPiece
-            self.state[fromSquare_r][fromSquare_c] = 'e'
+        # backup values because we are only simulating
+        backupFrom=self.state[fromRow][fromCol]
+        backupTo=self.state[toRow][toCol]
+        if 'P' in backupFrom and abs(toCol - fromCol) == 1 and 'e' == self.state[toRow][toCol]:
+            self.state[fromRow][toCol]='e'
+            enpassant=True
+        else:
+            enpassant=False
+        self.state[fromRow][fromCol]='e'
+        self.state[toRow][toCol]=backupFrom
 
-            retval = self.IsInCheck(color)
+        check=False
 
-            #undo temporary move
-            self.state[toSquare_r][toSquare_c] = toPiece
-            self.state[fromSquare_r][fromSquare_c] = fromPiece
+        if color=='b':
+            if down and right and 'w' in self.state[row+1][col+1]:
+                check=True
+            elif down and left and 'w' in self.state[row+1][col-1]:
+                check=True
+            elif down and 'wK'==self.state[row+1][col]:
+                check=True
+            elif up and left and 'wK'==self.state[row-1][col-1]:
+                check=True
+            elif up and right and 'wK'==self.state[row-1][col+1]:
+                check=True
+            elif up and 'wK'==self.state[row-1][col]:
+                check=True
+            elif right and 'wK'==self.state[row][col+1]:
+                check=True
+            elif left and 'wK'==self.state[row][col-1]:
+                check=True
 
-            return retval
+        elif color=='w':
+            if up and right and 'b' in self.state[row-1][col+1]:
+                check=True
+            elif up and left and 'b' in self.state[row-1][col-1]:
+                check=True
+            elif up and 'bK'==self.state[row-1][col]:
+                check=True
+            elif down and left and 'bK'==self.state[row+1][col-1]:
+                check=True
+            elif down and right and 'bK'==self.state[row+1][col+1]:
+                check=True
+            elif down and 'bK'==self.state[row+1][col]:
+                check=True
+            elif right and 'bK'==self.state[row][col+1]:
+                check=True
+            elif left and 'bK'==self.state[row][col-1]:
+                check=True
+
+        # restore backed up values
+        if enpassant:
+            if color=='b':
+                self.state[fromRow][toCol]='wP'
+            else:
+                self.state[fromRow][toCol]='bP'
+
+        self.state[fromRow][fromCol]=backupFrom
+        self.state[toRow][toCol]=backupTo
+
+        return check
+
 
     def IsInCheck(self,color):
             #check if 'color' is in check
@@ -510,11 +578,20 @@ class ChessBoard:
                 promoted=True
                 promotedCol=col
         validMoves=[]
-        for row in range(8):
-            for col in range(8):
+        if myColor=='b':
+            validMoves.extend(self.GetListOfValidMoves(color, (self.blackKing[0],self.blackKing[1])))
+            for pawn in self.blackPawns:
+                row=pawn[0]
+                col=pawn[1]
                 piece = self.state[row][col]
-                if myColor in piece:
-                    validMoves.extend(self.GetListOfValidMoves(color,(row,col)))
+                validMoves.extend(self.GetListOfValidMoves(color,(row,col)))
+        else:
+            validMoves.extend(self.GetListOfValidMoves(color, (self.whiteKing[0],self.whiteKing[1])))
+            for pawn in self.whitePawns:
+                row=pawn[0]
+                col=pawn[1]
+                piece = self.state[row][col]
+                validMoves.extend(self.GetListOfValidMoves(color,(row,col)))
         if promoted and (startRow,promotedCol) in validMoves:
             canCapture=True
         if len(validMoves)==0:

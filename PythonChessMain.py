@@ -1,3 +1,5 @@
+#!/usr/bin/python2.7
+
 from ChessBoard import *
 from ChessPlayer import ChessPlayer
 from ChessGUI_pygame import ChessGUI_pygame
