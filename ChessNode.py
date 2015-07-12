@@ -1,25 +1,17 @@
-from ChessRules import ChessRules
 from ChessBoard import ChessBoard
 from ChessBoard import complete_copy
 from Heuristic import Heuristic
 
 
 class ChessNode:
-    def __init__(self, state, old_state):
-        self.state = complete_copy(state)
-        self.old_state = complete_copy(old_state)
+    def __init__(self, state, oldstate):
+        self.state = board.state
+        self.oldstate = complete_copy(oldstate)
         self.utility = -1
         self.moveTuple = None
 
-    def GetOldState(self):
-        return self.old_state
-
     def GetState(self):
         return self.state
-
-    def SetState(self, state):
-        self.old_state = complete_copy(state)
-        self.state = complete_copy(state)
 
     def GetUtility(self):
         return self.utility
@@ -32,7 +24,6 @@ class ChessNode:
 
     #return successor nodes
     def Actions(self, player_color, threaded=None, threadIndex=-1, threadTotal=-1):
-        rules = ChessRules()
         board = ChessBoard()
         my_pawns = []
         row_no = 0
@@ -53,16 +44,18 @@ class ChessNode:
         actions = []
         successors = []
         for pawn in my_pawns:
-            moves = rules.GetListOfValidMoves(self.old_state, self.state, player_color, pawn)
+            board.state = self.state
+            board.oldstate = self.oldstate
+            moves = board.GetListOfValidMoves(player_color, pawn)
             moves.insert(0, pawn)
             actions.append(moves)
 
             # creating nodes
             for i in moves[1:]:
-                board.squares = self.state
+                board.state = self.oldstate
                 move_tuple = moves[0], i
                 board.MovePiece(move_tuple)
-                successor = ChessNode(board.squares, self.state)
+                successor = ChessNode(board.state, self.state)
                 successor.SetMoveTuple(move_tuple)
                 Heuristic.HeuristicFunction(successor)
 
