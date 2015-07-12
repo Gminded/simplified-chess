@@ -8,18 +8,52 @@
  http://yakinikuman.wordpress.com/
  """
 
+DEFEAT='defeat'
+DRAW='draw'
+NONE='none'
+
 class ChessRules:
-    def IsCheckmate(self,oldboard,board,color):
-            #returns true if 'color' player is in checkmate
+    def TerminalTest(self, oldboard, board, color):
+        promoted=False #true if the opponent promoted a pawn
+        canCapture=False #true if we can capture it
+        if color=='black':
+            myColor='b'
+            opponentColor='w'
+            startRow=0
+        else:
+            myColor='w'
+            opponentColor='b'
+            startRow=7
+        for col in range(8):
+            if opponentColor+'P' in board[startRow][col]:
+                promoted=True
+                promotedCol=col
+        validMoves=[]
+        for row in range(8):
+            for col in range(8):
+                piece = board[row][col]
+                if myColor in piece:
+                    validMoves.extend(self.GetListOfValidMoves(oldboard, board,color,(row,col)))
+        if promoted and (startRow,promotedCol) in validMoves:
+            canCapture=True
+        if len(validMoves)==0:
+            if IsInCheck(self,board,color):
+                return DEFEAT
+            else:
+                return DRAW
+        if (promoted and not canCapture):
+            return DEFEAT
+        return NONE #if the game did not end yet
+
+
+    def NoPossibleMoves(self,oldboard,board,color):
             #Call GetListOfValidMoves for each piece of current player
             #If there aren't any valid moves for any pieces, then return true
 
             if color == "black":
                     myColor = 'b'
-                    enemyColor = 'w'
             else:
                     myColor = 'w'
-                    enemyColor = 'b'
 
             myColorValidMoves = [];
             for row in range(8):
