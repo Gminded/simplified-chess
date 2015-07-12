@@ -24,10 +24,14 @@ def complete_copy(inList):
 
 class ChessBoard:
     def __init__(self,setupType=0):
-        whiteKing = () # the white king coordinates
-        whitePawns = [] # all of the white pawns coordinates expressed as tuples
-        blackKing = ()
+        whiteKing = [7,4] # the white king coordinates
+        blackKing = [0,4]
+        whitePawns = [] # all of the white pawns coordinates expressed as lists
         blackPawns = []
+        for col in range(0,8):
+            whitePawns.append([1,col])
+            blackPawns.append([6,col])
+
         self.state = [  ['bK','e','e','e','e','e','e','e'],\
                         ['wP','e','wP','e','e','e','e','e'],\
                         ['e','wP','e','e','e','e','e','e'],\
@@ -105,26 +109,52 @@ class ChessBoard:
 
     
     def MovePiece(self,moveTuple):
-            fromSquare_r = moveTuple[0][0]
-            fromSquare_c = moveTuple[0][1]
-            toSquare_r = moveTuple[1][0]
-            toSquare_c = moveTuple[1][1]
+            fromRow = moveTuple[0][0]
+            fromCol = moveTuple[0][1]
+            toRow = moveTuple[1][0]
+            toCol = moveTuple[1][1]
 
             self.oldstate = self.state
             self.state = complete_copy(self.state)
 
-            fromPiece = self.state[fromSquare_r][fromSquare_c]
-            toPiece = self.state[toSquare_r][toSquare_c]
+            fromPiece = self.state[fromRow][fromCol]
+            toPiece = self.state[toRow][toCol]
 
             # en passant
             enpassant = False
-            if 'P' in fromPiece and abs(toSquare_c - fromSquare_c) == 1 and 'e' == self.state[toSquare_r][toSquare_c]:
-                self.state[fromSquare_r][toSquare_c] = 'e'
-                capturedTuple = (fromSquare_r, toSquare_c)
+            if 'P' in fromPiece and abs(toCol - fromCol) == 1 and 'e' == self.state[toRow][toCol]:
+                capturedPiece = self.state[fromRow][toCol]
+                self.state[fromRow][toCol] = 'e'
+                capturedCoords = [fromRow, toCol]
+                if 'b' in capturedPiece:
+                    self.blackPawns.remove(capturedCoords)
+                else:
+                    self.whitePawns.remove(capturedCoords)
                 enpassant = True
 
-            self.state[toSquare_r][toSquare_c] = fromPiece
-            self.state[fromSquare_r][fromSquare_c] = 'e'
+            # capture
+            elif toPiece != 'e':
+                capturedCoords = [toRow, toCol]
+                if 'b' in toPiece:
+                    self.blackPawns.remove(capturedCoords)
+                else:
+                    self.whitePawns.remove(capturedCoords)
+
+            # always update these values
+            self.state[toRow][toCol] = fromPiece
+            self.state[fromRow][fromCol] = 'e'
+            if 'b' in fromPiece:
+                if 'P' in fromPiece:
+                    for i, coords in self.blackPawns:
+                        self.blackPawns[i]=[toRow,toCol]
+                else:
+                    self.blackKing=[toRow,toCol]
+            else:
+                if 'P' in fromPiece:
+                    for i, coords in self.whitePawns:
+                        self.whitePawns[i]=[toRow,toCol]
+                else:
+                    self.whiteKing=[toRow,toCol]
 
             fromPiece_fullString = self.GetFullString(fromPiece)
             toPiece_fullString = self.GetFullString(toPiece)
@@ -132,7 +162,7 @@ class ChessBoard:
             if enpassant:
                     messageString = fromPiece_fullString+ " moves from "+self.ConvertToAlgebraicNotation(moveTuple[0])+\
                                                 " to "+self.ConvertToAlgebraicNotation(moveTuple[1])+' and captures '+\
-                                                self.ConvertToAlgebraicNotation(capturedTuple)+'with en passant!'
+                                                self.ConvertToAlgebraicNotation(capturedCoords)+'with en passant!'
             elif toPiece == 'e':
                     messageString = fromPiece_fullString+ " moves from "+self.ConvertToAlgebraicNotation(moveTuple[0])+\
                                                 " to "+self.ConvertToAlgebraicNotation(moveTuple[1])
