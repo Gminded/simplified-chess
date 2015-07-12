@@ -73,7 +73,7 @@ from ChessGameParams import TkinterGameSetupParams
 
 class PythonChessMain:
     def __init__(self):
-        self.Board = ChessBoard(1)
+        self.Board = ChessBoard(0)
         self.Rules = ChessRules()
 
     def SetUp(self):
