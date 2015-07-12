@@ -68,6 +68,7 @@ from ChessGUI_pygame import ChessGUI_pygame
 from ChessRules import ChessRules
 from ChessAI import ChessAI
 from ChessNode import ChessNode
+from ChessGameParams import TkinterGameSetupParams
 
 
 class PythonChessMain:
@@ -83,6 +84,31 @@ class PythonChessMain:
         # GUI setup
         self.guitype = 'pygame'
         self.Gui = ChessGUI_pygame()
+	GameParams = TkinterGameSetupParams()
+	(player1Name, player1Color, player1Type, player2Name, player2Color, player2Type) = GameParams.GetGameSetupParams()
+        self.player = [0,0]
+        if player1Type == 'human':
+            self.player[0] = ChessPlayer(player1Name,player1Color)
+        elif player1Type == 'randomAI':
+            self.player[0] = ChessAI_random(player1Name,player1Color)
+        elif player1Type == 'defenseAI':
+            self.player[0] = ChessAI_defense(player1Name,player1Color)
+        elif player1Type == 'offenseAI':
+            self.player[0] = ChessAI_offense(player1Name,player1Color)
+                
+        if player2Type == 'human':
+            self.player[1] = ChessPlayer(player2Name,player2Color)
+        elif player2Type == 'randomAI':
+            self.player[1] = ChessAI_random(player2Name,player2Color)
+        elif player2Type == 'defenseAI':
+            self.player[1] = ChessAI_defense(player2Name,player2Color)
+        elif player2Type == 'offenseAI':
+            self.player[1] = ChessAI_offense(player2Name,player2Color)
+                
+        if 'AI' in self.player[0].GetType() and 'AI' in self.player[1].GetType():
+            self.AIvsAI = True
+        else:
+            self.AIvsAI = False
 
     def MainLoop(self):
         currentPlayerIndex = 0
