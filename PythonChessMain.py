@@ -65,7 +65,7 @@
 from ChessBoard import ChessBoard
 from ChessPlayer import ChessPlayer
 from ChessGUI_pygame import ChessGUI_pygame
-from ChessRules import ChessRules
+from ChessRules import *
 from ChessAI import ChessAI
 from ChessNode import ChessNode
 from ChessGameParams import TkinterGameSetupParams
@@ -114,7 +114,7 @@ class PythonChessMain:
         currentPlayerIndex = 0
         turnCount = 0
         currentNode = ChessNode(self.Board.GetState(), self.Board.GetState()) #setup initial node
-        while True:
+        while NONE == self.Rules.TerminalTest(self.Board.oldstate,self.Board.GetState(),self.player[currentPlayerIndex].color):
             realBoard = self.Board
             board = self.Board.GetState()
             currentColor = self.player[currentPlayerIndex].GetColor()
