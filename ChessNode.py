@@ -31,7 +31,7 @@ class ChessNode:
         return self.moveTuple
 
     #return successor nodes
-    def Actions(self, player_color):
+    def Actions(self, player_color, threaded=None, threadIndex=-1, threadTotal=-1):
         rules = ChessRules()
         board = ChessBoard()
         my_pawns = []
@@ -80,4 +80,10 @@ class ChessNode:
                         count += 1
                     if not inserted:
                         successors.append(successor)
-        return successors
+        if threaded:
+            if threadIndex+1 != threadTotal:
+                return successors[ threadIndex*threadTotal : len(successors)/threadTotal * (threadIndex+1) ]
+            else:
+                return successors[ threadIndex*threadTotal :]
+        else:
+            return successors
