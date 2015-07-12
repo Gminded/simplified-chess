@@ -122,6 +122,8 @@ class ChessBoard:
 
             fromPiece = self.state[fromRow][fromCol]
             toPiece = self.state[toRow][toCol]
+            fromCoords = [fromRow, fromCol ]
+            toCoords = [ toRow, toCol]
 
             # en passant
             enpassant = False
