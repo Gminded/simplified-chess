@@ -106,7 +106,8 @@ class ChessBoard:
             toSquare_r = moveTuple[1][0]
             toSquare_c = moveTuple[1][1]
 
-            self.oldstate = complete_copy(self.state)
+            self.oldstate = self.state
+            self.state = complete_copy(self.state)
 
             fromPiece = self.state[fromSquare_r][fromSquare_c]
             toPiece = self.state[toSquare_r][toSquare_c]
@@ -143,15 +144,85 @@ class ChessBoard:
 # ChessRules
 
     def GetListOfValidMoves(self, color,fromTuple):
-            legalDestinationSpaces = []
+        legalDestinationSpaces = []
+        row=fromTuple[0]
+        col=fromTuple[1]
+        piece = self.state[row][col]
+        moves=[]
+        if color=='black':
+            color='b'
+            direction=1
+        else:
+            color='w'
+            direction=-1
+        if color in piece:
+            if 'P' in piece:
+                moves.append((row+direction, col))
+                moves.append((row+direction, col-1))
+                moves.append((row+direction, col+1))
+                moves.append((row+direction*2, col))
+            elif 'K' in piece:
+                for r in [-1,0,1]:
+                    for c in [-1,0,1]:
+                        if not (r==0 and c==0):
+                            moves.append((row+r, col+c))
             for row in range(8):
-                    for col in range(8):
-                            d = (row,col)
-                            if self.IsLegalMove(color,fromTuple,d) and not self.DoesMovePutPlayerInCheck(color,fromTuple,d):
-                                    legalDestinationSpaces.append(d)
-            return legalDestinationSpaces
+                for col in range(8):
+                    d = (row,col)
+                    if self._IsCorrectMove(color,fromTuple,d) and not self.DoesMovePutPlayerInCheck(color,fromTuple,d):
+                        legalDestinationSpaces.append(d)
+        return legalDestinationSpaces
 
-    def IsEnpassantPawn(coords):
+    # Less redundant check for correctness
+    def _IsCorrectMove(self,color,fromTuple,toTuple):
+        fromRow = fromTuple[0]
+        fromCol = fromTuple[1]
+        toRow = toTuple[0]
+        toCol = toTuple[1]
+        fromPiece = self.state[fromRow][fromCol]
+        toPiece = self.state[toRow][toCol]
+        if not (0 <= toRow and toRow <= 7) or\
+           not (0 <= toCol and toCol <= 7):
+               return False
+
+        if 'P' in fromPiece:
+            #Pawn
+            if color == 'b':
+                #en passant
+                if 'b' in fromPiece and fromRow==4 and abs(toCol-fromCol)==1 and 'e'==self.state[toRow][toCol]:
+                    if 'wP' == self.state[fromRow][toCol] and 'e' == self.state[6][toCol] and 'wP' == self.oldstate[6][toCol]:
+                        return True
+                if fromRow == 1 and toRow == fromRow+2 and toCol == fromCol and toPiece == 'e':
+                    #black pawn on starting row can move forward 2 spaces if there is no one directly ahead
+                    if self.IsClearPath(fromTuple,toTuple):
+                        return True
+                if toCol == fromCol and toPiece == 'e':
+                    #moving forward one space
+                    return True
+                if toRow == fromRow+1 and (toCol == fromCol+1 or toCol == fromCol-1) and enemyColor in toPiece:
+                    #attacking
+                    return True
+
+            elif color == 'w':
+                #en passant
+                if 'w' in fromPiece and fromRow==3 and abs(toCol-fromCol)==1 and 'e'==self.state[toRow][toCol]:
+                    if 'bP' == self.state[fromRow][toCol] and 'e' == self.state[1][toCol] and 'bP' == self.oldstate[1][toCol]:
+                        return True
+                if fromRow == 6 and toRow == fromRow-2 and toCol == fromCol and toPiece == 'e':
+                    #white pawn on starting row can move forward 2 spaces if there is no one directly ahead
+                    if self.IsClearPath(fromTuple,toTuple):
+                        return True
+                if toCol == fromCol and toPiece == 'e':
+                    #moving forward one space
+                    return True
+                if toRow == fromRow-1 and (toCol == fromCol+1 or toCol == fromCol-1) and enemyColor in toPiece:
+                    #attacking
+                    return True
+        elif 'K' in fromPiece:
+            return True
+        return False
+
+    def IsEnpassantPawn(self,coords):
         row=coords[0]
         col=coords[1]
         piece=self.state[row][col]

@@ -5,8 +5,8 @@ from Heuristic import Heuristic
 
 class ChessNode:
     def __init__(self, state, oldstate):
-        self.state = board.state
-        self.oldstate = complete_copy(oldstate)
+        self.state = state
+        self.oldstate = oldstate
         self.utility = -1
         self.moveTuple = None
 
