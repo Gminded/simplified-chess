@@ -8,7 +8,6 @@
  http://yakinikuman.wordpress.com/
  """
 import threading
-from ChessRules import ChessRules
 from Heuristic import Heuristic
 
 class ChessAI:
@@ -17,7 +16,6 @@ class ChessAI:
         self.name = name
         self.color = color
         self.type = 'AI'
-        self.Rules = ChessRules()
         self.alpha = -1000
         self.beta = 1000
         self.lock = threading.Lock()
@@ -58,11 +56,21 @@ class ChessAI:
 
     def AlphaBetaSearch(self, alpha=-1000, beta=1000, currentNode=None, maxPlayer=True, depth=0):
         if maxPlayer:
+            playerColor = "black"
+        else:
+           playerColor = "white"
+
+        #terminal test1
+        if depth == 0:
+            Heuristic.HeuristicFunction(currentNode)
+            return currentNode.utility
+
+        if maxPlayer:
             actions = currentNode.Actions("black")
         else:
             actions = currentNode.Actions("white")
 
-        #terminal test
+        #terminal test2
         if depth == 0 or len(actions) == 0:
             Heuristic.HeuristicFunction(currentNode)
             return currentNode.utility

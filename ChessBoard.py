@@ -49,7 +49,10 @@ class ChessBoard:
         self.oldstate = self.state
 
     def GetState(self):
-            return self.state
+        return self.state
+
+    def GetOldState(self):
+        return self.oldstate
             
     def ConvertMoveTupleListToAlgebraicNotation(self,moveTupleList):        
             newTupleList = []
