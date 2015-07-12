@@ -73,7 +73,7 @@ from ChessGameParams import TkinterGameSetupParams
 
 class PythonChessMain:
     def __init__(self):
-        self.Board = ChessBoard(0)
+        self.Board = ChessBoard(1)
         self.Rules = ChessRules()
 
     def SetUp(self):
@@ -136,9 +136,12 @@ class PythonChessMain:
             #END OF PLAY TIME
             currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0
 
-        self.Gui.PrintMessage("CHECKMATE!")
-        winnerIndex = (currentPlayerIndex + 1) % 2
-        self.Gui.PrintMessage(self.player[winnerIndex].GetName() + " (" + self.player[winnerIndex].GetColor() + ") won the game!")
+        termination = self.Rules.TerminalTest(self.Board.oldstate,self.Board.GetState(),self.player[currentPlayerIndex].color)
+        if termination == DEFEAT:
+            winnerIndex = (currentPlayerIndex + 1) % 2
+            self.Gui.PrintMessage(self.player[winnerIndex].GetName() + " (" + self.player[winnerIndex].GetColor() + ") won the game!")
+        else:
+            self.Gui.PrintMessage('The game ends with a draw!')
         self.Gui.EndGame(self.Board.GetState())
 
 

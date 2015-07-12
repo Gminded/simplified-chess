@@ -22,14 +22,14 @@ def complete_copy(inList):
 
 class ChessBoard:
         def __init__(self,setupType=0):
-                self.state = [['e','e','e','e','e','e','e','e'],\
-                                                ['e','e','e','e','e','e','e','e'],\
-                                                ['e','e','e','e','e','e','e','e'],\
-                                                ['e','e','e','e','e','e','e','e'],\
-                                                ['e','e','e','e','e','e','e','e'],\
-                                                ['e','e','e','e','e','e','e','e'],\
-                                                ['e','e','e','e','e','e','e','e'],\
-                                                ['e','e','e','e','e','e','e','e']]
+                self.state = [  ['bK','e','e','e','e','e','e','e'],\
+                                ['wP','e','wP','e','e','e','e','e'],\
+                                ['e','wP','e','e','e','e','e','e'],\
+                                ['wK','e','e','e','e','e','e','e'],\
+                                ['e','e','e','e','e','e','e','e'],\
+                                ['e','e','e','e','e','e','e','e'],\
+                                ['e','e','e','e','e','e','e','e'],\
+                                ['e','e','e','e','e','e','e','e']]
                                                 
                 if setupType == 0:
                         self.state[0] = ['e','e','e','e','bK','e','e','e']
