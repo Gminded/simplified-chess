@@ -24,25 +24,29 @@ def complete_copy(inList):
 
 class ChessBoard:
     def __init__(self,setupType=0):
-            self.state = [  ['bK','e','e','e','e','e','e','e'],\
-                            ['wP','e','wP','e','e','e','e','e'],\
-                            ['e','wP','e','e','e','e','e','e'],\
-                            ['wK','e','e','e','e','e','e','e'],\
-                            ['e','e','e','e','e','e','e','e'],\
-                            ['e','e','e','e','e','e','e','e'],\
-                            ['e','e','e','e','e','e','e','e'],\
-                            ['e','e','e','e','e','e','e','e']]
-                                            
-            if setupType == 0:
-                    self.state[0] = ['e','e','e','e','bK','e','e','e']
-                    self.state[1] = ['bP','bP','bP','bP','bP','bP','bP','bP']
-                    self.state[2] = ['e','e','e','e','e','e','e','e']
-                    self.state[3] = ['e','e','e','e','e','e','e','e']
-                    self.state[4] = ['e','e','e','e','e','e','e','e']
-                    self.state[5] = ['e','e','e','e','e','e','e','e']
-                    self.state[6] = ['wP','wP','wP','wP','wP','wP','wP','wP']
-                    self.state[7] = ['e','e','e','e','wK','e','e','e']
-            self.oldstate = self.state
+        whiteKing = () # the white king coordinates
+        whitePawns = [] # all of the white pawns coordinates expressed as tuples
+        blackKing = ()
+        blackPawns = []
+        self.state = [  ['bK','e','e','e','e','e','e','e'],\
+                        ['wP','e','wP','e','e','e','e','e'],\
+                        ['e','wP','e','e','e','e','e','e'],\
+                        ['wK','e','e','e','e','e','e','e'],\
+                        ['e','e','e','e','e','e','e','e'],\
+                        ['e','e','e','e','e','e','e','e'],\
+                        ['e','e','e','e','e','e','e','e'],\
+                        ['e','e','e','e','e','e','e','e']]
+                                        
+        if setupType == 0:
+                self.state[0] = ['e','e','e','e','bK','e','e','e']
+                self.state[1] = ['bP','bP','bP','bP','bP','bP','bP','bP']
+                self.state[2] = ['e','e','e','e','e','e','e','e']
+                self.state[3] = ['e','e','e','e','e','e','e','e']
+                self.state[4] = ['e','e','e','e','e','e','e','e']
+                self.state[5] = ['e','e','e','e','e','e','e','e']
+                self.state[6] = ['wP','wP','wP','wP','wP','wP','wP','wP']
+                self.state[7] = ['e','e','e','e','wK','e','e','e']
+        self.oldstate = self.state
 
     def GetState(self):
             return self.state
