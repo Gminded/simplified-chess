@@ -273,6 +273,9 @@ class ChessRules:
             else:
                     return self.IsClearPath(board,newTuple,toTuple)
 
+    # color is the color of the current player. The function returns DEFEAT if the current player (color)
+    # is defeated in this state. This means that in this state the other player has achieved victory.
+    # 
     def TerminalTest(self, oldboard, board, color):
         promoted=False #true if the opponent promoted a pawn
         canCapture=False #true if we can capture it
