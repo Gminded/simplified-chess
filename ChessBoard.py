@@ -10,6 +10,7 @@
  """
  
 import string
+from ChessRules import ChessRules
 
 
 # To make a complete copy of the previous state.
@@ -108,13 +109,24 @@ class ChessBoard:
                 fromPiece = self.state[fromSquare_r][fromSquare_c]
                 toPiece = self.state[toSquare_r][toSquare_c]
 
+                # en passant
+                enpassant = False
+                if 'P' in fromPiece and abs(toSquare_c - fromSquare_c) == 1 and 'e' == self.state[toSquare_r][toSquare_c]:
+                    self.state[fromSquare_r][toSquare_c] = 'e'
+                    capturedTuple = (fromSquare_r, toSquare_c)
+                    enpassant = True
+
                 self.state[toSquare_r][toSquare_c] = fromPiece
                 self.state[fromSquare_r][fromSquare_c] = 'e'
 
                 fromPiece_fullString = self.GetFullString(fromPiece)
                 toPiece_fullString = self.GetFullString(toPiece)
                 
-                if toPiece == 'e':
+                if enpassant:
+                        messageString = fromPiece_fullString+ " moves from "+self.ConvertToAlgebraicNotation(moveTuple[0])+\
+                                                    " to "+self.ConvertToAlgebraicNotation(moveTuple[1])+' and captures '+\
+                                                    self.ConvertToAlgebraicNotation(capturedTuple)+'with en passant!'
+                elif toPiece == 'e':
                         messageString = fromPiece_fullString+ " moves from "+self.ConvertToAlgebraicNotation(moveTuple[0])+\
                                                     " to "+self.ConvertToAlgebraicNotation(moveTuple[1])
                 else:

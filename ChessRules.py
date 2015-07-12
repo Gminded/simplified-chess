@@ -71,104 +71,112 @@ class ChessRules:
         return enpassant
 
     def IsLegalMove(self, oldboard, board,color,fromTuple,toTuple):
-            #print "IsLegalMove with fromTuple:",fromTuple,"and toTuple:",toTuple,"color = ",color
-            fromSquare_r = fromTuple[0]
-            fromSquare_c = fromTuple[1]
-            toSquare_r = toTuple[0]
-            toSquare_c = toTuple[1]
-            fromPiece = board[fromSquare_r][fromSquare_c]
-            toPiece = board[toSquare_r][toSquare_c]
+        #print "IsLegalMove with fromTuple:",fromTuple,"and toTuple:",toTuple,"color = ",color
+        fromRow = fromTuple[0]
+        fromCol = fromTuple[1]
+        toRow = toTuple[0]
+        toCol = toTuple[1]
+        fromPiece = board[fromRow][fromCol]
+        toPiece = board[toRow][toCol]
 
+        if color == "black":
+                enemyColor = 'w'
+        if color == "white":
+                enemyColor = 'b'
+
+        if fromTuple == toTuple:
+                return False
+
+        if "P" in fromPiece:
+            #Pawn
             if color == "black":
-                    enemyColor = 'w'
-            if color == "white":
-                    enemyColor = 'b'
+                #en passant
+                if 'b' in fromPiece and fromRow==4 and toRow==5 and abs(toCol-fromCol)==1 and 'e'==board[toRow][toCol]:
+                    if 'wP' == board[fromRow][toCol] and 'e' == board[6][toCol] and 'wP' == oldboard[6][toCol]:
+                        return True
+                if toRow == fromRow+1 and toCol == fromCol and toPiece == 'e':
+                        #moving forward one space
+                        return True
+                if fromRow == 1 and toRow == fromRow+2 and toCol == fromCol and toPiece == 'e':
+                        #black pawn on starting row can move forward 2 spaces if there is no one directly ahead
+                        if self.IsClearPath(board,fromTuple,toTuple):
+                                return True
+                if toRow == fromRow+1 and (toCol == fromCol+1 or toCol == fromCol-1) and enemyColor in toPiece:
+                        #attacking
+                        return True
 
-            if fromTuple == toTuple:
-                    return False
+            elif color == "white":
+                #en passant
+                if 'w' in fromPiece and fromRow==3 and toRow==2 and abs(toCol-fromCol)==1 and 'e'==board[toRow][toCol]:
+                    if 'bP' == board[fromRow][toCol] and 'e' == board[1][toCol] and 'bP' == oldboard[1][toCol]:
+                        return True
+                if toRow == fromRow-1 and toCol == fromCol and toPiece == 'e':
+                        #moving forward one space
+                        return True
+                if fromRow == 6 and toRow == fromRow-2 and toCol == fromCol and toPiece == 'e':
+                        #black pawn on starting row can move forward 2 spaces if there is no one directly ahead
+                        if self.IsClearPath(board,fromTuple,toTuple):
+                                return True
+                if toRow == fromRow-1 and (toCol == fromCol+1 or toCol == fromCol-1) and enemyColor in toPiece:
+                        #attacking
+                        return True
 
-            if "P" in fromPiece:
-                    #Pawn
-                    if color == "black":
-                            if toSquare_r == fromSquare_r+1 and toSquare_c == fromSquare_c and toPiece == 'e':
-                                    #moving forward one space
-                                    return True
-                            if fromSquare_r == 1 and toSquare_r == fromSquare_r+2 and toSquare_c == fromSquare_c and toPiece == 'e':
-                                    #black pawn on starting row can move forward 2 spaces if there is no one directly ahead
-                                    if self.IsClearPath(board,fromTuple,toTuple):
-                                            return True
-                            if toSquare_r == fromSquare_r+1 and (toSquare_c == fromSquare_c+1 or toSquare_c == fromSquare_c-1) and enemyColor in toPiece:
-                                    #attacking
-                                    return True
+        elif "R" in fromPiece:
+                #Rook
+                if (toRow == fromRow or toCol == fromCol) and (toPiece == 'e' or enemyColor in toPiece):
+                        if self.IsClearPath(board,fromTuple,toTuple):
+                                return True
 
-                    elif color == "white":
-                            if toSquare_r == fromSquare_r-1 and toSquare_c == fromSquare_c and toPiece == 'e':
-                                    #moving forward one space
-                                    return True
-                            if fromSquare_r == 6 and toSquare_r == fromSquare_r-2 and toSquare_c == fromSquare_c and toPiece == 'e':
-                                    #black pawn on starting row can move forward 2 spaces if there is no one directly ahead
-                                    if self.IsClearPath(board,fromTuple,toTuple):
-                                            return True
-                            if toSquare_r == fromSquare_r-1 and (toSquare_c == fromSquare_c+1 or toSquare_c == fromSquare_c-1) and enemyColor in toPiece:
-                                    #attacking
-                                    return True
+        elif "T" in fromPiece:
+                #Knight
+                col_diff = toCol - fromCol
+                row_diff = toRow - fromRow
+                if toPiece == 'e' or enemyColor in toPiece:
+                        if col_diff == 1 and row_diff == -2:
+                                return True
+                        if col_diff == 2 and row_diff == -1:
+                                return True
+                        if col_diff == 2 and row_diff == 1:
+                                return True
+                        if col_diff == 1 and row_diff == 2:
+                                return True
+                        if col_diff == -1 and row_diff == 2:
+                                return True
+                        if col_diff == -2 and row_diff == 1:
+                                return True
+                        if col_diff == -2 and row_diff == -1:
+                                return True
+                        if col_diff == -1 and row_diff == -2:
+                                return True
 
-            elif "R" in fromPiece:
-                    #Rook
-                    if (toSquare_r == fromSquare_r or toSquare_c == fromSquare_c) and (toPiece == 'e' or enemyColor in toPiece):
-                            if self.IsClearPath(board,fromTuple,toTuple):
-                                    return True
+        elif "B" in fromPiece:
+                #Bishop
+                if ( abs(toRow - fromRow) == abs(toCol - fromCol) ) and (toPiece == 'e' or enemyColor in toPiece):
+                        if self.IsClearPath(board,fromTuple,toTuple):
+                                return True
 
-            elif "T" in fromPiece:
-                    #Knight
-                    col_diff = toSquare_c - fromSquare_c
-                    row_diff = toSquare_r - fromSquare_r
-                    if toPiece == 'e' or enemyColor in toPiece:
-                            if col_diff == 1 and row_diff == -2:
-                                    return True
-                            if col_diff == 2 and row_diff == -1:
-                                    return True
-                            if col_diff == 2 and row_diff == 1:
-                                    return True
-                            if col_diff == 1 and row_diff == 2:
-                                    return True
-                            if col_diff == -1 and row_diff == 2:
-                                    return True
-                            if col_diff == -2 and row_diff == 1:
-                                    return True
-                            if col_diff == -2 and row_diff == -1:
-                                    return True
-                            if col_diff == -1 and row_diff == -2:
-                                    return True
+        elif "Q" in fromPiece:
+                #Queen
+                if (toRow == fromRow or toCol == fromCol) and (toPiece == 'e' or enemyColor in toPiece):
+                        if self.IsClearPath(board,fromTuple,toTuple):
+                                return True
+                if ( abs(toRow - fromRow) == abs(toCol - fromCol) ) and (toPiece == 'e' or enemyColor in toPiece):
+                        if self.IsClearPath(board,fromTuple,toTuple):
+                                return True
 
-            elif "B" in fromPiece:
-                    #Bishop
-                    if ( abs(toSquare_r - fromSquare_r) == abs(toSquare_c - fromSquare_c) ) and (toPiece == 'e' or enemyColor in toPiece):
-                            if self.IsClearPath(board,fromTuple,toTuple):
-                                    return True
+        elif "K" in fromPiece:
+                #King
+                col_diff = toCol - fromCol
+                row_diff = toRow - fromRow
+                if toPiece == 'e' or enemyColor in toPiece:
+                        if abs(col_diff) == 1 and abs(row_diff) == 0:
+                                return True
+                        if abs(col_diff) == 0 and abs(row_diff) == 1:
+                                return True
+                        if abs(col_diff) == 1 and abs(row_diff) == 1:
+                                return True
 
-            elif "Q" in fromPiece:
-                    #Queen
-                    if (toSquare_r == fromSquare_r or toSquare_c == fromSquare_c) and (toPiece == 'e' or enemyColor in toPiece):
-                            if self.IsClearPath(board,fromTuple,toTuple):
-                                    return True
-                    if ( abs(toSquare_r - fromSquare_r) == abs(toSquare_c - fromSquare_c) ) and (toPiece == 'e' or enemyColor in toPiece):
-                            if self.IsClearPath(board,fromTuple,toTuple):
-                                    return True
-
-            elif "K" in fromPiece:
-                    #King
-                    col_diff = toSquare_c - fromSquare_c
-                    row_diff = toSquare_r - fromSquare_r
-                    if toPiece == 'e' or enemyColor in toPiece:
-                            if abs(col_diff) == 1 and abs(row_diff) == 0:
-                                    return True
-                            if abs(col_diff) == 0 and abs(row_diff) == 1:
-                                    return True
-                            if abs(col_diff) == 1 and abs(row_diff) == 1:
-                                    return True
-
-            return False #if none of the other "True"s are hit above
+        return False #if none of the other "True"s are hit above
 
     def DoesMovePutPlayerInCheck(self,board,color,fromTuple,toTuple):
             #makes a hypothetical move; returns True if it puts current player into check
