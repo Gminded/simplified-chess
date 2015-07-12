@@ -88,7 +88,6 @@ class ChessAI:
 
     def storeAlphaBetaThreaded(self, data, threadIndex, currentNode, depth, threadTotal):
         data[threadIndex] = self.AlphaBetaSearchThreaded( currentNode=currentNode, depth=depth, threaded=True, threadTotal=threadTotal, threadIndex=threadIndex)
-        print "thread done"
 
     def AlphaBetaSearchThreaded(self, currentNode=None, maxPlayer=True, depth=0, threaded=True, threadTotal=1, threadIndex=-1):
         if maxPlayer:
