@@ -4,21 +4,26 @@ from Heuristic import Heuristic
 
 
 class ChessNode:
-    def __init__(self, oldstate, state):
-        self.state = state
-        self.oldstate = oldstate
+    def __init__(self, board):
+        self.board = board
         self.utility = -1
         self.moveTuple = None
 
     def GetState(self):
-        return self.state
+        return self.board.GetState()
 
-    def SetState(self,oldstate,state):
-        self.state = complete_copy(state)
-        self.oldstate = complete_copy(oldstate)
+    def GetOldState(self):
+        return self.board.GetOldState()
+
+    def SetState(self, board):
+        self.state = complete_copy( board.GetState() )
+        self.oldstate = complete_copy( board.GetOldState() )
 
     def GetUtility(self):
         return self.utility
+
+    def SetUtility(self, utility):
+        self.utility = utility
 
     def SetMoveTuple(self, tuple):
         self.moveTuple = tuple
@@ -28,38 +33,28 @@ class ChessNode:
 
     #return successor nodes
     def Actions(self, player_color, threaded=None, threadIndex=-1, threadTotal=-1):
-        board = ChessBoard()
-        my_pawns = []
-        row_no = 0
-        col_no = 0
-        for row in self.GetState():
-            for column in row:
-                if column[0:1] == player_color[0:1]:
-                    my_pawns.append((row_no, col_no))
-                col_no += 1
-            # advance row and clear column number
-            row_no += 1
-            col_no = 0
+        if player_color == "white":
+            my_pieces = self.board.whitePawns
+            my_pieces.append(self.board.whiteKing)
+        else:
+            my_pieces = self.board.blackPawns
+            my_pieces.append(self.board.whiteKing)
 
-        # now we have the list of pawns of the current player
         # Format of actions
         # [ [ (current_pawn_position), (possible_move), (possible_move) ], [ (current_pawn_position), (possible_move) ], ... ]
         # creating nodes and move ordering based on the (approximated) utility value
         actions = []
         successors = []
-        for pawn in my_pawns:
-            board.state = self.state
-            board.oldstate = self.oldstate
-            moves = board.GetListOfValidMoves(player_color, pawn)
-            moves.insert(0, pawn)
+        for piece in my_pieces:
+            moves = self.board.GetListOfValidMoves(player_color, piece)
+            moves.insert(0, piece)
             actions.append(moves)
 
             # creating nodes
             for i in moves[1:]:
-                board.state = self.state
                 move_tuple = moves[0], i
-                board.MovePiece(move_tuple)
-                successor = ChessNode(board.oldstate, board.state)
+                self.board.MovePiece(move_tuple)
+                successor = ChessNode(self.board)
                 successor.SetMoveTuple(move_tuple)
                 Heuristic.HeuristicFunction(successor)
 

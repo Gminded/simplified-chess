@@ -1,22 +1,31 @@
-from ChessRules import ChessRules
-
 class Heuristic:
 
     @staticmethod
+    def HeuristicFunction(node, playerColor):
+        node.SetUtility(1)
+
+    @staticmethod
     def ShannonHeuristic(node, playerColor):
-        rules = ChessRules()
+        #weights
+        winWeigth = 200
+        distanceWeight = 50
+        enpassantWeight = 5
+        pawnWeight = 5
+        blockedPawnsWeight = 2
+        movesWeight = 1
 
         #Heuristic values
         playerEnpassant = 0
         adversaryEnpassant = 0
-        promotion = 0
-        checkMate = 0
-        playerKing = None
-        adversaryKing = None
+        score = 0
         playerPawns = []
         adversaryPawns = []
         playerMoves = 0
         adversaryMoves = 0
+        blockedPlayerPawns = 0
+        blockedAdversaryPawns = 0
+        playerMinDistance = 10
+        adversaryMinDistance = 10
 
         #board state
         board = node.GetState()
