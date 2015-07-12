@@ -34,9 +34,7 @@ class TkinterGameSetupParams:
 		
 		self.tk_player1Type = StringVar()
 		Radiobutton(self.frame, text="Human",variable=self.tk_player1Type,value="human").grid(row=2,column=2)
-		Radiobutton(self.frame, text="Random AI",variable=self.tk_player1Type,value="randomAI").grid(row=2,column=3)
-		Radiobutton(self.frame, text="Defense AI",variable=self.tk_player1Type,value="defenseAI").grid(row=2,column=4)
-		Radiobutton(self.frame, text="Offense AI",variable=self.tk_player1Type,value="offenseAI").grid(row=2,column=5)
+		Radiobutton(self.frame, text="AI",variable=self.tk_player1Type,value="AI").grid(row=2,column=3)
 		self.tk_player1Type.set("human")
 			
 		
@@ -47,10 +45,8 @@ class TkinterGameSetupParams:
 		
 		self.tk_player2Type = StringVar()
 		Radiobutton(self.frame, text="Human",variable=self.tk_player2Type,value="human").grid(row=3,column=2)
-		Radiobutton(self.frame, text="Random AI",variable=self.tk_player2Type,value="randomAI").grid(row=3,column=3)
-		Radiobutton(self.frame, text="Defense AI",variable=self.tk_player2Type,value="defenseAI").grid(row=3,column=4)
-		Radiobutton(self.frame, text="Offense AI",variable=self.tk_player2Type,value="offenseAI").grid(row=3,column=5)
-		self.tk_player2Type.set("defenseAI")
+		Radiobutton(self.frame, text="AI",variable=self.tk_player2Type,value="AI").grid(row=3,column=3)
+		self.tk_player2Type.set("AI")
 		
 
 		b = Button(self.frame, text="Start the Game!", command=self.ok)

@@ -87,21 +87,13 @@ class PythonChessMain:
         self.player = [0,0]
         if player1Type == 'human':
             self.player[0] = ChessPlayer(player1Name,player1Color)
-        elif player1Type == 'randomAI':
-            self.player[0] = ChessAI_random(player1Name,player1Color)
-        elif player1Type == 'defenseAI':
-            self.player[0] = ChessAI_defense(player1Name,player1Color)
-        elif player1Type == 'offenseAI':
-            self.player[0] = ChessAI_offense(player1Name,player1Color)
+        elif player1Type == 'AI':
+            self.player[0] = ChessAI(player1Name,player1Color)
                 
         if player2Type == 'human':
             self.player[1] = ChessPlayer(player2Name,player2Color)
-        elif player2Type == 'randomAI':
-            self.player[1] = ChessAI_random(player2Name,player2Color)
-        elif player2Type == 'defenseAI':
-            self.player[1] = ChessAI_defense(player2Name,player2Color)
-        elif player2Type == 'offenseAI':
-            self.player[1] = ChessAI_offense(player2Name,player2Color)
+        elif player2Type == 'AI':
+            self.player[1] = ChessAI(player2Name,player2Color)
                 
         if 'AI' in self.player[0].GetType() and 'AI' in self.player[1].GetType():
             self.AIvsAI = True
