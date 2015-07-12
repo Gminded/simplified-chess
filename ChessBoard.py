@@ -116,6 +116,8 @@ class ChessBoard:
             fromCol = moveTuple[0][1]
             toRow = moveTuple[1][0]
             toCol = moveTuple[1][1]
+            fromCoords=[fromRow,fromCol]
+            toCoords = [fromRow, toCol]
 
             self.oldstate = self.state
             self.state = complete_copy(self.state)
@@ -128,20 +130,18 @@ class ChessBoard:
             if 'P' in fromPiece and abs(toCol - fromCol) == 1 and 'e' == self.state[toRow][toCol]:
                 capturedPiece = self.state[fromRow][toCol]
                 self.state[fromRow][toCol] = 'e'
-                capturedCoords = [fromRow, toCol]
                 if 'b' in capturedPiece:
-                    self.blackPawns.remove(capturedCoords)
+                    self.blackPawns.remove(toCoords)
                 else:
-                    self.whitePawns.remove(capturedCoords)
+                    self.whitePawns.remove(toCoords)
                 enpassant = True
 
             # capture
             elif toPiece != 'e':
-                capturedCoords = [toRow, toCol]
                 if 'b' in toPiece:
-                    self.blackPawns.remove(capturedCoords)
+                    self.blackPawns.remove(toCoords)
                 else:
-                    self.whitePawns.remove(capturedCoords)
+                    self.whitePawns.remove(toCoords)
 
             # always update these values
             self.state[toRow][toCol] = fromPiece
