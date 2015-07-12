@@ -96,11 +96,11 @@ class PythonChessMain:
             self.Gui.PrintMessage("-----%s-----" % baseMsg)
             self.Gui.Draw(board)
             # hardcoded so that player 1 is always white
-            if currentColor == 'w':
+            if currentColor == 'white':
                 turnCount = turnCount + 1
             #PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
-                moveTuple = self.player[currentPlayerIndex].GetMove(currentNode, currentColor)
+                moveTuple = self.player[currentPlayerIndex].GetMove(currentNode)
             else:
                 moveTuple = self.Gui.GetPlayerInput(realBoard,currentColor)
 

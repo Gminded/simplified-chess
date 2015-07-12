@@ -9,6 +9,7 @@ class ChessNode:
         self.state = complete_copy(state)
         self.old_state = complete_copy(old_state)
         self.utility = -1
+        self.moveTuple = None
 
     def GetOldState(self):
         return self.old_state
@@ -23,6 +24,12 @@ class ChessNode:
     def GetUtility(self):
         return self.utility
 
+    def SetMoveTuple(self, tuple):
+        self.moveTuple = tuple
+
+    def GetMoveTuple(self):
+        return self.moveTuple
+
     #return successor nodes
     def Actions(self, player_color):
         rules = ChessRules()
@@ -30,7 +37,7 @@ class ChessNode:
         my_pawns = []
         row_no = 0
         col_no = 0
-        for row in self.state:
+        for row in self.GetState():
             for column in row:
                 if column[0:1] == player_color[0:1]:
                     my_pawns.append((row_no, col_no))
@@ -55,7 +62,8 @@ class ChessNode:
                 board.squares = self.state
                 move_tuple = moves[0], i
                 board.MovePiece(move_tuple)
-                successor = ChessNode(board, self.state)
+                successor = ChessNode(board.squares, self.state)
+                successor.SetMoveTuple(move_tuple)
                 Heuristic.HeuristicFunction(successor)
 
                 #ordering (descending)

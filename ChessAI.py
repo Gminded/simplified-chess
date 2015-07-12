@@ -9,6 +9,7 @@
  """
 
 from ChessRules import ChessRules
+from Heuristic import Heuristic
 
 class ChessAI:
     def __init__(self, name, color):
@@ -27,8 +28,45 @@ class ChessAI:
     def GetType(self):
         return self.type
 
-    def GetMove(self, currentNode, currentColor):
-        pass
+    def GetMove(self, currentNode):
+        actions = currentNode.Actions("black")
+        bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=4)
+        bestMoveTuple = None
 
-    def AlphaBetaSearch(self, Alpha=-1000, Beta=1000, currentNode=None, MaxPlayer=True, depth=0, limit=2):
-        pass
+        #get the best move tuple
+        for i in actions:
+            if i.utility == bestMoveUtility:
+                bestMoveTuple = i.GetMoveTuple()
+                break
+        return bestMoveTuple
+
+
+    def AlphaBetaSearch(self, alpha=-1000, beta=1000, currentNode=None, maxPlayer=True, depth=0):
+        if maxPlayer:
+            actions = currentNode.Actions("black")
+        else:
+            actions = currentNode.Actions("white")
+
+        #terminal test
+        if depth == 0 or len(actions) == 0:
+            Heuristic.HeuristicFunction(currentNode)
+            return currentNode.utility
+
+        if maxPlayer:
+            v = -1000
+            for node in actions:
+                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 ) )
+                if v >= beta:
+                    return beta
+                if v > alpha:
+                    alpha = v
+            return alpha
+        else:
+            v = 1000
+            for node in actions:
+                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1 ) )
+                if v <= alpha:
+                    return alpha
+                if v < beta:
+                    beta = v
+            return beta
