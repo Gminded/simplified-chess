@@ -24,13 +24,13 @@ def complete_copy(inList):
 
 class ChessBoard:
     def __init__(self,setupType=0):
-        whiteKing = [7,4] # the white king coordinates
-        blackKing = [0,4]
-        whitePawns = [] # all of the white pawns coordinates expressed as lists
-        blackPawns = []
+        self.whiteKing = [7,4] # the white king coordinates
+        self.blackKing = [0,4]
+        self.whitePawns = [] # all of the white pawns coordinates expressed as lists
+        self.blackPawns = []
         for col in range(0,8):
-            whitePawns.append([1,col])
-            blackPawns.append([6,col])
+            self.whitePawns.append([1,col])
+            self.blackPawns.append([6,col])
 
         self.state = [  ['bK','e','e','e','e','e','e','e'],\
                         ['wP','e','wP','e','e','e','e','e'],\

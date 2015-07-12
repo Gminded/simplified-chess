@@ -31,28 +31,13 @@ class Heuristic:
         board = node.GetState()
         oldboard = node.GetOldState()
 
-        #checking possible states
-        if playerColor == "b":
-            adversaryColor = "w"
+        #my pieces
+        if playerColor == "black":
+            playerPawns = node.board.blackPawns
+            adversaryPawns = node.board.whitePawns
         else:
-            adversaryColor = "b"
-        row_no = 0
-        col_no = 0
-        for row in board:
-            for column in row:
-                if column == playerColor+"P":
-                    playerPawns.append( (row_no, col_no) )
-                elif column == playerColor+"K":
-                    playerKing = ( row_no, col_no )
-                elif column == adversaryColor+"P":
-                    adversaryPawns.append( (row_no, col_no) )
-                elif column == adversaryColor+"K":
-                    adversaryKing = ( row_no, col_no )
-
-                col_no += 1
-            # advance row and clear column number
-            row_no += 1
-            col_no = 0
+            playerPawns = node.board.whitePawns
+            adversaryPawns = node.board.blackPawns
 
         #Checking enpassant
         for pawn in playerPawns:
@@ -63,11 +48,3 @@ class Heuristic:
                 adversaryEnpassant += 1
 
         #Checking
-
-
-import ChessBoard
-import ChessNode
-if __name__=="__main__":
-    board = ChessBoard.ChessBoard()
-    node = ChessNode.ChessNode(board.GetState(), board.GetState())
-    Heuristic.ShannonHeuristic(node, "b")
