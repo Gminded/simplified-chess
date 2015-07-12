@@ -29,8 +29,8 @@ class ChessBoard:
         self.whitePawns = [] # all of the white pawns coordinates expressed as lists
         self.blackPawns = []
         for col in range(0,8):
-            self.whitePawns.append([1,col])
-            self.blackPawns.append([6,col])
+            self.whitePawns.append([6,col])
+            self.blackPawns.append([1,col])
 
         self.state = [  ['bK','e','e','e','e','e','e','e'],\
                         ['wP','e','wP','e','e','e','e','e'],\
@@ -124,6 +124,8 @@ class ChessBoard:
 
             fromPiece = self.state[fromRow][fromCol]
             toPiece = self.state[toRow][toCol]
+            fromCoords = [fromRow, fromCol ]
+            toCoords = [ toRow, toCol]
 
             # en passant
             enpassant = False
