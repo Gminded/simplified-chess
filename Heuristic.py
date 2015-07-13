@@ -22,6 +22,7 @@ class Heuristic:
         pawnWeight = 20
         blockedPawnsWeight = 5
         movesWeight = 1
+        clearSightWeight = 50
 
         #Heuristic values
         playerEnpassant = 0
@@ -38,15 +39,14 @@ class Heuristic:
         playerAvgDistance = 0
         adversaryAvgDistance = 0
         playerPawnsEndangered = 0
-        adversaryPawnsEndangered = 0
+        playerPawnsClearSight = 0
+        adversaryPawnsClearSight = 0
 
         #board state
         board = node.GetState()
         oldboard = node.GetOldState()
 
         #my pieces
-
-        direction = 1
         playerColor = "black"
         adversaryColor = "white"
         playerPawns = node.board.blackPawns
@@ -62,6 +62,7 @@ class Heuristic:
         playerMoves = node.LegalMoves(playerColor)
         adversaryMoves = node.LegalMoves(adversaryMoves)
 
+        direction = 1
         #Two loops for counting player and adversary stuff
         for pawn in playerPawns:
             pawnRow = pawn[0]
@@ -72,12 +73,22 @@ class Heuristic:
                 playerEnpassant += 1
 
             #counting number of pawns which can be captured during the next turn
-            if node.board.state[ pawnRow + 1 ][ pawnCol + 1 ] != "e" or node.board.state[ pawnRow + 1 ][ pawnCol - 1 ] != "e":
+            if pawnRow + 1 < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + 1 ][ pawnCol + 1 ] != "e":
+                playerPawnsEndangered += 1
+            if pawnRow + 1 < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + 1 ][ pawnCol - 1 ] != "e":
                 playerPawnsEndangered += 1
 
             #counting number of blocked pawns
-            elif node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
+            if pawnRow + direction > 7 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
                 blockedPlayerPawns+= 1
+
+            #number of pawns which have a clear sight to the end of the board
+            for pos in range(pawnRow + direction, 8):
+                if node.board.state[ pos ][pawnCol] != "e":
+                    break
+                else:
+                    if pos == 7:
+                        playerPawnsClearSight +=1
 
             #counting minDistance from the other end of the board
             distance = 7 - pawnRow
@@ -86,6 +97,7 @@ class Heuristic:
                 playerMinDistance = distance
         playerAvgDistance = float(playerAvgDistance) / len(playerPawns)
 
+        direction = -1
         for pawn in adversaryPawns:
             pawnRow = pawn[0]
             pawnCol = pawn[1]
@@ -94,13 +106,17 @@ class Heuristic:
             if node.board.IsEnpassantPawn(pawn):
                 adversaryEnpassant += 1
 
-            #counting number of pawns which can be captured during the next turn
-            if node.board.state[ pawnRow + 1 ][ pawnCol + 1 ] != "e" or node.board.state[ pawnRow + 1 ][ pawnCol - 1 ] != "e":
-                adversaryPawnsEndangered += 1
-
             #counting number of blocked pawns
-            elif node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
+            if pawnRow + direction < 0 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
                 blockedAdversaryPawns+= 1
+
+            #number of pawns which have a clear sight to the end of the board
+            for pos in range(pawnRow + direction, direction, direction):
+                if node.board.state[ pos ][pawnCol] != "e":
+                    break
+                else:
+                    if pos == 7:
+                        adversaryPawnsClearSight +=1
 
             #counting minDistance from the other end of the board
             distance = pawnRow
@@ -115,5 +131,6 @@ class Heuristic:
                          enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
-                         movesWeight*( playerMoves - adversaryMoves ) + endangeredPawnsWeight*( adversaryPawnsEndangered - playerPawnsEndangered ) )
+                         movesWeight*( playerMoves - adversaryMoves ) - endangeredPawnsWeight*(  playerPawnsEndangered ) +
+                         clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ))
         table.insertUtility(node.board, node.utility)
