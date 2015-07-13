@@ -101,3 +101,4 @@ class Heuristic:
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
                          movesWeight*( playerMoves - adversaryMoves ) )
+        table.insertUtility(node.board, node.utility)
