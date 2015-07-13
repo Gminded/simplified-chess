@@ -1,13 +1,5 @@
-#! /usr/bin/env python
-"""
- Project: Python Chess
- File name: ChessAI.py
- Description:  Contains the AI classes.
-	
- Copyright (C) 2009 Steve Osborne, srosborne (at) gmail.com
- http://yakinikuman.wordpress.com/
- """
-import threading
+#! /usr/bin/env python2.7
+
 from Heuristic import Heuristic
 from ZobristHash import ZobristHash
 
@@ -29,7 +21,7 @@ class ChessAI:
         return self.type
 
     def GetMove(self, currentNode, depth):
-        actions = currentNode.Actions("black")
+        actions = currentNode.Actions("black", self.table)
         bestMoveTuple = None
 
         bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
@@ -54,9 +46,9 @@ class ChessAI:
 
         if actions == None:
             if maxPlayer:
-                actions = currentNode.Actions("black")
+                actions = currentNode.Actions("black", self.table)
             else:
-                actions = currentNode.Actions("white")
+                actions = currentNode.Actions("white", self.table)
 
         #terminal test2
         if len(actions) == 0:

@@ -51,7 +51,7 @@ class ChessNode:
 
 
     #return successor nodes
-    def Actions(self, player_color):
+    def Actions(self, player_color, table):
         if player_color == "white":
             my_pieces = copy.copy( self.board.whitePawns )
             my_pieces.append(self.board.whiteKing)
@@ -75,7 +75,7 @@ class ChessNode:
                 successor = ChessNode(self.board)
                 successor.SetMoveTuple(move_tuple)
                 successor.board.MovePiece(move_tuple)
-                Heuristic.ShannonHeuristic(successor, player_color)
+                Heuristic.ShannonHeuristic(successor, player_color, table)
 
                 #ordering (descending)
                 count = 0
