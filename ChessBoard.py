@@ -18,6 +18,8 @@ class ChessBoard:
         self.blackKing = [0,4]
         self.whitePawns = [] # all of the white pawns coordinates expressed as lists
         self.blackPawns = []
+        self.whiteMoves = {}
+        self.blackMoves = {}
         for col in range(0,8):
             self.whitePawns.append([6,col])
             self.blackPawns.append([1,col])
@@ -112,6 +114,11 @@ class ChessBoard:
             self.oldstate = self.state
             self.state = complete_copy(self.state)
 
+            if 'b' in self.state[fromRow][fromCol]:
+                self.blackMoves={}
+            else:
+                self.whiteMoves={}
+
             fromPiece = self.state[fromRow][fromCol]
             toPiece = self.state[toRow][toCol]
             fromCoords = [fromRow, fromCol ]
@@ -172,8 +179,23 @@ class ChessBoard:
             return messageString
 
 # ChessRules
-
     def GetListOfValidMoves(self, color,fromTuple):
+        if color=='black':
+            king=self.blackKing
+            pawns=self.blackPawns
+            moves=self.blackMoves
+        else:
+            king=self.whiteKing
+            pawns=self.whitePawns
+            moves=self.whiteMoves
+        row=fromTuple[0]
+        col=fromTuple[1]
+        key=row*8+col
+        if not key in moves:
+            moves[key] = self._GetListOfValidMoves(color,fromTuple)
+        return moves[key]
+
+    def _GetListOfValidMoves(self, color,fromTuple):
         legalDestinationSpaces = []
         row=fromTuple[0]
         col=fromTuple[1]
