@@ -36,10 +36,12 @@ class ZobristHash:
                     h = h ^ self.zobristTable[row*8+col][piece]
         return h
 
-    def insert(self, key, tuple):
-        self.hashTableSize[key] = tuple
+    def insertUtility(self, board, utility):
+        key = self.hash(board)
+        self.hashTableSize[key] = utility
 
-    def lookup(self, key):
+    def lookup(self, board):
+        key = self.hash(board)
         if key in self.hashTable:
             return self.hashTable[key]
         else:
