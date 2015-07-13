@@ -40,7 +40,7 @@ class ZobristHash:
         self.hashTableSize[key] = tuple
 
     def lookup(self, key):
-        if key in self.hashTable
+        if key in self.hashTable:
             return self.hashTable[key]
         else:
             return None
