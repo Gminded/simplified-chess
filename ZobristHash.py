@@ -20,7 +20,7 @@ class ZobristHash:
             for j in range(4):
                 self.zobristTable[i][j] = getrandbits(self.randomBits)
 
-    def hash(board):
+    def hash(self, board):
         state = board.state
         h = 0
         for row in range(8):
