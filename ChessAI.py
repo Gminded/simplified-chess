@@ -61,11 +61,11 @@ class ChessAI:
             for node in actions:
                 v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 ) )
                 if v >= beta:
-                    return beta
+                    return v
                 if v > alpha:
                     alpha = v
-            currentNode.SetUtility(alpha)
-            return alpha
+            currentNode.SetUtility(v)
+            return v
 
         # Min
         else:
@@ -73,8 +73,8 @@ class ChessAI:
             for node in actions:
                 v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1 ) )
                 if v <= alpha:
-                    return alpha
+                    return v
                 if v < beta:
                     beta = v
-            currentNode.SetUtility(beta)
-            return beta
+            currentNode.SetUtility(v)
+            return v
