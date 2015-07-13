@@ -12,6 +12,7 @@ class ZobristHash:
                 'bK' : 4
                 }
         self.randomBits = 32
+        self.hashTableLimit = 2**24
 
         #generate table
         self.zobristTable = [ [ 0 for x in range(4) ] for x in range(64) ]
@@ -19,6 +20,11 @@ class ZobristHash:
         for i in range(64):
             for j in range(4):
                 self.zobristTable[i][j] = getrandbits(self.randomBits)
+
+        #init hashTable
+        self.hashTable = {}
+        for i in xrange(2**24):
+            self.hashTableSize = None
 
     def hash(self, board):
         state = board.state
@@ -29,3 +35,11 @@ class ZobristHash:
                     piece = self.pieceId[state[row][col]]
                     h = h ^ self.zobristTable[row*8+col][piece]
         return h
+
+    def insert(self, key, tuple):
+        self.hashTableSize[key] = tuple
+
+    def lookup(self, key):
+        return self.hashTable[key]
+
+
