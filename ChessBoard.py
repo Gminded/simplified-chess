@@ -215,6 +215,20 @@ class ChessBoard:
                         if not (r==0 and c==0):
                             moves.append((row+r, col+c))
 
+        #check enpassant
+        if self.IsEnpassantPawn( fromTuple ):
+            if color == 'b':
+                if col+1 <= 7 and 'P' in self.state[row][col+1] and 'w' in self.state[row][col+1]:
+                    moves.append( ( row, col+1 ) )
+                if col-1 >= 0 and 'P' in self.state[row][col-1] and 'w' in self.state[row][col-1]:
+                    moves.append( ( row, col-1 ) )
+            else:
+                if col+1 <= 7 and 'P' in self.state[row][col+1] and 'b' in self.state[row][col+1]:
+                    moves.append( ( row, col+1 ) )
+                if col-1 >= 0 and 'P' in self.state[row][col-1] and 'b' in self.state[row][col-1]:
+                    moves.append( ( row, col-1 ) )
+
+
         for toTuple in moves:
             if 'K' in piece:
                 check=self.DoesMovePutPlayerInCheck(color, toTuple, fromTuple, toTuple)
@@ -282,7 +296,6 @@ class ChessBoard:
         piece=self.state[row][col]
         enpassant=False #will become true if enpassant is possible
         # left and right of the piece. -1 stands for a square outside of the self.state.
-        left=-1
         left=col-1
         if col+1 <= 7: right=col+1
         else: right=-1
