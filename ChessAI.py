@@ -54,7 +54,7 @@ class ChessAI:
                 break
         return bestMoveTuple
 
-    def AlphaBetaSearch(self, alpha=-1000, beta=1000, currentNode=None, maxPlayer=True, depth=0, actions=None):
+    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None):
         if maxPlayer:
             playerColor = "black"
         else:
@@ -77,22 +77,24 @@ class ChessAI:
             return currentNode.utility
 
         if maxPlayer:
-            v = -1000
+            v = -10000
             for node in actions:
                 v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 ) )
                 if v >= beta:
                     return beta
                 if v > alpha:
                     alpha = v
+            currentNode.SetUtility(alpha)
             return alpha
         else:
-            v = 1000
+            v = 10000
             for node in actions:
                 v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1 ) )
                 if v <= alpha:
                     return alpha
                 if v < beta:
                     beta = v
+            currentNode.SetUtility(beta)
             return beta
 
     def storeAlphaBetaThreaded(self, data, threadIndex, currentNode, depth, threadTotal):
