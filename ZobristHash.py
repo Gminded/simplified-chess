@@ -24,7 +24,7 @@ class ZobristHash:
         #init hashTable
         self.hashTable = {}
         for i in xrange(self.hashTableLimit):
-            self.hashTableSize = None
+            self.hashTable = None
 
     def hash(self, board):
         state = board.state
@@ -38,7 +38,7 @@ class ZobristHash:
 
     def insertUtility(self, board, utility):
         key = self.hash(board)
-        self.hashTableSize[key] = utility
+        self.hashTable[key] = utility
 
     def lookup(self, board):
         key = self.hash(board)
