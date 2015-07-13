@@ -56,8 +56,8 @@ class Heuristic:
             score = 1
 
         #checking number of legal moves
-        playerMoves = len( node.LegalMoves(playerColor) )
-        adversaryMoves = len( node.LegalMoves(adversaryMoves) )
+        playerMoves = node.LegalMoves(playerColor)
+        adversaryMoves = node.LegalMoves(adversaryMoves)
 
         #Two loops for counting player and adversary stuff
         for pawn in playerPawns:
