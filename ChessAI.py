@@ -36,7 +36,7 @@ class ChessAI:
 
         #use multithreading?
         if not threaded:
-            bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)
+            bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
         else:
             threads = [None] * threadTotal
             ret_values = [-1000] * threadTotal
@@ -54,7 +54,7 @@ class ChessAI:
                 break
         return bestMoveTuple
 
-    def AlphaBetaSearch(self, alpha=-1000, beta=1000, currentNode=None, maxPlayer=True, depth=0):
+    def AlphaBetaSearch(self, alpha=-1000, beta=1000, currentNode=None, maxPlayer=True, depth=0, actions=None):
         if maxPlayer:
             playerColor = "black"
         else:
@@ -65,11 +65,6 @@ class ChessAI:
             Heuristic.ShannonHeuristic(currentNode, playerColor)
             return currentNode.utility
 
-        if maxPlayer:
-            actions = currentNode.Actions("black")
-        else:
-            actions = currentNode.Actions("white")
-
         #terminal test2
         if depth == 0 or len(actions) == 0:
             Heuristic.ShannonHeuristic(currentNode, playerColor)
@@ -78,7 +73,7 @@ class ChessAI:
         if maxPlayer:
             v = -1000
             for node in actions:
-                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 ) )
+                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1, actions ) )
                 if v >= beta:
                     return beta
                 if v > alpha:
@@ -87,7 +82,7 @@ class ChessAI:
         else:
             v = 1000
             for node in actions:
-                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1 ) )
+                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, actions ) )
                 if v <= alpha:
                     return alpha
                 if v < beta:
