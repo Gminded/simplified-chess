@@ -49,7 +49,7 @@ class ChessAI:
 
         #terminal test1
         if depth == 0:
-            Heuristic.ShannonHeuristic(currentNode, playerColor)
+            Heuristic.ShannonHeuristic(currentNode, playerColor, self.table)
             return currentNode.utility
 
         if actions == None:
@@ -60,7 +60,7 @@ class ChessAI:
 
         #terminal test2
         if len(actions) == 0:
-            Heuristic.ShannonHeuristic(currentNode, playerColor)
+            Heuristic.ShannonHeuristic(currentNode, playerColor, self.table)
             return currentNode.utility
 
         # Max
