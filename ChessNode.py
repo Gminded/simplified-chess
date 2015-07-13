@@ -79,6 +79,7 @@ class ChessNode:
 
                 #ordering (descending)
                 count = 0
+                posToInsert = 0
                 inserted = False
                 if not successors:
                     successors.append(successor)
@@ -86,16 +87,18 @@ class ChessNode:
                     for k in successors:
                         if player_color == "black":
                             if successor.utility > k.utility:
-                                successors.insert(count, successor )
+                                posToInsert = count
                                 inserted = True
                                 break
                         else:
                             if successor.utility < k.utility:
-                                successors.insert(count, successor )
+                                posToInsert = count
                                 inserted = True
                                 break
                         count += 1
                     if not inserted:
                         successors.append(successor)
+                    else:
+                        successors.insert(count, successor )
 
         return successors

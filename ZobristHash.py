@@ -36,8 +36,7 @@ class ZobristHash:
 
     def insertUtility(self, board, utility):
         key = self.hash(board)
-        if key in self.hashTable:
-            self.hashTable[key] = utility
+        self.hashTable[key] = utility
 
     def lookup(self, board):
         key = self.hash(board)
@@ -46,9 +45,18 @@ class ZobristHash:
         else:
             return None
 
+from ChessNode import ChessNode
 from ChessBoard import ChessBoard
 if __name__ == "__main__":
     board = ChessBoard()
-    table = ZobristHash()
-    for i in table.hashTable:
-        print i
+    table = ZobristHash(2**16)
+    table.insertUtility( board, 24)
+    print table.lookup(board)
+    node = ChessNode(board)
+    actions = node.Actions("black", table)
+    for state in actions:
+        table.insertUtility(state.board, state.utility)
+    for state in actions:
+        print table.lookup(state.board)
+
+

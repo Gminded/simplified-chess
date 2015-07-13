@@ -1,5 +1,4 @@
 from ChessBoard import DEFEAT
-from ZobristHash import ZobristHash
 
 class Heuristic:
 
