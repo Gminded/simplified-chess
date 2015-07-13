@@ -32,6 +32,24 @@ class ChessNode:
     def GetMoveTuple(self):
         return self.moveTuple
 
+    #returns just the number of legal moves (for heuristic quickness)
+    def LegalMoves(self, playerColor):
+        if playerColor == "white":
+            my_pieces = self.board.whitePawns
+            myKing = self.board.whiteKing
+        else:
+            my_pieces = self.board.blackPawns
+            myKing = self.board.blackKing
+
+        #pawn moves counting
+        actions = 0
+        for piece in my_pieces:
+            actions += len( self.board.GetListOfValidMoves(playerColor, piece) )
+        #king moves counting
+        actions += len( self.board.GetListOfValidMoves(playerColor, myKing) )
+        return  actions
+
+
     #return successor nodes
     def Actions(self, player_color, threaded=None, threadIndex=-1, threadTotal=-1):
         if player_color == "white":

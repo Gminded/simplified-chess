@@ -1,3 +1,5 @@
+from ChessBoard import DEFEAT
+
 class Heuristic:
 
     @staticmethod
@@ -27,24 +29,72 @@ class Heuristic:
         playerMinDistance = 10
         adversaryMinDistance = 10
 
+        adversaryColor = None
+
         #board state
         board = node.GetState()
         oldboard = node.GetOldState()
 
         #my pieces
         if playerColor == "black":
+            direction = 1
+            otherEnd = -7
+            adversaryColor = "white"
             playerPawns = node.board.blackPawns
             adversaryPawns = node.board.whitePawns
         else:
+            direction = -1
+            otherEnd = 0
+            adversaryColor = "black"
             playerPawns = node.board.whitePawns
             adversaryPawns = node.board.blackPawns
 
-        #Checking enpassant
+        #checking victory state
+        if node.board.TerminalTest(playerColor) == DEFEAT:
+            score = -1
+        elif node.board.TerminalTest(adversaryColor) == DEFEAT:
+            score = 1
+
+        #checking number of legal moves
+        playerMoves = len( node.LegalMoves(playerColor) )
+        adversaryMoves = len( node.LegalMoves(adversaryMoves) )
+
+        #Two loops for counting player and adversary stuff
         for pawn in playerPawns:
-            if rules.IsEnpassantPawn(board, oldboard):
+            #Checking enpassant
+            if node.board.IsEnpassantPawn(pawn):
                 playerEnpassant += 1
+
+            #counting number of blocked pawns
+            if pawn[0] + direction > 7 or pawn[0] + direction < 0:
+                blockedPlayerPawns+= 1
+            elif node.board.state[ pawn[0] + direction ][ pawn[1] ] != "e":
+                blockedPlayerPawns+= 1
+
+            #counting minDistance from the other end of the board
+            distance = otherEnd + pawn[0]
+            if distance < playerMinDistance:
+                playerMinDistance = distance
+
         for pawn in adversaryPawns:
-            if rules.IsEnpassantPawn(oldboard, board):
+            #Checking enpassant
+            if node.board.IsEnpassantPawn(pawn):
                 adversaryEnpassant += 1
 
-        #Checking
+            #counting number of blocked pawns
+            if pawn[0] + direction > 7 or pawn[0] + direction < 0:
+                blockedAdversaryPawns+= 1
+            elif node.board.state[ pawn[0] + direction ][ pawn[1] ] != "e":
+                blockedAdversaryPawns+= 1
+
+            #counting minDistance from the other end of the board
+            distance = otherEnd + pawn[0]
+            if distance < playerMinDistance:
+                playerMinDistance = distance
+
+        #computing value
+        node.SetUtility( winWeigth*( score ) + distanceWeight*( playerMinDistance - adversaryMinDistance ) +
+                         enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
+                         pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
+                         blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
+                         movesWeight*( playerMoves - adversaryMoves ) )
