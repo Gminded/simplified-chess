@@ -4,7 +4,7 @@ from ZobristHash import ZobristHash
 class Heuristic:
 
     @staticmethod
-    def ShannonHeuristic(node, playerColor, table={}):
+    def ShannonHeuristic(node, playerColor, table):
         #retrieve the utility value if it was already computed
         cachedValue = table.lookup(node.board)
         if cachedValue != None:
