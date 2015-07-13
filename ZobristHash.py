@@ -3,7 +3,7 @@ from ChessBoard import *
 
 class ZobristHash:
 
-    def __init__(self):
+    def __init__(self, size):
         #costants
         self.pieceId = {
                 'wP' : 1,
@@ -12,7 +12,7 @@ class ZobristHash:
                 'bK' : 4
                 }
         self.randomBits = 32
-        self.hashTableLimit = 2**24
+        self.hashTableLimit = size
 
         #generate table
         self.zobristTable = [ [ 0 for x in range(4) ] for x in range(64) ]
@@ -23,7 +23,7 @@ class ZobristHash:
 
         #init hashTable
         self.hashTable = {}
-        for i in xrange(2**24):
+        for i in xrange(self.hashTableLimit):
             self.hashTableSize = None
 
     def hash(self, board):

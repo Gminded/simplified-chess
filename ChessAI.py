@@ -9,6 +9,7 @@
  """
 import threading
 from Heuristic import Heuristic
+from ZobristHash import ZobristHash
 
 class ChessAI:
     def __init__(self, name, color):
@@ -16,6 +17,7 @@ class ChessAI:
         self.name = name
         self.color = color
         self.type = 'AI'
+        self.table = ZobristHash(size=2**24)
 
     def GetName(self):
         return self.name
@@ -61,6 +63,7 @@ class ChessAI:
             Heuristic.ShannonHeuristic(currentNode, playerColor)
             return currentNode.utility
 
+        # Max
         if maxPlayer:
             v = -10000
             for node in actions:
@@ -71,6 +74,8 @@ class ChessAI:
                     alpha = v
             currentNode.SetUtility(alpha)
             return alpha
+
+        # Min
         else:
             v = 10000
             for node in actions:
