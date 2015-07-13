@@ -8,7 +8,7 @@ class Heuristic:
         #retrieve the utility value if it was already computed
         cachedValue = table.lookup(node.board)
         if cachedValue != None:
-            node.SetUtility(cachedValue[0]) #utility
+            node.SetUtility(cachedValue) #utility
             return
 
         #weights

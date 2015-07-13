@@ -23,8 +23,8 @@ class ZobristHash:
 
         #init hashTable
         self.hashTable = {}
-        for i in xrange(self.hashTableLimit):
-            self.hashTable = None
+        #for i in xrange(self.hashTableLimit):
+        #    self.hashTable = None
 
     def hash(self, board):
         state = board.state
