@@ -46,4 +46,9 @@ class ZobristHash:
         else:
             return None
 
-
+from ChessBoard import ChessBoard
+if __name__ == "__main__":
+    board = ChessBoard()
+    table = ZobristHash()
+    for i in table.hashTable:
+        print i
