@@ -12,7 +12,7 @@ class ZobristHash:
         self.randomBits = 32
 
         #generate table
-        self.zobristTable = None
+        self.zobristTable = [ [ 0 for x in range(4) ] for x in range(64) ]
         seed()
         for i in range(64):
             for j in range(4):
