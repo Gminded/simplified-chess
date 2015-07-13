@@ -4,19 +4,20 @@ from ZobristHash import ZobristHash
 class Heuristic:
 
     @staticmethod
-    def ShannonHeuristic(node, playerColor, table):
+    def ShannonHeuristic(node, table):
         #retrieve the utility value if it was already computed
         cachedValue = table.lookup(node.board)
         if cachedValue != None:
+            print "cached"
             node.SetUtility(cachedValue) #utility
             return
 
         #weights
-        winWeigth = 200
+        winWeigth = 300
         distanceWeight = 50
-        enpassantWeight = 5
-        pawnWeight = 5
-        blockedPawnsWeight = 2
+        enpassantWeight = 20
+        pawnWeight = 40
+        blockedPawnsWeight = 5
         movesWeight = 1
 
         #Heuristic values
@@ -39,18 +40,14 @@ class Heuristic:
         oldboard = node.GetOldState()
 
         #my pieces
-        if playerColor == "black":
-            direction = 1
-            otherEnd = -7
-            adversaryColor = "white"
-            playerPawns = node.board.blackPawns
-            adversaryPawns = node.board.whitePawns
-        else:
-            direction = -1
-            otherEnd = 0
-            adversaryColor = "black"
-            playerPawns = node.board.whitePawns
-            adversaryPawns = node.board.blackPawns
+
+        direction = 1
+        otherEnd = -7
+        playerColor = "black"
+        adversaryColor = "white"
+        playerPawns = node.board.blackPawns
+        adversaryPawns = node.board.whitePawns
+
 
         #checking victory state
         if node.board.TerminalTest(playerColor) == DEFEAT:
@@ -92,8 +89,8 @@ class Heuristic:
 
             #counting minDistance from the other end of the board
             distance = otherEnd + pawn[0]
-            if distance < playerMinDistance:
-                playerMinDistance = distance
+            if distance < adversaryMinDistance:
+                adversaryMinDistance = distance
 
         #computing value
         node.SetUtility( winWeigth*( score ) + distanceWeight*( playerMinDistance - adversaryMinDistance ) +

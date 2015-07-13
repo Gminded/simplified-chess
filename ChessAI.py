@@ -34,14 +34,10 @@ class ChessAI:
         return bestMoveTuple
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None):
-        if maxPlayer:
-            playerColor = "black"
-        else:
-           playerColor = "white"
 
         #terminal test1
         if depth == 0:
-            Heuristic.ShannonHeuristic(currentNode, playerColor, self.table)
+            Heuristic.ShannonHeuristic(currentNode, self.table)
             return currentNode.utility
 
         if actions == None:
@@ -52,7 +48,7 @@ class ChessAI:
 
         #terminal test2
         if len(actions) == 0:
-            Heuristic.ShannonHeuristic(currentNode, playerColor, self.table)
+            Heuristic.ShannonHeuristic(currentNode, self.table)
             return currentNode.utility
 
         # Max
