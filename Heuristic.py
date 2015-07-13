@@ -79,13 +79,15 @@ class Heuristic:
                 playerPawnsEndangered += 1
 
             #counting number of blocked pawns
-            if pawnRow + direction < 7 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
+            if pawnRow + direction < 8 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
                 blockedPlayerPawns+= 1
 
             #number of pawns which have a clear sight to the end of the board
             for pos in range(pawnRow + direction, 8):
                 if node.board.state[ pos ][pawnCol] != "e":
-                    break
+                    if pawnCol + 1 < 8 and node.board.state[ pos ][pawnCol +1] != "e":
+                        if pawnCol -1 >= 0 and node.board.state[ pos ][pawnCol -1] != "e":
+                            break
                 else:
                     if pos == 7:
                         playerPawnsClearSight +=1
@@ -107,7 +109,7 @@ class Heuristic:
                 adversaryEnpassant += 1
 
             #counting number of blocked pawns
-            if pawnRow + direction < 0 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
+            if pawnRow + direction >= 0 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
                 blockedAdversaryPawns+= 1
 
             #number of pawns which have a clear sight to the end of the board
