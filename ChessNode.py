@@ -2,8 +2,12 @@ from Heuristic import Heuristic
 import copy
 
 class ChessNode:
-    def __init__(self, board):
-        self.board = copy.deepcopy(board)
+    def __init__(self, board, copyFlag=True):
+        if copyFlag:
+            self.board = copy.deepcopy(board)
+        else:
+            self.board = board
+
         self.utility = -1
         self.moveTuple = None
 
@@ -14,8 +18,7 @@ class ChessNode:
         return self.board.GetOldState()
 
     def SetState(self, board):
-        self.state = copy.copy( board.GetState() )
-        self.oldstate = copy.copy( board.GetOldState() )
+        self.board = copy.deepcopy(board)
 
     def GetUtility(self):
         return self.utility

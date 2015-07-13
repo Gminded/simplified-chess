@@ -42,7 +42,7 @@ class PythonChessMain:
     def MainLoop(self):
         currentPlayerIndex = 0
         turnCount = 0
-        currentNode = ChessNode(self.Board)  # setup initial node
+        currentNode = ChessNode(self.Board, copyFlag=False)  # setup initial node
         while NONE == self.Board.TerminalTest(self.player[currentPlayerIndex].color):
             realBoard = self.Board
             board = self.Board.GetState()
@@ -60,11 +60,9 @@ class PythonChessMain:
                 moveTuple = self.Gui.GetPlayerInput(realBoard, currentColor)
 
             moveReport = self.Board.MovePiece(moveTuple)
-            currentNode.SetState(self.Board)  # new sstate and remembering old_state
             self.Gui.PrintMessage(moveReport)
             # END OF PLAY TIME
-            currentPlayerIndex = (
-                                 currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0
+            currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0
 
         termination = self.Board.TerminalTest(self.player[currentPlayerIndex].color)
         if termination == DEFEAT:
