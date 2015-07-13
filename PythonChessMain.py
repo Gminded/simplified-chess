@@ -17,11 +17,12 @@ class PythonChessMain:
         self.player = [0, 0]
         self.player[0] = ChessPlayer("Human", "white")
         self.player[1] = ChessAI("AI", "black")
+        self.treeDepth = 2
         # GUI setup
         self.guitype = 'pygame'
         self.Gui = ChessGUI_pygame(self.Board)
         GameParams = TkinterGameSetupParams()
-        (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type) = GameParams.GetGameSetupParams()
+        (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type, self.treeDepth) = GameParams.GetGameSetupParams()
         self.player = [0, 0]
         if player1Type == 'human':
             self.player[0] = ChessPlayer(player1Name, player1Color)
@@ -55,8 +56,9 @@ class PythonChessMain:
                 turnCount = turnCount + 1
             # PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
-                moveTuple = self.player[currentPlayerIndex].GetMove(currentNode, depth=4, threaded=False, threadTotal=4)
+                moveTuple = self.player[currentPlayerIndex].GetMove(currentNode, depth=self.treeDepth, threaded=False, threadTotal=4)
             else:
+                print self.treeDepth
                 moveTuple = self.Gui.GetPlayerInput(realBoard, currentColor)
 
             moveReport = self.Board.MovePiece(moveTuple)
