@@ -20,9 +20,9 @@ class PythonChessMain:
         self.treeDepth = 2
         # GUI setup
         self.guitype = 'pygame'
-        self.Gui = ChessGUI_pygame(self.Board)
         GameParams = TkinterGameSetupParams()
         (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type, self.treeDepth) = GameParams.GetGameSetupParams()
+        self.Gui = ChessGUI_pygame(self.Board, self.treeDepth)
         self.player = [0, 0]
         if player1Type == 'human':
             self.player[0] = ChessPlayer(player1Name, player1Color)
@@ -58,7 +58,6 @@ class PythonChessMain:
             if self.player[currentPlayerIndex].GetType() == 'AI':
                 moveTuple = self.player[currentPlayerIndex].GetMove(currentNode, depth=self.treeDepth, threaded=False, threadTotal=4)
             else:
-                print self.treeDepth
                 moveTuple = self.Gui.GetPlayerInput(realBoard, currentColor)
 
             moveReport = self.Board.MovePiece(moveTuple)
