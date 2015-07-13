@@ -6,10 +6,10 @@ class ZobristHash:
     def __init__(self, size):
         #costants
         self.pieceId = {
-                'wP' : 1,
-                'wK' : 2,
-                'bP' : 3,
-                'bK' : 4
+                'wP' : 0,
+                'wK' : 1,
+                'bP' : 2,
+                'bK' : 3
                 }
         self.randomBits = 32
         self.hashTableLimit = size
