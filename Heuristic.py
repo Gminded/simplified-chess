@@ -3,19 +3,17 @@ from ChessBoard import DEFEAT
 class Heuristic:
 
     @staticmethod
-    def ShannonHeuristic(node, table, cache=True):
+    def ShannonHeuristic(node, table):
         #retrieve the utility value if it was already computed
-        if cache:
-            cachedValue = table.lookup(node.board)
-            if cachedValue != None:
-                print "cached"
-                node.SetUtility(cachedValue) #utility
-                return cachedValue
+        cachedValue = table.lookup(node.board)
+        if cachedValue != None:
+            node.SetUtility(cachedValue) #utility
+            return cachedValue
 
         #weights
         winWeigth = 10000
         endangeredPawnsWeight = 20
-        minDistanceWeight = 30
+        minDistanceWeight = 20
         avgDistanceWeight = 15
         enpassantWeight = 20
         pawnWeight = 20
@@ -134,4 +132,3 @@ class Heuristic:
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
                          movesWeight*( playerMoves - adversaryMoves ) - endangeredPawnsWeight*(  playerPawnsEndangered ) +
                          clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ))
-        table.insertUtility(node.board, node.utility)
