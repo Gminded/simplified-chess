@@ -27,7 +27,7 @@ class ChessGUI_pygame:
         self.screen = pygame.display.set_mode((850*self.hidpi_factor, 600*self.hidpi_factor), pygame.DOUBLEBUF)
         self.boardStart_x = 50*self.hidpi_factor
         self.boardStart_y = 50*self.hidpi_factor
-        pygame.display.set_caption('Simplified Chess ( Depth '+depth+' )')
+        pygame.display.set_caption('Simplified Chess ( Depth '+str(depth)+' )')
 
         self.textBox = ScrollingTextBox(self.screen,525*self.hidpi_factor,825*self.hidpi_factor,50*self.hidpi_factor,450*self.hidpi_factor, self.hidpi_factor)
         self.LoadImages()
