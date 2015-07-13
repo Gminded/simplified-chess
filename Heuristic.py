@@ -13,10 +13,11 @@ class Heuristic:
             return
 
         #weights
-        winWeigth = 300
-        distanceWeight = 50
-        enpassantWeight = 20
-        pawnWeight = 40
+        winWeigth = 1000000
+        minDistanceWeight = 10
+        avgDistanceWeight = 10
+        enpassantWeight = 30
+        pawnWeight = 20
         blockedPawnsWeight = 5
         movesWeight = 1
 
@@ -32,6 +33,8 @@ class Heuristic:
         blockedAdversaryPawns = 0
         playerMinDistance = 10
         adversaryMinDistance = 10
+        playerAvgDistance = 0
+        adversaryAvgDistance = 0
 
         adversaryColor = None
 
@@ -42,7 +45,6 @@ class Heuristic:
         #my pieces
 
         direction = 1
-        otherEnd = -7
         playerColor = "black"
         adversaryColor = "white"
         playerPawns = node.board.blackPawns
@@ -66,15 +68,15 @@ class Heuristic:
                 playerEnpassant += 1
 
             #counting number of blocked pawns
-            if pawn[0] + direction > 7 or pawn[0] + direction < 0:
-                blockedPlayerPawns+= 1
             elif node.board.state[ pawn[0] + direction ][ pawn[1] ] != "e":
                 blockedPlayerPawns+= 1
 
             #counting minDistance from the other end of the board
-            distance = otherEnd + pawn[0]
+            distance = 7 - pawn[0]
+            playerAvgDistance += distance
             if distance < playerMinDistance:
                 playerMinDistance = distance
+        playerAvgDistance = float(playerAvgDistance) / len(playerPawns)
 
         for pawn in adversaryPawns:
             #Checking enpassant
@@ -82,18 +84,19 @@ class Heuristic:
                 adversaryEnpassant += 1
 
             #counting number of blocked pawns
-            if pawn[0] + direction > 7 or pawn[0] + direction < 0:
-                blockedAdversaryPawns+= 1
             elif node.board.state[ pawn[0] + direction ][ pawn[1] ] != "e":
                 blockedAdversaryPawns+= 1
 
             #counting minDistance from the other end of the board
-            distance = otherEnd + pawn[0]
+            distance = pawn[0]
+            adversaryAvgDistance += distance
             if distance < adversaryMinDistance:
                 adversaryMinDistance = distance
+        adversaryAvgDistance = float(adversaryAvgDistance) / len(adversaryPawns)
 
         #computing value
-        node.SetUtility( winWeigth*( score ) + distanceWeight*( playerMinDistance - adversaryMinDistance ) +
+        node.SetUtility( winWeigth*( score ) + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
+                         avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) +
                          enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
