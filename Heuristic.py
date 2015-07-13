@@ -6,10 +6,10 @@ class Heuristic:
     def ShannonHeuristic(node, playerColor):
         #weights
         winWeigth = 200
-        distanceWeight = 50
-        enpassantWeight = 10
-        pawnWeight = 10
-        blockedPawnsWeight = 3
+        distanceWeight = 80
+        enpassantWeight = 5
+        pawnWeight = 5
+        blockedPawnsWeight = 2
         movesWeight = 1
 
         #Heuristic values
