@@ -65,15 +65,20 @@ class ChessAI:
             Heuristic.ShannonHeuristic(currentNode, playerColor)
             return currentNode.utility
 
+        if actions == None and maxPlayer:
+            actions = currentNode.Actions("black")
+        else:
+            actions = currentNode.Actions("white")
+
         #terminal test2
-        if depth == 0 or len(actions) == 0:
+        if len(actions) == 0:
             Heuristic.ShannonHeuristic(currentNode, playerColor)
             return currentNode.utility
 
         if maxPlayer:
             v = -1000
             for node in actions:
-                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1, actions ) )
+                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 ) )
                 if v >= beta:
                     return beta
                 if v > alpha:
@@ -82,7 +87,7 @@ class ChessAI:
         else:
             v = 1000
             for node in actions:
-                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, actions ) )
+                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1 ) )
                 if v <= alpha:
                     return alpha
                 if v < beta:

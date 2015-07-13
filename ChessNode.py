@@ -51,7 +51,7 @@ class ChessNode:
 
 
     #return successor nodes
-    def Actions(self, player_color, maxPlayer, threaded=None, threadIndex=-1, threadTotal=-1):
+    def Actions(self, player_color, threaded=None, threadIndex=-1, threadTotal=-1):
         if player_color == "white":
             my_pieces = copy.copy( self.board.whitePawns )
             my_pieces.append(self.board.whiteKing)
@@ -84,7 +84,7 @@ class ChessNode:
                     successors.append(successor)
                 else:
                     for k in successors:
-                        if maxPlayer:
+                        if player_color == "black":
                             if successor.utility > k.utility:
                                 successors.insert(count, successor )
                                 inserted = True
