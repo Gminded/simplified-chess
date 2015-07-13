@@ -6,9 +6,9 @@ class ZobristHash:
     def __init__(self):
         #costants
         self.pieceId = {
-                'wP' : 1
-                'wK' : 2
-                'bP' : 3
+                'wP' : 1,
+                'wK' : 2,
+                'bP' : 3,
                 'bK' : 4
                 }
         self.randomBits = 32
