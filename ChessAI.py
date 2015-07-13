@@ -34,6 +34,11 @@ class ChessAI:
         return bestMoveTuple
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None):
+        #use hashtable
+        cachedValue = self.table.lookup(currentNode.board)
+        if cachedValue != None:
+            currentNode.SetUtility(cachedValue) #utility
+            return cachedValue
 
         #terminal test1
         if depth == 0:
@@ -59,6 +64,7 @@ class ChessAI:
                 if v >= beta:
                     return v
                 alpha = max(alpha, v)
+            self.table.insertUtility(currentNode.board, v)
             currentNode.SetUtility(v)
             return v
 
@@ -70,5 +76,6 @@ class ChessAI:
                 if v <= alpha:
                     return v
                 beta = max( beta, v)
+            self.table.insertUtility(currentNode.board, v)
             currentNode.SetUtility(v)
             return v
