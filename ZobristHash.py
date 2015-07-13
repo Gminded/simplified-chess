@@ -1,5 +1,4 @@
 from random import *
-from ChessBoard import *
 
 class ZobristHash:
 
@@ -11,15 +10,14 @@ class ZobristHash:
                 'bP' : 2,
                 'bK' : 3
                 }
-        self.randomBits = 32
+        self.randomBits = 64
         self.hashTableLimit = size
 
         #generate table
         self.zobristTable = [ [ 0 for x in range(4) ] for x in range(64) ]
-        seed()
         for i in range(64):
             for j in range(4):
-                self.zobristTable[i][j] = getrandbits(self.randomBits)
+                self.zobristTable[i][j] = SystemRandom().getrandbits(self.randomBits)
 
         #init hashTable
         self.hashTable = {}
@@ -38,7 +36,8 @@ class ZobristHash:
 
     def insertUtility(self, board, utility):
         key = self.hash(board)
-        self.hashTable[key] = utility
+        if key in self.hashTable:
+            self.hashTable[key] = utility
 
     def lookup(self, board):
         key = self.hash(board)
