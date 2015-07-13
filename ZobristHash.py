@@ -12,7 +12,6 @@ class ZobristHash:
                 'bK' : 4
                 }
         self.randomBits = 32
-        self.hashTableLimit = 2**24
 
         #generate table
         self.zobristTable = [ [ 0 for x in range(4) ] for x in range(64) ]
@@ -44,5 +43,3 @@ class ZobristHash:
             return self.hashTable[key]
         else:
             return None
-
-
