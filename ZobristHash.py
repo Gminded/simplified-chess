@@ -5,10 +5,12 @@ class ZobristHash:
 
     def __init__(self):
         #costants
-        self.whitePawn = 1
-        self.whiteKing = 2
-        self.blackPawn = 3
-        self.blackKing = 4
+        self.pieceId = {
+                'wP' : 1
+                'wK' : 2
+                'bP' : 3
+                'bK' : 4
+                }
         self.randomBits = 32
 
         #generate table
