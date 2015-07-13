@@ -65,10 +65,11 @@ class ChessAI:
             Heuristic.ShannonHeuristic(currentNode, playerColor)
             return currentNode.utility
 
-        if actions == None and maxPlayer:
-            actions = currentNode.Actions("black")
-        else:
-            actions = currentNode.Actions("white")
+        if actions == None:
+            if maxPlayer:
+                actions = currentNode.Actions("black")
+            else:
+                actions = currentNode.Actions("white")
 
         #terminal test2
         if len(actions) == 0:
