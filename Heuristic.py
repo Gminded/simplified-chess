@@ -3,17 +3,13 @@ from ChessBoard import DEFEAT
 class Heuristic:
 
     @staticmethod
-    def HeuristicFunction(node):
-        node.SetUtility(1)
-
-    @staticmethod
     def ShannonHeuristic(node, playerColor):
         #weights
         winWeigth = 200
         distanceWeight = 50
-        enpassantWeight = 5
-        pawnWeight = 5
-        blockedPawnsWeight = 2
+        enpassantWeight = 10
+        pawnWeight = 10
+        blockedPawnsWeight = 3
         movesWeight = 1
 
         #Heuristic values
