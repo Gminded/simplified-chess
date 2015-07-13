@@ -47,30 +47,13 @@ class ChessGUI_pygame:
 
         self.black_pawn = pygame.image.load(os.path.join("images","Chess_tile_pd.png")).convert()
         self.black_pawn = pygame.transform.scale(self.black_pawn, (self.square_size,self.square_size))
-        self.black_rook = pygame.image.load(os.path.join("images","Chess_tile_rd.png")).convert()
-        self.black_rook = pygame.transform.scale(self.black_rook, (self.square_size,self.square_size))
-        self.black_knight = pygame.image.load(os.path.join("images","Chess_tile_nd.png")).convert()
-        self.black_knight = pygame.transform.scale(self.black_knight, (self.square_size,self.square_size))
-        self.black_bishop = pygame.image.load(os.path.join("images","Chess_tile_bd.png")).convert()
-        self.black_bishop = pygame.transform.scale(self.black_bishop, (self.square_size,self.square_size))
         self.black_king = pygame.image.load(os.path.join("images","Chess_tile_kd.png")).convert()
         self.black_king = pygame.transform.scale(self.black_king, (self.square_size,self.square_size))
-        self.black_queen = pygame.image.load(os.path.join("images","Chess_tile_qd.png")).convert()
-        self.black_queen = pygame.transform.scale(self.black_queen, (self.square_size,self.square_size))
 
         self.white_pawn = pygame.image.load(os.path.join("images","Chess_tile_pl.png")).convert()
         self.white_pawn = pygame.transform.scale(self.white_pawn, (self.square_size,self.square_size))
-        self.white_rook = pygame.image.load(os.path.join("images","Chess_tile_rl.png")).convert()
-        self.white_rook = pygame.transform.scale(self.white_rook, (self.square_size,self.square_size))
-        self.white_knight = pygame.image.load(os.path.join("images","Chess_tile_nl.png")).convert()
-        self.white_knight = pygame.transform.scale(self.white_knight, (self.square_size,self.square_size))
-        self.white_bishop = pygame.image.load(os.path.join("images","Chess_tile_bl.png")).convert()
-        self.white_bishop = pygame.transform.scale(self.white_bishop, (self.square_size,self.square_size))
         self.white_king = pygame.image.load(os.path.join("images","Chess_tile_kl.png")).convert()
         self.white_king = pygame.transform.scale(self.white_king, (self.square_size,self.square_size))
-        self.white_queen = pygame.image.load(os.path.join("images","Chess_tile_ql.png")).convert()
-        self.white_queen = pygame.transform.scale(self.white_queen, (self.square_size,self.square_size))
-
 
     def PrintMessage(self,message):
         #prints a string to the area to the right of the board

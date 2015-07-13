@@ -23,7 +23,7 @@ class TkinterGameSetupParams:
         Label(self.frame, text="Player 1 (White)").grid(row=2,column=0)
         self.entry_player1Name = Entry(self.frame)
         self.entry_player1Name.grid(row=2,column=1)
-        self.entry_player1Name.insert(ANCHOR,"Kasparov")
+        self.entry_player1Name.insert(ANCHOR,"Human")
 
         self.tk_player1Type = StringVar()
         Radiobutton(self.frame, text="Human",variable=self.tk_player1Type,value="human").grid(row=2,column=2)
@@ -34,7 +34,7 @@ class TkinterGameSetupParams:
         Label(self.frame, text="Player 2 (Black)").grid(row=3,column=0)
         self.entry_player2Name = Entry(self.frame)
         self.entry_player2Name.grid(row=3,column=1)
-        self.entry_player2Name.insert(ANCHOR,"Light Blue")
+        self.entry_player2Name.insert(ANCHOR,"AI")
 
         self.tk_player2Type = StringVar()
         Radiobutton(self.frame, text="Human",variable=self.tk_player2Type,value="human").grid(row=3,column=2)
