@@ -79,7 +79,7 @@ class Heuristic:
                 playerPawnsEndangered += 1
 
             #counting number of blocked pawns
-            if pawnRow + direction > 7 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
+            if pawnRow + direction < 7 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
                 blockedPlayerPawns+= 1
 
             #number of pawns which have a clear sight to the end of the board
