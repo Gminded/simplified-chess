@@ -21,8 +21,6 @@ class ZobristHash:
 
         #init hashTable
         self.hashTable = {}
-        for i in xrange(self.hashTableLimit):
-            self.hashTable[i] = None
 
     def hash(self, board):
         state = board.state

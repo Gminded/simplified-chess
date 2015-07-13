@@ -94,7 +94,10 @@ class Heuristic:
             playerAvgDistance += distance
             if distance < playerMinDistance:
                 playerMinDistance = distance
-        playerAvgDistance = float(playerAvgDistance) / len(playerPawns)
+        if len(playerPawns):
+            playerAvgDistance = float(playerAvgDistance) / len(playerPawns)
+        else:
+            playerAvgDistance = 10
 
         direction = -1
         for pawn in adversaryPawns:
@@ -122,7 +125,10 @@ class Heuristic:
             adversaryAvgDistance += distance
             if distance < adversaryMinDistance:
                 adversaryMinDistance = distance
-        adversaryAvgDistance = float(adversaryAvgDistance) / len(adversaryPawns)
+        if len(adversaryPawns) > 0:
+            adversaryAvgDistance = float(adversaryAvgDistance) / len(adversaryPawns)
+        else:
+            adversaryAvgDistance = 10
 
         #computing value
         node.SetUtility( winWeigth*( score ) + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +

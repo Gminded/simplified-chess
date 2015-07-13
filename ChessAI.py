@@ -43,6 +43,7 @@ class ChessAI:
         #terminal test1
         if depth == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table)
+            self.table.insertUtility(currentNode.board, currentNode.utility)
             return currentNode.utility
 
         if actions == None:
@@ -54,6 +55,7 @@ class ChessAI:
         #terminal test2
         if len(actions) == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table)
+            self.table.insertUtility(currentNode.board, currentNode.utility)
             return currentNode.utility
 
         # Max
