@@ -13,7 +13,7 @@ class Heuristic:
 
         #weights
         winWeigth = 200
-        distanceWeight = 80
+        distanceWeight = 50
         enpassantWeight = 5
         pawnWeight = 5
         blockedPawnsWeight = 2
