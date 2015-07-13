@@ -75,7 +75,7 @@ class ChessNode:
                 successor = ChessNode(self.board)
                 successor.SetMoveTuple(move_tuple)
                 successor.board.MovePiece(move_tuple)
-                Heuristic.ShannonHeuristic(successor, table, cache=False)
+                Heuristic.ShannonHeuristic(successor, table)
 
                 #ordering (descending)
                 count = 0
