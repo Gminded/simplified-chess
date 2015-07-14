@@ -105,7 +105,7 @@ class ChessAI:
                 if v <= alpha:
                     print('pruned in min')
                     return v
-                beta = max( beta, v)
+                beta = min( beta, v)
             self.table.insertUtility(currentNode.board, v)
             currentNode.SetUtility(v)
             return v
