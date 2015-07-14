@@ -3,9 +3,7 @@
 from Heuristic import Heuristic
 from ZobristHash import ZobristHash
 import signal
-import os
-
-continueIterative = True
+import copy
 
 class ChessAI:
     def __init__(self, name, color):
@@ -14,8 +12,9 @@ class ChessAI:
         self.color = color
         self.type = 'AI'
         self.table = ZobristHash(size=2**24)
-        self.worker_proc = -1
-        self.continueIterative = True
+        self.heuristicTable = ZobristHash(size=2**24)
+        self.bestMoveTuple = None
+        self.bestMoveUtility = -1000
 
     def GetName(self):
         return self.name
@@ -27,91 +26,87 @@ class ChessAI:
         return self.type
 
     def GetMove(self, currentNode):
-        actions = currentNode.Actions("black", self.table)
-
-        self.continueIterative = True
-        self.worker_proc = os.fork()
+        actions = currentNode.Actions("black", self.heuristicTable)
+        depth = 1
+        self.bestMoveTuple = None
+        self.bestMoveUtility = -1000
 
         def handler(signum, frame):
-                print "signal received"
-                self.continueIterative = False
-                os.kill(self.worker_proc, signal.SIGKILL)
+            print "signal received"
+            raise RuntimeError
 
-        if self.worker_proc == 0:
-            depth = 1
-            while self.continueIterative:
-                self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions, initialDepth=depth)
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(7)
+
+        try:
+            while True:
+                self.bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
                 depth +=1
+
+                self.bestMoveTuple = None
+                #get the best move tuple
+                for i in actions:
+                    if i.utility == self.bestMoveUtility:
+                        self.bestMoveTuple = i.GetMoveTuple()
+                print self.bestMoveUtility
+
+                #new hashtables
+                self.heuristicTable = copy.copy(self.table)
+                self.table = ZobristHash(size=2**24)
+
                 #DEBUG
                 print "search arrived at depth "+str(depth)
-        else:
-            signal.signal(signal.SIGALRM, handler)
-            signal.alarm(10)
-            try:
-                os.wait()
-            except OSError:
-                pass
 
-        bestMoveDepth = -1
-        bestMoveTuple = None
-        #get the best move tuple
-        for i in actions:
-            if i.bestMoveDepth > bestMoveDepth:
-                bestMoveDepth = i.bestMoveDepth
-                bestMoveTuple = i.GetMoveTuple()
-        return bestMoveTuple
+        except RuntimeError:
+            pass
 
-    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None, initialDepth=0):
+        return self.bestMoveTuple
+
+    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None):
         #use hashtable
-        if currentNode.bestMoveDepth > initialDepth:
-            cachedValue = self.table.lookup(currentNode.board)
-            if cachedValue != None:
-                currentNode.SetUtility(cachedValue) #utility
-                currentNode.bestMoveDepth = initialDepth
-                return cachedValue
+        cachedValue = self.table.lookup(currentNode.board)
+        if cachedValue != None:
+            currentNode.SetUtility(cachedValue) #utility
+            return cachedValue
 
         #terminal test1
         if depth == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table)
             self.table.insertUtility(currentNode.board, currentNode.utility)
-            currentNode.bestMoveDepth = initialDepth
             return currentNode.utility
 
         if actions == None:
             if maxPlayer:
-                actions = currentNode.Actions("black", self.table)
+                actions = currentNode.Actions("black", self.heuristicTable)
             else:
-                actions = currentNode.Actions("white", self.table)
+                actions = currentNode.Actions("white", self.heuristicTable)
 
         #terminal test2
         if len(actions) == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table)
             self.table.insertUtility(currentNode.board, currentNode.utility)
-            currentNode.bestMoveDepth = initialDepth
             return currentNode.utility
 
         # Max
         if maxPlayer:
             v = -10000
             for node in actions:
-                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 , None, initialDepth) )
+                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 , None) )
                 if v >= beta:
                     return v
                 alpha = max(alpha, v)
             self.table.insertUtility(currentNode.board, v)
             currentNode.SetUtility(v)
-            currentNode.bestMoveDepth = initialDepth
             return v
 
         # Min
         else:
             v = 10000
             for node in actions:
-                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, None, initialDepth ) )
+                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, None ) )
                 if v <= alpha:
                     return v
                 beta = max( beta, v)
             self.table.insertUtility(currentNode.board, v)
             currentNode.SetUtility(v)
-            currentNode.bestMoveDepth = initialDepth
             return v

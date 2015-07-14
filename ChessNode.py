@@ -10,7 +10,6 @@ class ChessNode:
 
         self.utility = -1
         self.moveTuple = None
-        self.bestMoveDepth = -1
 
     def GetState(self):
         return self.board.GetState()
