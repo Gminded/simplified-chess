@@ -38,6 +38,7 @@ class Heuristic:
         playerPawnsEndangered = 0
         playerPawnsClearSight = 0
         adversaryPawnsClearSight = 0
+        adversaryPawnsEndangered = 0
 
         #board state
         board = node.GetState()
@@ -69,10 +70,14 @@ class Heuristic:
             if node.board.IsEnpassantPawn(pawn):
                 playerEnpassant += 1
 
-            #counting number of pawns which can be captured during the next turn
-            if pawnRow + 1 < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + 1 ][ pawnCol + 1 ] != "e":
+            #counting number of pawns which can be captured during the next turn (and the one after)
+            if pawnRow + direction < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction ][ pawnCol + 1 ] != "e":
                 playerPawnsEndangered += 1
-            if pawnRow + 1 < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + 1 ][ pawnCol - 1 ] != "e":
+            if pawnRow + direction < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction ][ pawnCol - 1 ] != "e":
+                playerPawnsEndangered += 1
+            if pawnRow + direction*2 < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction*2 ][ pawnCol + 1 ] != "e":
+                playerPawnsEndangered += 1
+            if pawnRow + direction*2 < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction*2 ][ pawnCol - 1 ] != "e":
                 playerPawnsEndangered += 1
 
             #counting number of blocked pawns
@@ -108,6 +113,16 @@ class Heuristic:
             if node.board.IsEnpassantPawn(pawn):
                 adversaryEnpassant += 1
 
+            #counting number of pawns which can be captured during the next turn (and the one after)
+            if pawnRow + direction >= 0 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction ][ pawnCol + 1 ] != "e":
+                adversaryPawnsEndangered += 1
+            if pawnRow + direction >= 0 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction ][ pawnCol - 1 ] != "e":
+                adversaryPawnsEndangered += 1
+            if pawnRow + direction*2 >= 0 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction*2 ][ pawnCol + 1 ] != "e":
+                adversaryPawnsEndangered += 1
+            if pawnRow + direction*2 >= 0 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction*2 ][ pawnCol - 1 ] != "e":
+                adversaryPawnsEndangered += 1
+
             #counting number of blocked pawns
             if pawnRow + direction >= 0 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
                 blockedAdversaryPawns+= 1
@@ -115,7 +130,9 @@ class Heuristic:
             #number of pawns which have a clear sight to the end of the board
             for pos in range(pawnRow + direction, direction, direction):
                 if node.board.state[ pos ][pawnCol] != "e":
-                    break
+                    if pawnCol + 1 < 8 and node.board.state[ pos ][pawnCol +1] != "e":
+                        if pawnCol -1 >= 0 and node.board.state[ pos ][pawnCol -1] != "e":
+                            break
                 else:
                     if pos == 7:
                         adversaryPawnsClearSight +=1
@@ -136,5 +153,5 @@ class Heuristic:
                          enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
-                         movesWeight*( playerMoves - adversaryMoves ) - endangeredPawnsWeight*(  playerPawnsEndangered ) +
+                         movesWeight*( playerMoves - adversaryMoves ) - endangeredPawnsWeight*(  adversaryPawnsEndangered - playerPawnsEndangered ) +
                          clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ))
