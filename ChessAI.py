@@ -14,6 +14,8 @@ class ChessAI:
         self.color = color
         self.type = 'AI'
         self.table = ZobristHash(size=2**24)
+        self.worker_proc = -1
+        self.continueIterative = True
 
     def GetName(self):
         return self.name
@@ -27,43 +29,37 @@ class ChessAI:
     def GetMove(self, currentNode):
         actions = currentNode.Actions("black", self.table)
 
-        worker_proc = os.fork()
+        self.continueIterative = True
+        self.worker_proc = os.fork()
 
-        if worker_proc == 0:
-            self.GetIterativeMove(currentNode, actions)
-        else:
-
-            def handler(signum, frame):
+        def handler(signum, frame):
                 print "signal received"
-                continueIterative = False
-                os.kill(worker_proc, signal.SIGKILL)
+                self.continueIterative = False
+                os.kill(self.worker_proc, signal.SIGKILL)
 
+        if self.worker_proc == 0:
+            depth = 1
+            while self.continueIterative:
+                self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions, initialDepth=depth)
+                depth +=1
+                #DEBUG
+                print "search arrived at depth "+str(depth)
+        else:
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(5)
+            signal.alarm(10)
             try:
                 os.wait()
             except OSError:
                 pass
 
         bestMoveDepth = -1
+        bestMoveTuple = None
         #get the best move tuple
         for i in actions:
             if i.bestMoveDepth > bestMoveDepth:
                 bestMoveDepth = i.bestMoveDepth
                 bestMoveTuple = i.GetMoveTuple()
         return bestMoveTuple
-
-    def GetIterativeMove(self, currentNode, actions):
-        bestMoveTuple = None
-        depth = 1
-        continueIterative = True
-        while continueIterative:
-            self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions, initialDepth=depth)
-            depth +=1
-            #DEBUG
-            print "search arrived at depth "+str(depth)
-
-
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None, initialDepth=0):
         #use hashtable
