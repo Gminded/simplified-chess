@@ -62,8 +62,9 @@ class ChessNode:
             actions = []
             for piece in my_pieces:
                 moves = self.board.GetListOfValidMoves(player_color, piece)
-                moves.insert(0, piece)
-                actions.append(moves)
+                if moves:
+                    moves.insert(0, piece)
+                    actions.append(moves)
 
         if not actions or counter >= len(actions):
             return None, None, None, None
@@ -77,7 +78,7 @@ class ChessNode:
         successor.board.MovePiece(move_tuple)
 
         #advance
-        if inner < len(actions[counter]) - 1:
+        if inner < ( len(actions[counter]) - 1):
             inner += 1
         else:
             counter += 1
