@@ -30,26 +30,25 @@ class ChessAI:
         depth = 1
         self.bestMoveTuple = None
         self.bestMoveUtility = -1000
+        try:
+            def handler(signum, frame):
+                print "signal received"
+                raise RuntimeError
+            signal.signal(signal.SIGALRM, handler)
+            signal.alarm(20)
+            while True:
+                #htime = 0
+                utility, self.bestMoveTuple = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)#, htime=htime)
 
-        #try:
-            #def handler(signum, frame):
-            #    print "signal received"
-            #    raise RuntimeError
-            #signal.signal(signal.SIGALRM, handler)
-            #signal.alarm(30)
+                #DEBUG
+                print "search arrived at depth "+str(depth)#+" heuristic time= "+str(htime)+"s"
+                depth +=1
 
-        while depth < 5:
-            #htime = 0
-            utility, self.bestMoveTuple = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)#, htime=htime)
-
-            #DEBUG
-            print "search arrived at depth "+str(depth)#+" heuristic time= "+str(htime)+"s"
-            depth +=1
-
-            #new hashtables
-            self.heuristicTable = copy.copy(self.table)
-            self.table = ZobristHash(size=2**24)
-
+                #new hashtables
+                self.heuristicTable = copy.copy(self.table)
+                self.table = ZobristHash(size=2**24)
+        except RuntimeError:
+            pass
         return self.bestMoveTuple
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0):#, htime=0):
@@ -57,6 +56,7 @@ class ChessAI:
         cachedValue = self.table.lookup(currentNode.board)
         if cachedValue != None:
             currentNode.SetUtility(cachedValue[0]) #utility
+            currentNode.SetMoveTuple(cachedValue[1])
             return cachedValue
 
         #start = time.time()
@@ -74,17 +74,21 @@ class ChessAI:
             counter = 0
             inner = 1
             moves = []
-            node = currentNode.NextAction("black", counter, inner, moves)
+            node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
+            bestMove = None
             while node != None:
                 utility, tuple = self.AlphaBetaSearch( alpha, beta, node, False, depth-1)
                 v = max(v, utility)#, htime) )
                 if v >= beta:
                     return v, tuple
-                alpha = max(alpha, v)
-                node = currentNode.NextAction("black", counter, inner, moves)
+                if v > alpha:
+                    alpha = v
+                    bestMove = tuple
+                node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
             self.table.insertUtility(currentNode.board, v, currentNode.moveTuple)
             currentNode.SetUtility(v)
-            return v, currentNode.moveTuple
+            currentNode.SetMoveTuple(bestMove)
+            return v, bestMove
 
         # Min
         else:
@@ -92,14 +96,18 @@ class ChessAI:
             counter = 0
             inner = 1
             moves = []
-            node = currentNode.NextAction("white", counter, inner, moves)
+            bestMove = None
+            node, counter, actions, inner = currentNode.NextAction("white", counter, inner, moves)
             while node != None:
                 utility, tuple = self.AlphaBetaSearch( alpha, beta, node, True, depth-1)
                 v = min(v, utility)#, htime ) )
                 if v <= alpha:
                     return v, tuple
-                beta = min( beta, v)
-                node = currentNode.NextAction("white", counter, inner, moves)
+                if v < beta:
+                    beta = v
+                    bestMove = tuple
+                node, counter, actions, inner = currentNode.NextAction("white", counter, inner, moves)
             self.table.insertUtility(currentNode.board, v, currentNode.moveTuple)
             currentNode.SetUtility(v)
+            currentNode.SetMoveTuple(bestMove)
             return v, currentNode.moveTuple

@@ -66,7 +66,7 @@ class ChessNode:
                 actions.append(moves)
 
         if counter >= len(actions):
-            return None
+            return None, None, None, None
 
         fromCoords = actions[counter][0]
         toCoords = actions[counter][inner]
@@ -77,12 +77,12 @@ class ChessNode:
         successor.board.MovePiece(move_tuple)
 
         #advance
-        counter += 1
-        if inner < len(actions[counter]):
+        if inner < len(actions[counter]) - 1:
             inner += 1
         else:
+            counter += 1
             inner = 1
-        return successor
+        return successor, counter,actions, inner
 
     #return successor nodes
     def Actions(self, player_color, table):
