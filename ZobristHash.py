@@ -32,10 +32,10 @@ class ZobristHash:
                     h = h ^ self.zobristTable[row*8+col][piece]
         return h
 
-    def insertUtility(self, board, utility):
+    def insertUtility(self, board, utility, depth):
         key = self.hash(board)
         if not key in self.hashTable:
-            self.hashTable[key] = utility
+            self.hashTable[key] = utility, depth
 
     def lookup(self, board):
         key = self.hash(board)
