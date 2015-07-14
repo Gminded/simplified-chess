@@ -65,7 +65,7 @@ class ChessNode:
                 moves.insert(0, piece)
                 actions.append(moves)
 
-        if not actions or counter >= len(actions) or inner >= len(actions[counter]):
+        if not actions or counter >= len(actions):
             return None, None, None, None
 
         fromCoords = actions[counter][0]
