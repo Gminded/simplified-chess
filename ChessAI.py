@@ -36,7 +36,7 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(7)
+            signal.alarm(30)
 
             while True:
                 self.bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
