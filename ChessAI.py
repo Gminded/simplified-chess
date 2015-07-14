@@ -67,7 +67,7 @@ class ChessAI:
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None, initialDepth=0):
         #use hashtable
-        if depth == 0:
+        if currentNode.bestMoveDepth > initialDepth:
             cachedValue = self.table.lookup(currentNode.board)
             if cachedValue != None:
                 currentNode.SetUtility(cachedValue) #utility
