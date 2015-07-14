@@ -49,6 +49,40 @@ class ChessNode:
         actions += len( self.board.GetListOfValidMoves(playerColor, myKing) )
         return  actions
 
+    def NextAction(self, player_color, counter, inner, actions):
+
+        if counter == 0:
+            if player_color == "white":
+                my_pieces = copy.copy( self.board.whitePawns )
+                my_pieces.append(self.board.whiteKing)
+            else:
+                my_pieces = copy.copy( self.board.blackPawns )
+                my_pieces.append(self.board.blackKing)
+
+            actions = []
+            for piece in my_pieces:
+                moves = self.board.GetListOfValidMoves(player_color, piece)
+                moves.insert(0, piece)
+                actions.append(moves)
+
+        if counter >= len(actions):
+            return None
+
+        fromCoords = actions[counter][inner]
+        toCoords = actions[counter]
+
+        move_tuple = fromCoords, toCoords
+        successor = ChessNode(self.board)
+        successor.SetMoveTuple(move_tuple)
+        successor.board.MovePiece(move_tuple)
+
+        #advance
+        counter += 1
+        if inner < len(actions[counter]):
+            inner += 1
+        else:
+            inner = 1
+        return successor
 
     #return successor nodes
     def Actions(self, player_color, table):
