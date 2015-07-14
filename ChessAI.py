@@ -26,15 +26,16 @@ class ChessAI:
 
     def GetMove(self, currentNode):
         depth = 1
+        bestMove = None
         try:
             def handler(signum, frame):
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(20)
+            signal.alarm(10)
             while True:
                 #htime = 0
-                utility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)#, htime=htime)
+                bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth)#, htime=htime)
 
                 #DEBUG
                 print "search arrived at depth "+str(depth)#+" heuristic time= "+str(htime)+"s"
@@ -46,25 +47,31 @@ class ChessAI:
         except RuntimeError:
             pass
 
+        return bestMove
+
+    def AlphaBetaInit(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0):
+        v = -10000
         counter = 0
         inner = 1
         moves = []
-        bestMove = None
         node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
+        bestMove = None
         while node != None:
-            if utility == node.GetUtility():
+            utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1)
+            v = max(v, utility)
+            if v >= beta:
+                return v, tuple
+            if v > alpha:
+                alpha = v
                 bestMove = node.GetMoveTuple()
-                break
             node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
-
-
+        self.table.insertUtility(currentNode.board, v)
         return bestMove
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0):#, htime=0):
         #use hashtable
         cachedValue = self.table.lookup(currentNode.board)
         if cachedValue != None:
-            currentNode.SetUtility(cachedValue) #utility
             return cachedValue
 
         #start = time.time()
@@ -83,12 +90,11 @@ class ChessAI:
             inner = 1
             moves = []
             node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
-            bestMove = None
             while node != None:
                 utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1)
                 v = max(v, utility)#, htime) )
                 if v >= beta:
-                    return v, tuple
+                    return v
                 if v > alpha:
                     alpha = v
                 node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
@@ -101,7 +107,6 @@ class ChessAI:
             counter = 0
             inner = 1
             moves = []
-            bestMove = None
             node, counter, actions, inner = currentNode.NextAction("white", counter, inner, moves)
             while node != None:
                 utility = self.AlphaBetaSearch( alpha, beta, node, True, depth-1)
@@ -112,5 +117,4 @@ class ChessAI:
                     beta = v
                 node, counter, actions, inner = currentNode.NextAction("white", counter, inner, moves)
             self.table.insertUtility(currentNode.board, v)
-            currentNode.SetUtility(v)
             return v
