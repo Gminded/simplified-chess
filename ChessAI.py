@@ -2,6 +2,20 @@
 
 from Heuristic import Heuristic
 from ZobristHash import ZobristHash
+import signal
+import thread
+import threading
+
+continueIterative = True
+bestMoveUtility = -1
+worker_thread = None
+semaphore = None
+
+def handler(signum, frame):
+    continueIterative = False
+    worker_thread.exit()
+    semaphore.release()
+
 
 class ChessAI:
     def __init__(self, name, color):
@@ -20,12 +34,14 @@ class ChessAI:
     def GetType(self):
         return self.type
 
-    def GetMove(self, currentNode, depth):
+    def GetMove(self, currentNode):
         actions = currentNode.Actions("black", self.table)
-        bestMoveTuple = None
 
-        bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
-
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(20)
+        semaphore = threading.Semaphore(0)
+        worker_thread = thread.start_new_thread(self.GetIterativeMove, (currentNode, actions) )
+        semaphore.acquire()
         #get the best move tuple
         for i in actions:
             if i.utility == bestMoveUtility:
@@ -33,12 +49,25 @@ class ChessAI:
                 break
         return bestMoveTuple
 
+    def GetIterativeMove(self, currentNode, actions):
+        bestMoveTuple = None
+        depth = 1
+        continueIterative = True
+        while continueIterative:
+            bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
+            depth +=1
+            #DEBUG
+            print "search arrived at depth "+str(depth)+" with utility "+str(bestMoveUtility)
+
+
+
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None):
         #use hashtable
-        cachedValue = self.table.lookup(currentNode.board)
-        if cachedValue != None:
-            currentNode.SetUtility(cachedValue) #utility
-            return cachedValue
+        if depth == 0:
+            cachedValue = self.table.lookup(currentNode.board)
+            if cachedValue != None:
+                currentNode.SetUtility(cachedValue) #utility
+                return cachedValue
 
         #terminal test1
         if depth == 0:
