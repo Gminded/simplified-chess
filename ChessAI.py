@@ -31,34 +31,32 @@ class ChessAI:
         self.bestMoveTuple = None
         self.bestMoveUtility = -1000
 
-        try:
-            def handler(signum, frame):
-                print "signal received"
-                raise RuntimeError
-            signal.signal(signal.SIGALRM, handler)
-            signal.alarm(30)
+        #try:
+            #def handler(signum, frame):
+            #    print "signal received"
+            #    raise RuntimeError
+            #signal.signal(signal.SIGALRM, handler)
+            #signal.alarm(30)
 
-            while True:
-                #htime = 0
-                utility, self.bestMoveTuple = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)#, htime=htime)
+        while depth < 5:
+            #htime = 0
+            utility, self.bestMoveTuple = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)#, htime=htime)
 
-                #DEBUG
-                print "search arrived at depth "+str(depth)#+" heuristic time= "+str(htime)+"s"
-                depth +=1
+            #DEBUG
+            print "search arrived at depth "+str(depth)#+" heuristic time= "+str(htime)+"s"
+            depth +=1
 
-                #new hashtables
-                self.heuristicTable = copy.copy(self.table)
-                self.table = ZobristHash(size=2**24)
-        except RuntimeError:
-            pass
-        finally:
-            return self.bestMoveTuple
+            #new hashtables
+            self.heuristicTable = copy.copy(self.table)
+            self.table = ZobristHash(size=2**24)
+
+        return self.bestMoveTuple
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0):#, htime=0):
         #use hashtable
         cachedValue = self.table.lookup(currentNode.board)
         if cachedValue != None:
-            currentNode.SetUtility(cachedValue) #utility
+            currentNode.SetUtility(cachedValue[0]) #utility
             return cachedValue
 
         #start = time.time()

@@ -68,8 +68,8 @@ class ChessNode:
         if counter >= len(actions):
             return None
 
-        fromCoords = actions[counter][inner]
-        toCoords = actions[counter]
+        fromCoords = actions[counter][0]
+        toCoords = actions[counter][inner]
 
         move_tuple = fromCoords, toCoords
         successor = ChessNode(self.board)
