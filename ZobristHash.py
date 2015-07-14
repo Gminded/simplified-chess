@@ -34,8 +34,7 @@ class ZobristHash:
 
     def insertUtility(self, board, utility, depth):
         key = self.hash(board)
-        if not key in self.hashTable:
-            self.hashTable[key] = utility, depth
+        self.hashTable[key] = utility, depth
 
     def lookup(self, board):
         key = self.hash(board)
