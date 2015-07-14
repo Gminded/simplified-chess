@@ -12,10 +12,10 @@ class Heuristic:
 
         #weights
         winWeigth = 10000
-        endangeredPawnsWeight = 20
+        endangeredPawnsWeight = 30
         minDistanceWeight = 20
         avgDistanceWeight = 15
-        enpassantWeight = 20
+        enpassantWeight = 15
         pawnWeight = 20
         blockedPawnsWeight = 5
         movesWeight = 1
@@ -159,5 +159,5 @@ class Heuristic:
                          enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
-                         movesWeight*( playerMoves - adversaryMoves ) - endangeredPawnsWeight*(  adversaryPawnsEndangered - playerPawnsEndangered ) +
+                         movesWeight*( playerMoves - adversaryMoves ) + endangeredPawnsWeight*(  adversaryPawnsEndangered - playerPawnsEndangered ) +
                          clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ))
