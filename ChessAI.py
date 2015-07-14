@@ -25,14 +25,14 @@ class ChessAI:
         return self.type
 
     def GetMove(self, currentNode):
-        depth = 1
+        depth = 2
         bestMove = None
         try:
             def handler(signum, frame):
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(20)
+            signal.alarm(22)
             while True:
                 #htime = 0
                 bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)#, htime=htime)
@@ -48,7 +48,7 @@ class ChessAI:
             pass
         return bestMove
 
-    def AlphaBetaInit(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
+    def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
         v = -10000
         counter = 0
         inner = 1
@@ -56,7 +56,7 @@ class ChessAI:
         node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
         bestMove = None
         while node != None:
-            utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit)
+            utility = self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit)
             if utility > v:
                 v = utility
                 bestMove = node.GetMoveTuple()
