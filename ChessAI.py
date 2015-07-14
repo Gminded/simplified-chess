@@ -3,18 +3,16 @@
 from Heuristic import Heuristic
 from ZobristHash import ZobristHash
 import signal
-import thread
-import threading
+import os
 
 continueIterative = True
 bestMoveUtility = -1
-worker_thread = None
-semaphore = None
+worker_proc = None
 
 def handler(signum, frame):
+    print "signal received"
     continueIterative = False
-    worker_thread.exit()
-    semaphore.release()
+    os.kill(worker_proc, signal.SIGKILL)
 
 
 class ChessAI:
@@ -37,11 +35,17 @@ class ChessAI:
     def GetMove(self, currentNode):
         actions = currentNode.Actions("black", self.table)
 
-        signal.signal(signal.SIGALRM, handler)
-        signal.alarm(20)
-        semaphore = threading.Semaphore(0)
-        worker_thread = thread.start_new_thread(self.GetIterativeMove, (currentNode, actions) )
-        semaphore.acquire()
+        worker_proc = os.fork()
+        if worker_proc == 0:
+            self.GetIterativeMove(currentNode, actions)
+        else:
+            signal.signal(signal.SIGALRM, handler)
+            signal.alarm(20)
+            try:
+                os.wait()
+            except OSError:
+                pass
+
         #get the best move tuple
         for i in actions:
             if i.utility == bestMoveUtility:
