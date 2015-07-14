@@ -27,7 +27,6 @@ class ChessAI:
         return self.type
 
     def GetMove(self, currentNode):
-        actions = currentNode.Actions("black", self.heuristicTable)
         depth = 1
         self.bestMoveTuple = None
         self.bestMoveUtility = -1000
@@ -41,16 +40,11 @@ class ChessAI:
 
             while True:
                 #htime = 0
-                self.bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)#, htime=htime)
+                utility, self.bestMoveTuple = self.AlphaBetaSearch(currentNode=currentNode, depth=depth)#, htime=htime)
 
                 #DEBUG
                 print "search arrived at depth "+str(depth)#+" heuristic time= "+str(htime)+"s"
                 depth +=1
-
-                #get the best move tuple
-                for i in actions:
-                    if i.utility == self.bestMoveUtility:
-                        self.bestMoveTuple = i.GetMoveTuple()
 
                 #new hashtables
                 self.heuristicTable = copy.copy(self.table)
@@ -60,7 +54,7 @@ class ChessAI:
         finally:
             return self.bestMoveTuple
 
-    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None):#, htime=0):
+    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0):#, htime=0):
         #use hashtable
         cachedValue = self.table.lookup(currentNode.board)
         if cachedValue != None:
@@ -71,17 +65,8 @@ class ChessAI:
         #terminal test1
         if depth == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table)
-            self.table.insertUtility(currentNode.board, currentNode.utility)
-            return currentNode.utility
-        #end = time.time()
-        #htime += (end - start)
-
-        #start = time.time()
-        #terminal test2
-        if len(actions) == 0:
-            Heuristic.ShannonHeuristic(currentNode, self.table)
-            self.table.insertUtility(currentNode.board, currentNode.utility)
-            return currentNode.utility
+            self.table.insertUtility(currentNode.board, currentNode.utility, currentNode.moveTuple)
+            return currentNode.utility, currentNode.moveTuple
         #end = time.time()
         #htime += (end - start)
 
@@ -90,31 +75,33 @@ class ChessAI:
             v = -10000
             counter = 0
             inner = 1
-            actions = []
-            node = currentNode.NextAction("black", counter, inner, actions)
+            moves = []
+            node = currentNode.NextAction("black", counter, inner, moves)
             while node != None:
-                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 , None))#, htime) )
+                utility, tuple = self.AlphaBetaSearch( alpha, beta, node, False, depth-1)
+                v = max(v, utility)#, htime) )
                 if v >= beta:
-                    return v
+                    return v, tuple
                 alpha = max(alpha, v)
-                node = currentNode.NextAction("black", counter, inner, actions)
-            self.table.insertUtility(currentNode.board, v)
+                node = currentNode.NextAction("black", counter, inner, moves)
+            self.table.insertUtility(currentNode.board, v, currentNode.moveTuple)
             currentNode.SetUtility(v)
-            return v
+            return v, currentNode.moveTuple
 
         # Min
         else:
             v = 10000
             counter = 0
             inner = 1
-            actions = []
-            node = currentNode.NextAction("white", counter, inner, actions)
+            moves = []
+            node = currentNode.NextAction("white", counter, inner, moves)
             while node != None:
-                v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, None))#, htime ) )
+                utility, tuple = self.AlphaBetaSearch( alpha, beta, node, True, depth-1)
+                v = min(v, utility)#, htime ) )
                 if v <= alpha:
-                    return v
+                    return v, tuple
                 beta = min( beta, v)
-                node = currentNode.NextAction("white", counter, inner, actions)
-            self.table.insertUtility(currentNode.board, v)
+                node = currentNode.NextAction("white", counter, inner, moves)
+            self.table.insertUtility(currentNode.board, v, currentNode.moveTuple)
             currentNode.SetUtility(v)
-            return v
+            return v, currentNode.moveTuple
