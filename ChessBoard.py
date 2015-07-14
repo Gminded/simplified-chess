@@ -107,7 +107,7 @@ class ChessBoard:
             toRow = moveTuple[1][0]
             toCol = moveTuple[1][1]
             fromCoords=[fromRow,fromCol]
-            toCoords = [fromRow, toCol]
+            toCoords = [toRow, toCol]
 
             self.oldstate = self.state
             self.state = complete_copy(self.state)
