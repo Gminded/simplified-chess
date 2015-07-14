@@ -31,14 +31,13 @@ class ChessAI:
         self.bestMoveTuple = None
         self.bestMoveUtility = -1000
 
-        def handler(signum, frame):
-            print "signal received"
-            raise RuntimeError
-
-        signal.signal(signal.SIGALRM, handler)
-        signal.alarm(7)
-
         try:
+            def handler(signum, frame):
+                print "signal received"
+                raise RuntimeError
+            signal.signal(signal.SIGALRM, handler)
+            signal.alarm(7)
+
             while True:
                 self.bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
                 depth +=1
@@ -56,11 +55,10 @@ class ChessAI:
 
                 #DEBUG
                 print "search arrived at depth "+str(depth)
-
         except RuntimeError:
-            pass
-
-        return self.bestMoveTuple
+            print "exception caught"
+        finally:
+            return self.bestMoveTuple
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, actions=None):
         #use hashtable
