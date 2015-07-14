@@ -19,7 +19,7 @@ class Heuristic:
         pawnWeight = 20
         blockedPawnsWeight = 5
         movesWeight = 1
-        clearSightWeight = 50
+        clearSightWeight = 100
 
         #Heuristic values
         playerEnpassant = 0
@@ -87,8 +87,11 @@ class Heuristic:
             #number of pawns which have a clear sight to the end of the board
             for pos in range(pawnRow + direction, 8):
                 if node.board.state[ pos ][pawnCol] != "e":
-                    if pawnCol + 1 < 8 and node.board.state[ pos ][pawnCol +1] != "e":
-                        if pawnCol -1 >= 0 and node.board.state[ pos ][pawnCol -1] != "e":
+                    if pawnCol + 1 < 8:
+                        if node.board.state[ pos ][pawnCol +1] != "e":
+                            break
+                    if pawnCol -1 >= 0:
+                        if node.board.state[ pos ][pawnCol -1] != "e":
                             break
                 else:
                     if pos == 7:
@@ -130,8 +133,11 @@ class Heuristic:
             #number of pawns which have a clear sight to the end of the board
             for pos in range(pawnRow + direction, direction, direction):
                 if node.board.state[ pos ][pawnCol] != "e":
-                    if pawnCol + 1 < 8 and node.board.state[ pos ][pawnCol +1] != "e":
-                        if pawnCol -1 >= 0 and node.board.state[ pos ][pawnCol -1] != "e":
+                    if pawnCol + 1 < 8:
+                        if node.board.state[ pos ][pawnCol +1] != "e":
+                            break
+                    if pawnCol -1 >= 0:
+                        if node.board.state[ pos ][pawnCol -1] != "e":
                             break
                 else:
                     if pos == 7:
