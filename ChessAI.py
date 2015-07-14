@@ -40,9 +40,11 @@ class ChessAI:
 
             while True:
                 self.bestMoveUtility = self.AlphaBetaSearch(currentNode=currentNode, depth=depth, actions=actions)
+
+                #DEBUG
+                print "search arrived at depth "+str(depth)
                 depth +=1
 
-                self.bestMoveTuple = None
                 #get the best move tuple
                 for i in actions:
                     if i.utility == self.bestMoveUtility:
@@ -52,9 +54,6 @@ class ChessAI:
                 #new hashtables
                 self.heuristicTable = copy.copy(self.table)
                 self.table = ZobristHash(size=2**24)
-
-                #DEBUG
-                print "search arrived at depth "+str(depth)
         except RuntimeError:
             print "exception caught"
         finally:
@@ -91,6 +90,7 @@ class ChessAI:
             for node in actions:
                 v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1 , None) )
                 if v >= beta:
+                    print('pruned in max')
                     return v
                 alpha = max(alpha, v)
             self.table.insertUtility(currentNode.board, v)
@@ -103,6 +103,7 @@ class ChessAI:
             for node in actions:
                 v = min(v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, None ) )
                 if v <= alpha:
+                    print('pruned in min')
                     return v
                 beta = max( beta, v)
             self.table.insertUtility(currentNode.board, v)
