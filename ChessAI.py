@@ -57,11 +57,8 @@ class ChessAI:
         bestMove = None
         while node != None:
             utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit)
-            v = max(v, utility)
-            if v >= beta:
-                return v, tuple
-            if v > alpha:
-                alpha = v
+            if utility > v:
+                v = utility
                 bestMove = node.GetMoveTuple()
             node, counter, moves, inner = currentNode.NextAction("black", counter, inner, moves)
         self.table.insertUtility(currentNode.board, v, depthLimit)
