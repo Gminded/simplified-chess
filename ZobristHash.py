@@ -32,13 +32,20 @@ class ZobristHash:
                     h = h ^ self.zobristTable[row*8+col][piece]
         return h
 
-    def insertUtility(self, board, utility, depth):
+    def insertUtility(self, board, utility, depth, bestMove, maxPlayer):
         key = self.hash(board)
         ret = self.lookup( board )
         if ret != None and depth > ret[1]:
-            self.hashTable[key] = utility, depth
+            self.hashTable[key] = utility, depth, bestMove, maxPlayer
         elif ret == None:
-            self.hashTable[key] = utility, depth
+            self.hashTable[key] = utility, depth, bestMove, maxPlayer
+
+    def lookupBestMove(self, board):
+        key = self.hash(board)
+        if key in self.hashTable:
+            return self.hashTable[key][2],self.hashTable[key][3]
+        else:
+            return None, None
 
     def lookup(self, board):
         key = self.hash(board)
