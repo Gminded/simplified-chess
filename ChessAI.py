@@ -32,7 +32,7 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(15000)
+            signal.alarm(15)
             while True:
                 #htime = 0
                 bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)#, htime=htime)

@@ -12,8 +12,8 @@ class Heuristic:
 
         #weights
         winWeigth = 10000
-        endangeredPawnsWeight = 0
-        minDistanceWeight = 70
+        endangeredPawnsWeight = 30
+        minDistanceWeight = 60
         avgDistanceWeight = 55
         enpassantWeight = 15
         pawnWeight = 60
