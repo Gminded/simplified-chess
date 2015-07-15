@@ -12,15 +12,15 @@ class Heuristic:
 
         #weights
         winWeigth = 5000
-        endangeredPawnsWeight = 0
-        minDistanceWeight = 20
-        avgDistanceWeight = 20
+        endangeredPawnsWeight = 8
+        minDistanceWeight = 42
+        avgDistanceWeight = 40
         enpassantWeight = 0
         pawnWeight = 80
         blockedPawnsWeight = 2
         movesWeight = 1
         clearSightWeight = 0
-        distanceFromKingWeigth = 20
+        distanceFromKingWeigth = 8
 
         #Heuristic values
         playerEnpassant = 0
@@ -111,11 +111,11 @@ class Heuristic:
             distance = 7 - pawnRow
             playerAvgDistance += distance
             if distance < playerMinDistance:
-                playerMinDistance = 7 - distance
+                playerMinDistance = distance
         if len(playerPawns) != 0:
-            playerAvgDistance = 7 - float(playerAvgDistance) / len(playerPawns)
+            playerAvgDistance = float(playerAvgDistance) / len(playerPawns)
         else:
-            playerAvgDistance = 1
+            playerAvgDistance = 10
 
         if len(playerPawns) != 0:
             playerAvgDistanceFromKing = playerAvgDistanceFromKing / len(playerPawns)
@@ -166,11 +166,11 @@ class Heuristic:
             distance = pawnRow
             adversaryAvgDistance += distance
             if distance < adversaryMinDistance:
-                adversaryMinDistance = 7 -distance
+                adversaryMinDistance = distance
         if len(adversaryPawns) > 0:
             adversaryAvgDistance = float(adversaryAvgDistance) / len(adversaryPawns)
         else:
-            adversaryAvgDistance = 1
+            adversaryAvgDistance = 10
 
         if len(adversaryPawns) != 0:
             adversaryAvgDistanceFromKing = adversaryAvgDistanceFromKing / len(adversaryPawns)
@@ -178,10 +178,10 @@ class Heuristic:
             adversaryAvgDistanceFromKing = 0
 
         #computing value
-        node.SetUtility( winWeigth*( score ) + minDistanceWeight*( playerMinDistance -  playerMinDistance ) +
-                         int( avgDistanceWeight*(playerAvgDistance - adversaryAvgDistance) ) +
+        node.SetUtility( winWeigth*( score ) + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
+                         int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
                          enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
                          movesWeight*( playerMoves - adversaryMoves ) + endangeredPawnsWeight*(  adversaryPawnsEndangered - playerPawnsEndangered ) +
-                         clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ) + distanceFromKingWeigth*(int( playerAvgDistanceFromKing - adversaryAvgDistanceFromKing ) ) )
+                         clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ) + distanceFromKingWeigth*(int( playerAvgDistanceFromKing ) ) )
