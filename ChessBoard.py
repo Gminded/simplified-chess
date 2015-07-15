@@ -4,6 +4,7 @@ import string
 DEFEAT='defeat'
 DRAW='draw'
 NONE='none'
+WON='won'
 
 # To make a complete copy of the previous state.
 def complete_copy(inList):
@@ -561,6 +562,25 @@ class ChessBoard:
                     return False
             else:
                     return self.IsClearPath(newTuple,toTuple)
+
+
+    def quickWinLoseTest(self, color):
+        lost = False
+        won = True
+        if color == "black":
+            for i in range(0,8):
+                if self.state[0][i] == 'wP':
+                    lost = True
+                    break
+            for i in range(0,8):
+                if self.state[7][i] == 'bP':
+                    won = True
+                    break
+        if lost:
+            return DEFEAT
+        if won:
+            return WON
+        return NONE
 
     # color is the color of the current player. The function returns DEFEAT if the current player (color)
     # is defeated in this state. This means that in this state the other player has achieved victory.

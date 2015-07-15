@@ -1,4 +1,5 @@
 from ChessBoard import DEFEAT
+from ChessBoard import WON
 
 class Heuristic:
 
@@ -54,12 +55,13 @@ class Heuristic:
         adversaryPawns = node.board.whitePawns
 
         #checking victory state
-        if node.board.TerminalTest(playerColor) == DEFEAT:
+        winTest =  node.board.quickWinLoseTest(playerColor)
+        if winTest == DEFEAT:
             score = -1
             print "AI lost"
-        elif node.board.TerminalTest(adversaryColor) == DEFEAT:
+        elif winTest == WON:
             score = 1
-            print "AI won"
+            print "AI Won"
 
         #checking number of legal moves
         playerMoves = node.LegalMoves(playerColor)
