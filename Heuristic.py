@@ -55,7 +55,7 @@ class Heuristic:
         adversaryPawns = node.board.whitePawns
 
         #checking victory state
-        winTest =  node.board.quickWinLoseTest(playerColor)
+        winTest =  node.board.quickWinLoseTest()
         if winTest == DEFEAT:
             score = -1
             print "AI lost"

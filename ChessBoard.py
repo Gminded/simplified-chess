@@ -564,18 +564,17 @@ class ChessBoard:
                     return self.IsClearPath(newTuple,toTuple)
 
 
-    def quickWinLoseTest(self, color):
+    def quickWinLoseTest(self):
         lost = False
-        won = True
-        if color == "black":
-            for i in range(0,8):
-                if self.state[0][i] == 'wP':
-                    lost = True
-                    break
-            for i in range(0,8):
-                if self.state[7][i] == 'bP':
-                    won = True
-                    break
+        won = False
+        for i in range(0,8):
+            if self.state[0][i] == 'wP':
+                lost = True
+                break
+        for i in range(0,8):
+            if self.state[7][i] == 'bP':
+                won = True
+                break
         if lost:
             return DEFEAT
         if won:
