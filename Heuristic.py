@@ -21,7 +21,7 @@ class Heuristic:
         blockedPawnsWeight = 2
         movesWeight = 1
         clearSightWeight = 0
-        distanceFromKingWeigth = 8
+        distanceFromKingWeigth = 5
 
         #Heuristic values
         playerEnpassant = 0
@@ -65,7 +65,7 @@ class Heuristic:
 
         #checking number of legal moves
         playerMoves = node.LegalMoves(playerColor)
-        adversaryMoves = node.LegalMoves(adversaryMoves)
+        adversaryMoves = node.LegalMoves(adversaryColor)
 
         direction = 1
         #Two loops for counting player and adversary stuff
@@ -78,7 +78,7 @@ class Heuristic:
                 playerEnpassant += 1
 
             #distance from adv King
-            distance = abs( (node.board.blackKing[0] +node.board.blackKing[1] ) * ( pawnRow + pawnCol))
+            distance = abs( (node.board.blackKing[0] +node.board.blackKing[1] ) - ( pawnRow + pawnCol))
             playerAvgDistanceFromKing += distance
 
 
@@ -134,7 +134,7 @@ class Heuristic:
                 adversaryEnpassant += 1
 
             #distance from adv King
-            distance = abs( (node.board.whiteKing[0] +node.board.whiteKing[1] ) * ( pawnRow + pawnCol))
+            distance = abs( (node.board.whiteKing[0] +node.board.whiteKing[1] ) - ( pawnRow + pawnCol))
             adversaryAvgDistanceFromKing += distance
 
             #counting number of pawns which can be captured during the next turn (and the one after)
@@ -186,4 +186,4 @@ class Heuristic:
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
                          movesWeight*( playerMoves - adversaryMoves ) + endangeredPawnsWeight*(  adversaryPawnsEndangered - playerPawnsEndangered ) +
-                         clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ) + distanceFromKingWeigth*(int( playerAvgDistanceFromKing ) ) )
+                         clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ) - distanceFromKingWeigth*(int( playerAvgDistanceFromKing ) ) )

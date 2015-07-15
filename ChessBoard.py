@@ -567,12 +567,12 @@ class ChessBoard:
     def quickWinLoseTest(self):
         lost = False
         won = False
-        for i in range(0,8):
-            if self.state[0][i] == 'wP':
+        for pawn in self.whitePawns:
+            if pawn[0] == 0:
                 lost = True
                 break
-        for i in range(0,8):
-            if self.state[7][i] == 'bP':
+        for pawn in self.blackPawns:
+            if pawn[0] == 7:
                 won = True
                 break
         if lost:
