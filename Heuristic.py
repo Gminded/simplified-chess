@@ -11,7 +11,7 @@ class Heuristic:
             return cachedValue
 
         #weights
-        winWeigth = 10000
+        winWeigth = 1000000000
         endangeredPawnsWeight = 30
         minDistanceWeight = 50
         avgDistanceWeight = 25
