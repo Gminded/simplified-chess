@@ -49,13 +49,15 @@ class ChessNode:
         actions += len( self.board.GetListOfValidMoves(playerColor, myKing) )
         return  actions
 
-    def NextAction(self, player_color, counter, inner, actions):
+    def NextAction(self, player_color, counter, inner, actions, table, lastWasTheBest):
 
-        if counter == 0:
+        if not lastWasTheBest and counter == 0 and inner == 1:
             if player_color == "white":
+                maxPlayer = False
                 my_pieces = copy.copy( self.board.whitePawns )
                 my_pieces.append(self.board.whiteKing)
             else:
+                maxPlayer = True
                 my_pieces = copy.copy( self.board.blackPawns )
                 my_pieces.append(self.board.blackKing)
 
@@ -63,14 +65,30 @@ class ChessNode:
             for piece in my_pieces:
                 moves = self.board.GetListOfValidMoves(player_color, piece)
                 if moves:
-                    moves.insert(0, piece)
+                    moves.insert(0, ( piece[0], piece[1]) )
                     actions.append(moves)
 
+            bestMove, player = table.lookupBestMove(self.board)
+            if bestMove != None and maxPlayer == player :
+                for move in actions:
+                    for pos in move[1:]:
+                        if move[0] == bestMove[0] and pos == bestMove[1]:
+                            move.remove( bestMove[1] )
+                        if len(move) == 1:
+                            actions.remove(move)
+                lastWasTheBest  = True
+                successor = ChessNode(self.board)
+                successor.SetMoveTuple(bestMove)
+                successor.board.MovePiece(bestMove)
+                return successor, counter,actions, inner, lastWasTheBest
+
+
         if not actions or counter >= len(actions):
-            return None, None, None, None
+            return None, None, None, None, None
 
         fromCoords = actions[counter][0]
         toCoords = actions[counter][inner]
+        lastWasTheBest = False
 
         move_tuple = fromCoords, toCoords
         successor = ChessNode(self.board)
@@ -83,7 +101,7 @@ class ChessNode:
         else:
             counter += 1
             inner = 1
-        return successor, counter,actions, inner
+        return successor, counter,actions, inner, lastWasTheBest
 
     #return successor nodes
     def Actions(self, player_color, table):

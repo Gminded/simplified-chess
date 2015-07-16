@@ -4,6 +4,7 @@ import string
 DEFEAT='defeat'
 DRAW='draw'
 NONE='none'
+WON='won'
 
 # To make a complete copy of the previous state.
 def complete_copy(inList):
@@ -23,8 +24,8 @@ class ChessBoard:
             self.blackPawns.append([1,col])
 
         self.state = [  ['bK','e','e','e','e','e','e','e'],\
-                        ['wP','e','wP','e','e','e','e','e'],\
-                        ['e','wP','e','e','e','e','e','e'],\
+                        ['e','e','wP','e','e','e','e','e'],\
+                        ['e','e','e','e','e','e','e','e'],\
                         ['wK','e','e','e','e','e','e','e'],\
                         ['e','e','e','e','e','e','e','e'],\
                         ['e','e','e','e','e','e','e','e'],\
@@ -111,11 +112,11 @@ class ChessBoard:
 
             self.oldstate = self.state
             self.state = complete_copy(self.state)
-
             fromPiece = self.state[fromRow][fromCol]
             toPiece = self.state[toRow][toCol]
             fromCoords = [fromRow, fromCol ]
             toCoords = [ toRow, toCol]
+            capturedCoords = None
 
             # en passant
             enpassant = False
@@ -180,19 +181,21 @@ class ChessBoard:
         piece = self.state[row][col]
         moves=[]
         if color=='black':
-            color='b'
             direction=1
             myKingCoords=self.blackKing
         else:
-            color='w'
             direction=-1
             myKingCoords=self.whiteKing
-        if color in piece:
+        if color[0:1] in piece:
             if 'P' in piece:
-                moves.append((row+direction, col))
-                moves.append((row+direction, col-1))
-                moves.append((row+direction, col+1))
-                moves.append((row+direction*2, col))
+                if 0 <= row+direction <= 7:
+                    moves.append((row+direction, col))
+                    if 0 <= col - 1 <= 7:
+                        moves.append((row+direction, col-1))
+                    if 0 <= col + 1 <= 7:
+                        moves.append((row+direction, col+1))
+                if 0 <= row+direction <= 7:
+                    moves.append((row+direction*2, col))
             elif 'K' in piece:
                 addrow=[0]
                 if 0 < row: addrow.append(-1)
@@ -207,7 +210,7 @@ class ChessBoard:
 
         #check enpassant
         if self.IsEnpassantPawn( fromTuple ):
-            if color == 'b':
+            if color[0:1] == 'b':
                 if col+1 <= 7 and 'P' in self.state[row][col+1] and 'w' in self.state[row][col+1]:
                     moves.append( ( row, col+1 ) )
                 if col-1 >= 0 and 'P' in self.state[row][col-1] and 'w' in self.state[row][col-1]:
@@ -221,10 +224,10 @@ class ChessBoard:
 
         for toTuple in moves:
             if 'K' in piece:
-                check=self.DoesMovePutPlayerInCheck(color, toTuple, fromTuple, toTuple)
+                check=self.DoesMovePutPlayerInCheck(color[0:1], toTuple, fromTuple, toTuple)
             else:
-                check=self.DoesMovePutPlayerInCheck(color, myKingCoords, fromTuple, toTuple)
-            if self._IsCorrectMove(color,fromTuple,toTuple) and not check:
+                check=self.DoesMovePutPlayerInCheck(color[0:1], myKingCoords, fromTuple, toTuple)
+            if self._IsCorrectMove(color[0:1],fromTuple,toTuple) and not check:
                 legalDestinationSpaces.append(toTuple)
         return legalDestinationSpaces
 
@@ -315,6 +318,7 @@ class ChessBoard:
         toCol = toTuple[1]
         fromPiece = self.state[fromRow][fromCol]
         toPiece = self.state[toRow][toCol]
+        enemyColor = ""
 
         if color == "black":
                 enemyColor = 'w'
@@ -357,49 +361,6 @@ class ChessBoard:
                 if toRow == fromRow-1 and (toCol == fromCol+1 or toCol == fromCol-1) and enemyColor in toPiece:
                         #attacking
                         return True
-
-        elif "R" in fromPiece:
-                #Rook
-                if (toRow == fromRow or toCol == fromCol) and (toPiece == 'e' or enemyColor in toPiece):
-                        if self.IsClearPath(fromTuple,toTuple):
-                                return True
-
-        elif "T" in fromPiece:
-                #Knight
-                col_diff = toCol - fromCol
-                row_diff = toRow - fromRow
-                if toPiece == 'e' or enemyColor in toPiece:
-                        if col_diff == 1 and row_diff == -2:
-                                return True
-                        if col_diff == 2 and row_diff == -1:
-                                return True
-                        if col_diff == 2 and row_diff == 1:
-                                return True
-                        if col_diff == 1 and row_diff == 2:
-                                return True
-                        if col_diff == -1 and row_diff == 2:
-                                return True
-                        if col_diff == -2 and row_diff == 1:
-                                return True
-                        if col_diff == -2 and row_diff == -1:
-                                return True
-                        if col_diff == -1 and row_diff == -2:
-                                return True
-
-        elif "B" in fromPiece:
-                #Bishop
-                if ( abs(toRow - fromRow) == abs(toCol - fromCol) ) and (toPiece == 'e' or enemyColor in toPiece):
-                        if self.IsClearPath(fromTuple,toTuple):
-                                return True
-
-        elif "Q" in fromPiece:
-                #Queen
-                if (toRow == fromRow or toCol == fromCol) and (toPiece == 'e' or enemyColor in toPiece):
-                        if self.IsClearPath(fromTuple,toTuple):
-                                return True
-                if ( abs(toRow - fromRow) == abs(toCol - fromCol) ) and (toPiece == 'e' or enemyColor in toPiece):
-                        if self.IsClearPath(fromTuple,toTuple):
-                                return True
 
         elif "K" in fromPiece:
                 #King
@@ -561,6 +522,24 @@ class ChessBoard:
                     return False
             else:
                     return self.IsClearPath(newTuple,toTuple)
+
+
+    def quickWinLoseTest(self):
+        lost = False
+        won = False
+        for pawn in self.whitePawns:
+            if pawn[0] == 0:
+                lost = True
+                break
+        for pawn in self.blackPawns:
+            if pawn[0] == 7:
+                won = True
+                break
+        if lost:
+            return DEFEAT
+        if won:
+            return WON
+        return NONE
 
     # color is the color of the current player. The function returns DEFEAT if the current player (color)
     # is defeated in this state. This means that in this state the other player has achieved victory.
