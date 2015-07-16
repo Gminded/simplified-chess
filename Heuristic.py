@@ -13,14 +13,14 @@ class Heuristic:
 
         #weights
         winWeigth = 5000
-        endangeredPawnsWeight = 8
-        minDistanceWeight = 42
+        endangeredPawnsWeight = 0
+        minDistanceWeight = 60
         avgDistanceWeight = 40
         enpassantWeight = 0
-        pawnWeight = 80
+        pawnWeight = 10
         blockedPawnsWeight = 2
         movesWeight = 1
-        clearSightWeight = 0
+        clearSightWeight = 40
         distanceFromKingWeigth = 5
 
         #Heuristic values

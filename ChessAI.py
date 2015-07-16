@@ -32,7 +32,7 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(15)
+            signal.alarm(14)
             while True:
                 #htime = 0
                 bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)#, htime=htime)
@@ -94,12 +94,14 @@ class ChessAI:
                 utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit)
                 v = max(v, utility)#, htime) )
                 if v >= beta:
+                    bestMove = node.GetMoveTuple()
+                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                     return v
                 if v > alpha:
                     alpha = v
                     bestMove = node.GetMoveTuple()
+                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                 node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
-            self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
             return v
 
         # Min
@@ -115,10 +117,12 @@ class ChessAI:
                 utility = self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)
                 v = min(v, utility)#, htime ) )
                 if v <= alpha:
+                    bestMove = node.GetMoveTuple()
+                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                     return v
                 if v < beta:
                     beta = v
                     bestMove = node.GetMoveTuple()
+                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                 node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("white", counter, inner, moves, self.table, lastWasTheBest)
-            self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, maxPlayer)
             return v
