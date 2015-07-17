@@ -1,37 +1,8 @@
 #! /usr/bin/env python
 import string
 
-DEFEAT='defeat'
-DRAW='draw'
-NONE='none'
-WON='won'
-
-# To make a complete copy of the previous state.
-def complete_copy(inList):
-    if isinstance(inList, list):
-        return list( map(complete_copy, inList) )
-    else:
-        return inList
-
 class ChessBoard:
     def __init__(self,setupType=0):
-        self.whiteKing = [7,4] # the white king coordinates
-        self.blackKing = [0,4]
-        self.whitePawns = [] # all of the white pawns coordinates expressed as lists
-        self.blackPawns = []
-        for col in range(0,8):
-            self.whitePawns.append([6,col])
-            self.blackPawns.append([1,col])
-
-        self.state = [  ['bK','e','e','e','e','e','e','e'],\
-                        ['e','e','wP','e','e','e','e','e'],\
-                        ['e','e','e','e','e','e','e','e'],\
-                        ['wK','e','e','e','e','e','e','e'],\
-                        ['e','e','e','e','e','e','e','e'],\
-                        ['e','e','e','e','e','e','e','e'],\
-                        ['e','e','e','e','e','e','e','e'],\
-                        ['e','e','e','e','e','e','e','e']]
-                                        
         if setupType == 0:
                 self.state[0] = ['e','e','e','e','bK','e','e','e']
                 self.state[1] = ['bP','bP','bP','bP','bP','bP','bP','bP']
@@ -41,7 +12,6 @@ class ChessBoard:
                 self.state[5] = ['e','e','e','e','e','e','e','e']
                 self.state[6] = ['wP','wP','wP','wP','wP','wP','wP','wP']
                 self.state[7] = ['e','e','e','e','wK','e','e','e']
-        self.oldstate = self.state
 
     def GetState(self):
         return self.state
