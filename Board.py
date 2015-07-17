@@ -148,7 +148,12 @@ class Board:
                 return True
             return False
 
-
+    #TODO
+    #enpassant check
+    #generate possible moves
+    #get valid list of moves
+    #does move put player in check
+    #terminal test
 
 
 
