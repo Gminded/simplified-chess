@@ -14,7 +14,6 @@ class ChessAI:
         self.color = color
         self.type = 'AI'
         self.table = ZobristHash(size=2**24)
-        #self.heuristicTable = ZobristHash(size=2**24)
 
     def GetName(self):
         return self.name
@@ -77,12 +76,7 @@ class ChessAI:
         print "best utility "+str(v)
         return bestMove, v
 
-    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):#, htime=0):
-        #use hashtable
-        #cachedValue = self.table.lookup(currentNode.board)
-        #if cachedValue != None and cachedValue[1] >= depth:
-        #    return cachedValue[0]
-
+    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
         if maxPlayer:
             color='black'
         else:
