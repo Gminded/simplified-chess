@@ -33,7 +33,7 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(14)
+            signal.alarm(15)
             while True:
                 #htime = 0
                 bestMove, utility = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)#, htime=htime)
@@ -44,6 +44,7 @@ class ChessAI:
 
                 # It's pointless to go on if we know are going to win or lose
                 if 500000000 <= utility or utility <= -500000000:
+                    print('Stopping early because of terminal state.')
                     signal.alarm(0) #disable alarm because we're done
                     break
 
@@ -55,13 +56,17 @@ class ChessAI:
         return bestMove
 
     def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
-        v = -10000
         counter = 0
         inner = 1
         moves = []
         lastWasTheBest = False
         node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
         bestMove = None
+        # Initialize v before cycling through the other actions
+        if node != None:
+            v = self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit)
+            bestMove = node.GetMoveTuple()
+            node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
         while node != None:
             utility = self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit)
             if utility > v:
@@ -70,7 +75,7 @@ class ChessAI:
             node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
         self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, True)
         print "best utility "+str(v)
-        return bestMove, utility
+        return bestMove, v
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):#, htime=0):
         #use hashtable

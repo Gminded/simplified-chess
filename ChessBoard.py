@@ -227,7 +227,7 @@ class ChessBoard:
                 check=self.DoesMovePutPlayerInCheck(color[0:1], toTuple, fromTuple, toTuple)
             else:
                 check=self.DoesMovePutPlayerInCheck(color[0:1], myKingCoords, fromTuple, toTuple)
-            if self._IsCorrectMove(color[0:1],fromTuple,toTuple) and not check:
+            if not check and self._IsCorrectMove(color[0:1],fromTuple,toTuple):
                 legalDestinationSpaces.append(toTuple)
         return legalDestinationSpaces
 
@@ -288,6 +288,8 @@ class ChessBoard:
         col=coords[1]
         piece=self.state[row][col]
         enpassant=False #will become true if enpassant is possible
+        captLeft=False
+        captRight=True
         # left and right of the piece. -1 stands for a square outside of the self.state.
         left=col-1
         if col+1 <= 7: right=col+1
@@ -298,17 +300,21 @@ class ChessBoard:
                 if left != -1 and 'wP' == self.state[row][left] and 'e' == self.state[5][left]:
                     if 'wP' == self.oldstate[6][left] and 'e' == self.state[6][left]: #the pawn moved by 2 squares
                         enpassant=True
+                        captLeft=True
                 if right != -1 and 'wP' == self.state[row][right] and 'e' == self.state[5][right]:
                     if 'wP' == self.oldstate[6][right] and 'e' == self.state[6][right]: #the pawn moved by 2 squares
                         enpassant=True
-            if 'w' in piece and row==3:
+                        captRight=True
+            elif 'w' in piece and row==3:
                 if left != -1 and 'bP' == self.state[row][left] and 'e' == self.state[2][left]:
                     if 'bP' == self.oldstate[0][left] and 'e' == self.state[0][left]: #the pawn moved by 2 squares
                         enpassant=True
+                        captLeft=True
                 if right != -1 and 'bP' == self.state[row][right] and 'e' == self.state[2][right]:
                     if 'bP' == self.oldstate[0][right] and 'e' == self.state[0][right]: #the pawn moved by 2 squares
                         enpassant=True
-        return enpassant
+                        captRight=True
+        return enpassant, captLeft, captRight
 
     def IsLegalMove(self, color,fromTuple,toTuple):
         #print "IsLegalMove with fromTuple:",fromTuple,"and toTuple:",toTuple,"color = ",color
@@ -380,8 +386,8 @@ class ChessBoard:
         # Faster implementation:
         fromRow=fromTuple[0]
         fromCol=fromTuple[1]
-        toRow=fromTuple[0]
-        toCol=fromTuple[1]
+        toRow=toTuple[0]
+        toCol=toTuple[1]
         row=myKingCoords[0]
         col=myKingCoords[1]
         right = col < 7
@@ -392,11 +398,15 @@ class ChessBoard:
         # backup values because we are only simulating
         backupFrom=self.state[fromRow][fromCol]
         backupTo=self.state[toRow][toCol]
-        if 'P' in backupFrom and abs(toCol - fromCol) == 1 and 'e' == self.state[toRow][toCol]:
-            self.state[fromRow][toCol]='e'
-            enpassant=True
-        else:
-            enpassant=False
+        #the error of alternating pwns is here! it's because of enpassant
+        #the check is incorrect and returns true in the initial state
+        #if color+'P' in backupFrom and abs(toCol - fromCol) == 1 and 'e' == self.state[toRow][toCol]\
+        enpassant, captLeft, captRight = self.IsEnpassantPawn(fromTuple)
+        if enpassant:
+            if captLeft and fromCol-toCol == 1 or captRight and toCol-fromCol == 1:
+                self.state[fromRow][toCol]='e'
+            else:
+                enpassant=False
         self.state[fromRow][fromCol]='e'
         self.state[toRow][toCol]=backupFrom
 

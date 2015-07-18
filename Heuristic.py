@@ -55,8 +55,8 @@ class Heuristic:
         adversaryPawns = node.board.whitePawns
 
         #checking victory state
-        winTest =  node.board.TerminalTest(color)
-        if winTest == DEFEAT:
+        if DEFEAT == node.board.TerminalTest(color):
+            pass
             if color == 'black':
                 score = -1
             else:
@@ -179,7 +179,7 @@ class Heuristic:
             adversaryAvgDistanceFromKing = 0
 
         #computing value
-        node.SetUtility( winWeight*( score ) + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
+        node.SetUtility( winWeight*score + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
                          int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
                          enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
