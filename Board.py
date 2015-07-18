@@ -4,6 +4,10 @@ DRAW='draw'
 NONE='none'
 WON='won'
 
+#player colors
+BLACK='b'
+WHITE='w'
+
 class Board:
     #PIECES
     WHITEKING = 'wK'
@@ -41,7 +45,7 @@ class Board:
     def movePiece(self, chessMove):
         fromPos = chessMove.getFromPos()
         toPos = chessMove.getToPos()
-        pieceType = chessMove.getPieceType()
+        pieceType = chessMove.pieceType
 
         if pieceType == self.WHITEKING:
             self.whiteKing = toPos
@@ -80,7 +84,7 @@ class Board:
         toPosRow = toPos[0]
         toPosCol = toPos[1]
         toPosPiece = self.getPiece(toPos)
-        pieceType = chessMove.getPieceType()
+        pieceType = chessMove.pieceType
         foundPieceType = False
 
         #var init
@@ -111,20 +115,20 @@ class Board:
 
             if fromPosRow + direction == toPosRow:
                 if fromPosCol == toPosCol and toPosPiece is None:
-                    chessMove.setMoveType(chessMove.MOVE)
+                    chessMove.moveType=chessMove.MOVE
                     return True
                 elif fromPosCol + 1 == toPosCol:
                     if toPosPiece == advPawn or toPosPiece == advKing:
-                        chessMove.setMoveType(chessMove.CAPTURE)
+                        chessMove.moveType=chessMove.CAPTURE
                         return True
-                    elif self.previousMove.getPieceType() == advPawn and self.previousMove.getToPos() == ( fromPosRow, fromPosCol + 1) and self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol+1 ):
-                        chessMove.setMoveType(chessMove.ENPASSANT_CAPTURE)
+                    elif self.previousMove.pieceType == advPawn and self.previousMove.getToPos() == ( fromPosRow, fromPosCol + 1) and self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol+1 ):
+                        chessMove.moveType=chessMove.ENPASSANT_CAPTURE
                         return True
                 elif fromPosCol - 1 == toPosCol:
                     if toPosPiece == self.BLACKPAWN or toPosPiece == advKing:
-                        chessMove.setMoveType(chessMove.CAPTURE)
-                    elif self.previousMove.getPieceType() == advPawn and self.previousMove.getToPos() == ( fromPosRow, fromPosCol - 1) and self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol-1 ):
-                        chessMove.setMoveType(chessMove.ENPASSANT)
+                        chessMove.moveType=chessMove.CAPTURE
+                    elif self.previousMove.pieceType == advPawn and self.previousMove.getToPos() == ( fromPosRow, fromPosCol - 1) and self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol-1 ):
+                        chessMove.moveType=chessMove.ENPASSANT
                         return True
             return False
 
@@ -142,9 +146,9 @@ class Board:
                     break
 
             if toPosPiece == advPawn:
-                chessMove.setMoveType(chessMove.CAPTURE)
+                chessMove.moveType=chessMove.CAPTURE
             else:
-                chessMove.setMoveType(chessMove.MOVE)
+                chessMove.moveType=chessMove.MOVE
 
             if fromPosRow == toPosRow and ( fromPosCol - 1 == toPosCol or fromPosCol + 1 == toPosCol ):
                 return True
@@ -162,9 +166,9 @@ class Board:
         toPosRow = toPos[0]
         toPosCol = toPos[1]
 
-        if chessMove.getPieceType() == self.WHITEKING:
+        if chessMove.pieceType == self.WHITEKING:
             advPawn = self.BLACKPAWN
-        elif chessMove.getPieceType() == self.BLACKKING:
+        elif chessMove.pieceType == self.BLACKKING:
             advPawn = self.WHITEPAWN
         else:
             return False
@@ -189,6 +193,50 @@ class Board:
             state[row][col]='bP'
 
         return state
+
+    def getAllValidMoves(self,color)
+        if color == BLACK:
+            king=self.blackKing
+            pawns=self.blackPawns
+            direction=self.BLACKDIRECTION
+        else:
+            king=self.whiteKing
+            pawns=self.whitePawns
+            direction=self.WHITEDIRECTION
+        moves=[]
+        # add the king coordinates
+        moves.expand(self.getListOfValidMoves(color+self.KING,king))
+        for pawn in pawns:
+            coords.append(pawn)
+            moves.expand(self.getListOfValidMoves(color+self.PAWN,pawn))
+        return moves
+
+    def getListOfValidMoves(self,piece,fromCoords):
+        moves=[]
+        if self.KING in piece:
+            for r in (-1,0,1):
+                for c in (-1,0,1):
+                    if not (r == c == 0):
+                        move=ChessMove((fromCoords,(row+r,col+c)),piece)
+                        if self.isValidMove(move):
+                            moves.append(move)
+        elif self.PAWN in piece:
+            destinations=[]
+            if color==self.BLACK:
+                direction=self.BLACKDIRECTION
+            else:
+                direction=self.WHITEDIRECTION
+            row=fromCoords[0]
+            col=fromCoords[0]
+            for c in [-1,0,1]:
+                destinations.append((row+direction,col+c))
+            destinations.append((row+2*direction,col))
+            for destination in destinations:
+                move=ChessMove((fromCoords,destination),piece)
+                if self.isValidMove(move):
+                    moves.append(move)
+        return moves
+
 
     #TODO
     #generate possible moves
