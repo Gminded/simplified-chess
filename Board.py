@@ -86,19 +86,30 @@ class Board:
         toPosRow = toPos[0]
         toPosCol = toPos[1]
         toPosPiece = self.getPiece(toPos)
+        pieceType = chessMove.getPieceType()
+        foundPieceType = False
 
         #advance or capture with a white pawn or a black pawn
-        for pieceType in WHITEPAWN,BLACKPAWN:
-            if pieceType == WHITEPAWN:
+        for type in WHITEPAWN,BLACKPAWN:
+            if type == WHITEPAWN == pieceType:
                 direction = WHITEDIRECTION
                 advDirection = BLACKDIRECTION
                 advPawn = BLACKPAWN
                 advKing = BLACKKING
-            else:
+                foundPieceType = True
+            elif type == BLACKPAWN == pieceType:
                 direction = BLACKDIRECTION
                 advDirection = WHITEDIRECTION
                 advPawn = WHITEPAWN
                 advKing = WHITEKING
+                foundPieceType = True
+
+            if not foundPieceType:
+                if type == WHITEPAWN:
+                    continue
+                else:
+                    break
+
 
             if fromPosRow + direction == toPosRow:
                 if fromPosCol == toPosCol and toPosPiece is None:
@@ -117,14 +128,19 @@ class Board:
                     elif self.previousMove.getPieceType() == advPawn and self.previousMove.getToPos() == ( fromPosRow, fromPosCol - 1) and self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol-1 ):
                         chessMove.setMoveType(ENPASSANT)
                         return True
-            return False
 
         #advance or capture with the black King or the white King
-        for pieceType in WHITEKING,BLACKKING:
-            if pieceType == WHITEKING:
+        for type in WHITEKING,BLACKKING:
+            if type == WHITEKING == pieceType:
                 advPawn = BLACKPAWN
-            else:
+            elif type == BLACKKING == pieceType:
                 advPawn = WHITEPAWN
+
+            if not foundPieceType:
+                if type == WHITEKING:
+                    continue
+                else:
+                    break
 
             if toPosPiece == advPawn:
                 chessMove.setMoveType(CAPTURE)
@@ -137,10 +153,14 @@ class Board:
                 return True
             elif ( fromPosCol + 1 == toPosCol or fromPosCol - 1 == toPosCol ) and ( fromPosRow + 1 == toPosRow or fromPosRow - 1 == toPosRow ):
                 return True
-            return False
+
+        return False
+
+    def doesMovePutInCheck(self, chessMove):
+        for king in WHITEKING,BLACKKING:
+
 
     #TODO
-    #enpassant check
     #generate possible moves
     #get valid list of moves
     #does move put player in check
