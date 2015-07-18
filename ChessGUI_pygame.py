@@ -22,7 +22,7 @@ class ChessGUI_pygame:
     def __init__(self,board, depth):
         os.environ['SDL_VIDEO_CENTERED'] = '1' #should center pygame window on the screen
         pygame.init()
-        self.Board = board
+        self.board = board
         self.hidpi_factor = pygame.display.Info().current_h / 600
         self.screen = pygame.display.set_mode((850*self.hidpi_factor, 600*self.hidpi_factor), pygame.DOUBLEBUF)
         self.boardStart_x = 50*self.hidpi_factor
@@ -97,7 +97,6 @@ class ChessGUI_pygame:
             current_square = (current_square+1)%2
 
         #draw row/column labels around the edge of the board
-        chessboard_obj = self.Board
         color = (255,255,255)#white
         antialias = 1
 
@@ -107,7 +106,7 @@ class ChessGUI_pygame:
                 (screenX,screenY) = self.ConvertToScreenCoords((r,c))
                 screenX = screenX + self.square_size/2
                 screenY = screenY + self.square_size/2
-                notation = chessboard_obj.ConvertToAlgebraicNotation_col(c)
+                notation = self.board.convertToAlgebraicNotationCol(c)
                 renderedLine = self.fontDefault.render(notation,antialias,color)
                 self.screen.blit(renderedLine,(screenX,screenY))
 
@@ -117,7 +116,7 @@ class ChessGUI_pygame:
                 (screenX,screenY) = self.ConvertToScreenCoords((r,c))
                 screenX = screenX + self.square_size/2
                 screenY = screenY + self.square_size/2
-                notation = chessboard_obj.ConvertToAlgebraicNotation_row(r)
+                notation = self.board.convertToAlgebraicNotationRow(r)
                 renderedLine = self.fontDefault.render(notation,antialias,color)
                 self.screen.blit(renderedLine,(screenX,screenY))
 
@@ -138,7 +137,7 @@ class ChessGUI_pygame:
                     self.screen.blit(self.black_knight,(screenX,screenY))
                 if board[r][c] == 'bB':
                     self.screen.blit(self.black_bishop,(screenX,screenY))
-                if board[r][c] == 'bQ':
+                if board[r][c] == 'bQ' or board[r][c] == 'bP' and r == 7:
                     self.screen.blit(self.black_queen,(screenX,screenY))
                 if board[r][c] == 'bK':
                     self.screen.blit(self.black_king,(screenX,screenY))
@@ -150,7 +149,7 @@ class ChessGUI_pygame:
                     self.screen.blit(self.white_knight,(screenX,screenY))
                 if board[r][c] == 'wB':
                     self.screen.blit(self.white_bishop,(screenX,screenY))
-                if board[r][c] == 'wQ':
+                if board[r][c] == 'wQ' or board[r][c] == 'wP' and r == 0:
                     self.screen.blit(self.white_queen,(screenX,screenY))
                 if board[r][c] == 'wK':
                     self.screen.blit(self.white_king,(screenX,screenY))
@@ -200,16 +199,16 @@ class ChessGUI_pygame:
                 if squareClicked != []:
                     (r,c) = squareClicked
                     if currentColor == 'black' and 'b' in state[r][c]:
-                        if len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
+                        if len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                     elif currentColor == 'white' and 'w' in state[r][c]:
-                        if len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
+                        if len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
 
             elif fromSquareChosen and not toSquareChosen:
-                possibleDestinations = self.Board.GetListOfValidMoves(currentColor,fromTuple)
+                possibleDestinations = self.board.getListOfValidMoves(state[r][c],fromTuple)
                 self.Draw(state,possibleDestinations)
                 if squareClicked != []:
                     (r,c) = squareClicked
@@ -219,7 +218,7 @@ class ChessGUI_pygame:
                     elif currentColor == 'black' and 'b' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
+                        elif len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:
@@ -227,7 +226,7 @@ class ChessGUI_pygame:
                     elif currentColor == 'white' and 'w' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
+                        elif len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:
