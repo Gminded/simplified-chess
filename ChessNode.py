@@ -43,10 +43,12 @@ class ChessNode:
                 maxPlayer = False
                 my_pieces = copy.copy( self.board.whitePawns )
                 my_pieces.append(self.board.whiteKing)
+                bestMove = table.lookupMinBestMove(self.board)
             else:
                 maxPlayer = True
                 my_pieces = copy.copy( self.board.blackPawns )
                 my_pieces.append(self.board.blackKing)
+                bestMove = table.lookupMaxBestMove(self.board)
 
             actions = []
             for piece in my_pieces:
@@ -55,8 +57,7 @@ class ChessNode:
                     moves.insert(0, ( piece[0], piece[1]) )
                     actions.append(moves)
 
-            bestMove, player = table.lookupBestMove(self.board)
-            if bestMove != None and maxPlayer == player :
+            if bestMove != None:
                 for move in actions:
                     for pos in move[1:]:
                         if move[0] == bestMove[0] and pos == bestMove[1]:
@@ -89,56 +90,3 @@ class ChessNode:
             counter += 1
             inner = 1
         return successor, counter,actions, inner, lastWasTheBest
-
-    #return successor nodes
-    def Actions(self, player_color, table):
-        if player_color == "white":
-            my_pieces = copy.copy( self.board.whitePawns )
-            my_pieces.append(self.board.whiteKing)
-        else:
-            my_pieces = copy.copy( self.board.blackPawns )
-            my_pieces.append(self.board.blackKing)
-
-        # Format of actions
-        # [ [ (current_pawn_position), (possible_move), (possible_move) ], [ (current_pawn_position), (possible_move) ], ... ]
-        # creating nodes and move ordering based on the (approximated) utility value
-        actions = []
-        successors = []
-        for piece in my_pieces:
-            moves = self.board.GetListOfValidMoves(player_color, piece)
-            moves.insert(0, piece)
-            actions.append(moves)
-
-            # creating nodes
-            for i in moves[1:]:
-                move_tuple = moves[0], i
-                successor = ChessNode(self.board)
-                successor.SetMoveTuple(move_tuple)
-                successor.board.MovePiece(move_tuple)
-                Heuristic.ShannonHeuristic(successor, table)
-
-                #ordering (descending)
-                count = 0
-                posToInsert = 0
-                inserted = False
-                if not successors:
-                    successors.append(successor)
-                else:
-                    for k in successors:
-                        if player_color == "black":
-                            if successor.utility > k.utility:
-                                posToInsert = count
-                                inserted = True
-                                break
-                        else:
-                            if successor.utility < k.utility:
-                                posToInsert = count
-                                inserted = True
-                                break
-                        count += 1
-                    if not inserted:
-                        successors.append(successor)
-                    else:
-                        successors.insert(count, successor )
-
-        return successors

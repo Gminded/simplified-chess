@@ -7,12 +7,12 @@ class Heuristic:
     def ShannonHeuristic(node, table, depth, color):
         #retrieve the utility value if it was already computed
         cachedValue = table.lookup(node.board)
-        if cachedValue != None and cachedValue[1] >= depth:
+        if cachedValue != None and not cachedValue[0] is None:
             node.SetUtility(cachedValue[0]) #utility
             return cachedValue
 
         #weights
-        winWeight = 1000000000
+        winWeight = 10000
         endangeredPawnsWeight = 0
         minDistanceWeight = 60
         avgDistanceWeight = 40
@@ -56,7 +56,6 @@ class Heuristic:
 
         #checking victory state
         if DEFEAT == node.board.TerminalTest(color):
-            pass
             if color == 'black':
                 score = -1
             else:

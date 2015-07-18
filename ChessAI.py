@@ -5,11 +5,9 @@ from ZobristHash import ZobristHash
 from Board import *
 import signal
 import copy
-#import time
 
 class ChessAI:
     def __init__(self, name, color):
-        # print "In ChessAI __init__"
         self.name = name
         self.color = color
         self.type = 'AI'
@@ -34,22 +32,9 @@ class ChessAI:
             signal.signal(signal.SIGALRM, handler)
             signal.alarm(15)
             while True:
-                #htime = 0
-                bestMove, utility = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)#, htime=htime)
-
-                #DEBUG
-                print "search arrived at depth "+str(depth)#+" heuristic time= "+str(htime)+"s"
+                utility = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
+                print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
-
-                # It's pointless to go on if we know are going to win or lose
-                if 500000000 <= utility or utility <= -500000000:
-                    print('Stopping early because of terminal state.')
-                    signal.alarm(0) #disable alarm because we're done
-                    break
-
-                #new hashtables
-                #self.heuristicTable = copy.copy(self.table)
-                #self.table.hashTable = {}
         except RuntimeError:
             pass
         return bestMove
@@ -59,13 +44,8 @@ class ChessAI:
         inner = 1
         moves = []
         lastWasTheBest = False
-        node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
         bestMove = None
-        # Initialize v before cycling through the other actions
-        if node != None:
-            v = self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit)
-            bestMove = node.GetMoveTuple()
-            node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
+        node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
         while node != None:
             utility = self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit)
             if utility > v:
@@ -73,8 +53,7 @@ class ChessAI:
                 bestMove = node.GetMoveTuple()
             node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
         self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, True)
-        print "best utility "+str(v)
-        return bestMove, v
+        return v
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
         if maxPlayer:
@@ -82,20 +61,17 @@ class ChessAI:
         else:
             color='white'
 
-        #start = time.time()
-        #terminal test1
+        #terminal test
         if depth == 0 or currentNode.board.TerminalTest(color) == DEFEAT:
             Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
             self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, maxPlayer)
             return currentNode.utility
-        #end = time.time()
-        #htime += (end - start)
 
         # If this is a terminal test don't go any deeper, because the game ended.
         
         # Max
         if maxPlayer:
-            v = -2000000000
+            v = -1000000
             counter = 0
             inner = 1
             moves = []
@@ -104,21 +80,18 @@ class ChessAI:
             node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
             while node != None:
                 utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit)
-                v = max(v, utility)#, htime) )
                 if v >= beta:
-                    bestMove = node.GetMoveTuple()
-                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                     return v
                 if v > alpha:
                     alpha = v
                     bestMove = node.GetMoveTuple()
-                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                 node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
+            self.table.insertUtility(currentNode.board, None, depthLimit, bestMove ,maxPlayer)
             return v
 
         # Min
         else:
-            v = 2000000000
+            v = 1000000
             counter = 0
             inner = 1
             moves = []
@@ -127,7 +100,7 @@ class ChessAI:
             node, counter, actions, inner, lastWasTheBest = currentNode.NextAction("white", counter, inner, moves, self.table, lastWasTheBest)
             while node != None:
                 utility = self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)
-                v = min(v, utility)#, htime ) )
+                v = min(v, utility)
                 if v <= alpha:
                     bestMove = node.GetMoveTuple()
                     self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
