@@ -89,6 +89,10 @@ class Board:
         pieceType = chessMove.getPieceType()
         foundPieceType = False
 
+        #var init
+        advKing = advPawn = advDirection = direction = None
+        foundPieceType = True
+
         #advance or capture with a white pawn or a black pawn
         for type in WHITEPAWN,BLACKPAWN:
             if type == WHITEPAWN == pieceType:
@@ -128,6 +132,7 @@ class Board:
                     elif self.previousMove.getPieceType() == advPawn and self.previousMove.getToPos() == ( fromPosRow, fromPosCol - 1) and self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol-1 ):
                         chessMove.setMoveType(ENPASSANT)
                         return True
+            return False
 
         #advance or capture with the black King or the white King
         for type in WHITEKING,BLACKKING:
@@ -153,6 +158,7 @@ class Board:
                 return True
             elif ( fromPosCol + 1 == toPosCol or fromPosCol - 1 == toPosCol ) and ( fromPosRow + 1 == toPosRow or fromPosRow - 1 == toPosRow ):
                 return True
+            return False
 
         return False
 
