@@ -2,7 +2,7 @@
 
 from Heuristic import Heuristic
 from ZobristHash import ZobristHash
-from ChessBoard import *
+from Board import *
 import signal
 import copy
 #import time
