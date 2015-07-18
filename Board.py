@@ -104,12 +104,6 @@ class Board:
                 advDirection = self.WHITEDIRECTION
                 advPawn = self.WHITEPAWN
                 advKing = self.WHITEKING
-            else:
-                if type == self.WHITEPAWN:
-                    continue
-                else:
-                    break
-
 
             if fromPosRow + direction == toPosRow:
                 if fromPosCol == toPosCol and toPosPiece is None:
@@ -140,11 +134,6 @@ class Board:
                 advPawn = self.BLACKPAWN
             elif type == self.BLACKKING == pieceType:
                 advPawn = self.WHITEPAWN
-            else:
-                if type == self.WHITEKING:
-                    continue
-                else:
-                    break
 
             if toPosPiece == advPawn:
                 chessMove.moveType=chessMove.CAPTURE
