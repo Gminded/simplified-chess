@@ -72,7 +72,11 @@ class Board:
 
     #true if the move is a valid one
     def isValidMove(self, chessMove):
+        return self._isPossibleMove(chessMove) and self._doesMovePutInCheck(chessMove)
 
+    # checks if the move is correct but ignores the fact that
+    # it could put the player in check
+    def _isPossibleMove(self,chessMove):
         fromPos = chessMove.getFromPos()
         toPos = chessMove.getToPos()
 
@@ -160,7 +164,7 @@ class Board:
 
         return False
 
-    def doesMovePutInCheck(self, chessMove):
+    def _doesMovePutInCheck(self, chessMove):
         advPawn = None
         toPos = chessMove.getToPos()
         toPosRow = toPos[0]
@@ -194,6 +198,7 @@ class Board:
 
         return state
 
+    # Returns a list with all valid moves for a player
     def getAllValidMoves(self,color)
         if color == BLACK:
             king=self.blackKing
@@ -211,6 +216,7 @@ class Board:
             moves.expand(self.getListOfValidMoves(color+self.PAWN,pawn))
         return moves
 
+    # Returns a list with all the valid moves for a given piece
     def getListOfValidMoves(self,piece,fromCoords):
         moves=[]
         if self.KING in piece:
@@ -239,8 +245,6 @@ class Board:
 
 
     #TODO
-    #generate possible moves
-    #get valid list of moves
     #terminal test
 
 b=Board()
