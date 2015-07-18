@@ -14,8 +14,5 @@ class ChessMove:
     def getToPos(self):
         return self.moveTuple[1]
 
-    def getPieceType(self):
-        return self.pieceType
-
-    def setMoveType(self, moveType):
-        self.moveType = moveType
+    # getter and setter methods could be defined as properties
+    # bet we are not doing anything special so they are useless
