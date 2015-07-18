@@ -1,10 +1,11 @@
 from ChessMove import ChessMove
 
-#player colors
-BLACK='b'
-WHITE='w'
 
 class Board:
+    #player colors
+    BLACK='b'
+    WHITE='w'
+
     #TERMINAL STATES
     DEFEAT='defeat'
     DRAW='draw'
@@ -20,12 +21,12 @@ class Board:
     WHITEDIRECTION = -1
     BLACKDIRECTION = 1
 
-    def __init__(self):
+    def __init__(self, previousMove):
         self.whiteKing = [7,4] # the white king coordinates
         self.blackKing = [0,4]
         self.whitePawns = [] # all of the white pawns coordinates expressed as lists
         self.blackPawns = []
-        self.previousMove = None
+        self.previousMove = previousMove
 
         for col in range(0,8):
             self.whitePawns.append([6,col])
@@ -93,13 +94,13 @@ class Board:
         pieceType = chessMove.pieceType
 
         #advance or capture with a white pawn or a black pawn
-        for type in self.WHITEPAWN,self.BLACKPAWN:
-            if type == self.WHITEPAWN == pieceType:
+        if self.PAWN in pieceType:
+            if self.WHITE in pieceType:
                 direction = self.WHITEDIRECTION
                 advDirection = self.BLACKDIRECTION
                 advPawn = self.BLACKPAWN
                 advKing = self.BLACKKING
-            elif type == self.BLACKPAWN == pieceType:
+            elif self.BLACK in pieceType:
                 direction = self.BLACKDIRECTION
                 advDirection = self.WHITEDIRECTION
                 advPawn = self.WHITEPAWN
@@ -129,10 +130,10 @@ class Board:
             return False
 
         #advance or capture with the black King or the white King
-        for type in self.WHITEKING,self.BLACKKING:
-            if type == self.WHITEKING == pieceType:
+        if self.KING in pieceType:
+            if self.KING in pieceType:
                 advPawn = self.BLACKPAWN
-            elif type == self.BLACKKING == pieceType:
+            elif self.WHITE in pieceType:
                 advPawn = self.WHITEPAWN
 
             if toPosPiece == advPawn:
@@ -211,7 +212,7 @@ class Board:
 
     # Returns a list with all valid moves for a player
     def getAllValidMoves(self,color):
-        if BLACK in color:
+        if self.BLACK in color:
             king=self.blackKing
             pawns=self.blackPawns
             direction=self.BLACKDIRECTION
@@ -240,7 +241,7 @@ class Board:
                             moves.append(move)
         elif self.PAWN in piece:
             destinations=[]
-            if BLACK in piece:
+            if self.BLACK in piece:
                 direction=self.BLACKDIRECTION
             else:
                 direction=self.WHITEDIRECTION
@@ -255,16 +256,16 @@ class Board:
 
     # returns True if the player is in check, false otherwise
     def _isInCheck(self,color):
-        if BLACK in color:
+        if self.BLACK in color:
             king=self.blackKing
             direction=self.BLACKDIRECTION
-            oppColor=WHITE
+            oppColor=self.WHITE
             oppPawns=self.whitePawns
             oppKing=self.whiteKing
         else:
             king=self.whiteKing
             direction=self.WHITEDIRECTION
-            oppColor=BLACK
+            oppColor=self.BLACK
             oppPawns=self.blackPawns
             oppKing=self.blackKing
         row=king[0]

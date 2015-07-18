@@ -10,7 +10,8 @@ from ChessGameParams import TkinterGameSetupParams
 
 class PythonChessMain:
     def __init__(self):
-        self.board = Board()
+        #set an invalid but harmless move as the previous move
+        self.board = Board(ChessMove(((0,0),(0,0)), 'bK'))
 
     def SetUp(self):
         # players set up
