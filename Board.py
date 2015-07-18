@@ -91,11 +91,6 @@ class Board:
         toPosCol = toPos[1]
         toPosPiece = self.getPiece(toPos)
         pieceType = chessMove.pieceType
-        foundPieceType = False
-
-        #var init
-        advKing = advPawn = advDirection = direction = None
-        foundPieceType = True
 
         #advance or capture with a white pawn or a black pawn
         for type in self.WHITEPAWN,self.BLACKPAWN:
@@ -104,15 +99,12 @@ class Board:
                 advDirection = self.BLACKDIRECTION
                 advPawn = self.BLACKPAWN
                 advKing = self.BLACKKING
-                foundPieceType = True
             elif type == self.BLACKPAWN == pieceType:
                 direction = self.BLACKDIRECTION
                 advDirection = self.WHITEDIRECTION
                 advPawn = self.WHITEPAWN
                 advKing = self.WHITEKING
-                foundPieceType = True
-
-            if not foundPieceType:
+            else:
                 if type == self.WHITEPAWN:
                     continue
                 else:
@@ -148,8 +140,7 @@ class Board:
                 advPawn = self.BLACKPAWN
             elif type == self.BLACKKING == pieceType:
                 advPawn = self.WHITEPAWN
-
-            if not foundPieceType:
+            else:
                 if type == self.WHITEKING:
                     continue
                 else:
@@ -308,9 +299,9 @@ class Board:
                 return self.DRAW
         return CONTINUE
 
-    def convertToAlgebraicNotationCol(col):
+    def convertToAlgebraicNotationCol(self,col):
         columns=['a','b','c','d','e','f','g','h']
         return columns[col]
 
-    def convertToAlgebraicNotationRow(row):
+    def convertToAlgebraicNotationRow(self,row):
         return str(8-row)

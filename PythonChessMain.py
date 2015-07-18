@@ -71,7 +71,7 @@ class PythonChessMain:
                 self.player[winnerIndex].GetName() + " (" + self.player[winnerIndex].GetColor() + ") won the game!")
         elif termination == self.board.DRAW:
             self.Gui.PrintMessage('The game ends with a draw!')
-        self.Gui.EndGame(self.board.GetState())
+        self.Gui.EndGame(self.board.getWholeState())
 
 
 game = PythonChessMain()
