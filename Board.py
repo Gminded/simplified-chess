@@ -1,16 +1,16 @@
 from ChessMove import ChessMove
 
-#TERMINAL STATES
-DEFEAT='defeat'
-DRAW='draw'
-NONE='none'
-WON='won'
 
 #player colors
 BLACK='b'
 WHITE='w'
 
 class Board:
+    #TERMINAL STATES
+    DEFEAT='defeat'
+    DRAW='draw'
+    CONTINUE='continue'
+
     #PIECES
     WHITEKING = 'wK'
     WHITEPAWN = 'wP'
@@ -266,4 +266,37 @@ class Board:
                     moves.append(move)
         return moves
 
+    # returns True if the player is in check, false otherwise
+    def _isInCheck(self,color):
+        if color == self.BLACK:
+            king=self.blackKing
+            direction=self.BLACKDIRECTION
+            oppColor=self.WHITE
+            oppPawns=self.whitePawns
+            oppKing=self.whiteKing
+        else:
+            king=self.whiteKing
+            direction=self.WHITEDIRECTION
+            oppColor=self.BLACK
+            oppPawns=self.blackPawns
+            oppKing=self.blackKing
+        row=king[0]
+        col=king[1]
+        if (row+direction, col-1) in oppPawns or (row+direction,col+1) in oppPawns:
+            return True
+        for r in [-1,0,1]:
+            for c in [-1,0,1]:
+                if (row+r, col+c) == oppKing:
+                    return True
+        return False
+
+    # returns DEFEAT if the player is defeated,
+    # DRAW if the game ends in a draw,
+    # CONTINUE otherwise
     def terminalTest(self, playerColor):
+        if not self.getAllValidMoves():
+            if self._isInCheck(playerColor):
+                return self.DEFEAT
+            else:
+                return self.DRAW
+        return CONTINUE

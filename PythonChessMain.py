@@ -10,7 +10,7 @@ from ChessGameParams import TkinterGameSetupParams
 
 class PythonChessMain:
     def __init__(self):
-        self.Board = ChessBoard(0)
+        self.board = Board()
 
     def SetUp(self):
         # players set up
@@ -22,7 +22,7 @@ class PythonChessMain:
         self.guitype = 'pygame'
         GameParams = TkinterGameSetupParams()
         (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type, self.treeDepth) = GameParams.GetGameSetupParams()
-        self.Gui = ChessGUI_pygame(self.Board, self.treeDepth)
+        self.Gui = ChessGUI_pygame(self.board, self.treeDepth)
         self.player = [0, 0]
         if player1Type == 'human':
             self.player[0] = ChessPlayer(player1Name, player1Color)
@@ -43,10 +43,9 @@ class PythonChessMain:
     def MainLoop(self):
         currentPlayerIndex = 0
         turnCount = 0
-        currentNode = ChessNode(self.Board, copyFlag=False)  # setup initial node
-        while NONE == self.Board.TerminalTest(self.player[currentPlayerIndex].color):
-            realBoard = self.Board
-            board = self.Board.GetState()
+        currentNode = ChessNode(self.board, copyFlag=False)  # setup initial node
+        while self.board.CONTINUE == self.board.terminalTest(self.player[currentPlayerIndex].color):
+            board = self.board.getWholeState()
             currentColor = self.player[currentPlayerIndex].GetColor()
             baseMsg = "TURN %s - %s (%s)" % (str(turnCount), self.player[currentPlayerIndex].GetName(), currentColor)
             self.Gui.PrintMessage("-----%s-----" % baseMsg)
@@ -58,21 +57,21 @@ class PythonChessMain:
             if self.player[currentPlayerIndex].GetType() == 'AI':
                 moveTuple = self.player[currentPlayerIndex].GetMove(currentNode)
             else:
-                moveTuple = self.Gui.GetPlayerInput(realBoard, currentColor)
+                moveTuple = self.Gui.GetPlayerInput(self.board, currentColor)
 
-            moveReport = self.Board.MovePiece(moveTuple)
+            moveReport = self.board.MovePiece(moveTuple)
             self.Gui.PrintMessage(moveReport)
             # END OF PLAY TIME
             currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0
 
-        termination = self.Board.TerminalTest(self.player[currentPlayerIndex].color)
-        if termination == DEFEAT:
+        termination = self.board.terminalTest(self.player[currentPlayerIndex].color)
+        if termination == self.board.DEFEAT:
             winnerIndex = (currentPlayerIndex + 1) % 2
             self.Gui.PrintMessage(
                 self.player[winnerIndex].GetName() + " (" + self.player[winnerIndex].GetColor() + ") won the game!")
-        elif termination == DRAW:
+        elif termination == self.board.DRAW:
             self.Gui.PrintMessage('The game ends with a draw!')
-        self.Gui.EndGame(self.Board.GetState())
+        self.Gui.EndGame(self.board.GetState())
 
 
 game = PythonChessMain()
