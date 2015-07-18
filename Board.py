@@ -64,7 +64,7 @@ class Board:
         self.previousMove = chessMove
 
     #returns True if the move is defined in the chessBoard
-    def isInBoard(self, chessMove):
+    def _isInBoard(self, chessMove):
         toPos = chessMove.getToPos()
 
         if 0 <= toPos[0] <= 7 and 0 <= toPos[1] <= 7:
@@ -167,7 +167,7 @@ class Board:
 
         return False
 
-    def canIMoveTheKing(self, chessMove, advPieces):
+    def _canIMoveTheKing(self, chessMove, advPieces):
         if self.BLACKPAWN in advPieces:
             direction = self.WHITEDIRECTION
         else:
