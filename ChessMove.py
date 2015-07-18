@@ -1,7 +1,7 @@
 class ChessMove:
-    def __init__(self, moveTuple, moveType, pieceType):
+    def __init__(self, moveTuple, pieceType):
         self.moveTuple = moveTuple
-        self.moveType = moveType
+        self.moveType = None
         self.pieceType = pieceType
 
     def getFromPos(self):

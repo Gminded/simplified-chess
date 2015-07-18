@@ -163,13 +163,28 @@ class Board:
         return False
 
     def doesMovePutInCheck(self, chessMove):
-        for king in WHITEKING,BLACKKING:
+        advPawn = None
+        toPos = chessMove.getToPos()
+        toPosRow = toPos[0]
+        toPosCol = toPos[1]
+
+        if chessMove.getPieceType() == WHITEKING:
+            advPawn = BLACKPAWN
+        elif chessMove.getPieceType() == BLACKKING:
+            advPawn = WHITEPAWN
+        else:
+            return False
+
+        if self.getPiece( (toPosRow, toPosCol + 1) ) == advPawn or self.getPiece( (toPosRow, toPosCol - 1) ) == advPawn:
+            return True
+        else:
+            return False
+
 
 
     #TODO
     #generate possible moves
     #get valid list of moves
-    #does move put player in check
     #terminal test
 
 
