@@ -62,7 +62,7 @@ class ChessAI:
             color='white'
 
         #terminal test
-        if depth == 0 or currentNode.board.TerminalTest(color) == DEFEAT:
+        if depth == 0 or currentNode.board.TerminalTest(color) == currentNode.board.DEFEAT:
             Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
             self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, maxPlayer)
             return currentNode.utility
