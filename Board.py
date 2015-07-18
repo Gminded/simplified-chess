@@ -83,7 +83,7 @@ class Board:
         fromPos = chessMove.getFromPos()
         toPos = chessMove.getToPos()
 
-        if not self.isInBoard(chessMove) or fromPos == toPos:
+        if not self._isInBoard(chessMove) or fromPos == toPos:
             return False
 
         fromPosRow = fromPos[0]
@@ -181,17 +181,17 @@ class Board:
             return True
 
     def _doesMovePutInCheck(self, chessMove):
-        if chessMove.getPieceType() == self.WHITEKING:
+        if chessMove.pieceType == self.WHITEKING:
             advPieces = []
             advPieces.append(self.BLACKPAWN)
             advPieces.append(self.BLACKKING)
-            return not self.canIMoveTheKing(chessMove, advPieces)
-        elif chessMove.getPieceType() == self.BLACKKING:
+            return not self._canIMoveTheKing(chessMove, advPieces)
+        elif chessMove.pieceType == self.BLACKKING:
             advPieces = []
             advPieces.append(self.WHITEPAWN)
             advPieces.append(self.WHITEKING)
-            return not self.canIMoveTheKing(chessMove, advPieces)
-        elif chessMove.getPieceType() == self.BLACKPAWN:
+            return not self._canIMoveTheKing(chessMove, advPieces)
+        elif chessMove.pieceType == self.BLACKPAWN:
             kingRow = self.blackKing[0]
             kingCol = self.blackKing[1]
             if self.getPiece( (kingRow + self.BLACKDIRECTION, kingCol + 1 ) ) == self.WHITEPAWN or self.getPiece( (kingRow + self.BLACKDIRECTION, kingCol - 1 ) ) == self.WHITEPAWN:
@@ -234,9 +234,9 @@ class Board:
             direction=self.WHITEDIRECTION
         moves=[]
         # add the king coordinates
-        moves.expand(self.getListOfValidMoves(color+self.KING,king))
+        moves.extend(self.getListOfValidMoves(color+self.KING,king))
         for pawn in pawns:
-            moves.expand(self.getListOfValidMoves(color+self.PAWN,pawn))
+            moves.extend(self.getListOfValidMoves(color+self.PAWN,pawn))
         return moves
 
     # Returns a list with all the valid moves for a given piece
