@@ -266,9 +266,4 @@ class Board:
                     moves.append(move)
         return moves
 
-
-    #TODO
-    #terminal test
-
-b=Board()
-print b.getWholeState()
+    def terminalTest(self, playerColor):
