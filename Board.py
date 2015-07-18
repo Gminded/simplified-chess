@@ -1,6 +1,5 @@
 from ChessMove import ChessMove
 
-
 #player colors
 BLACK='b'
 WHITE='w'
@@ -232,7 +231,7 @@ class Board:
 
     # Returns a list with all valid moves for a player
     def getAllValidMoves(self,color):
-        if color == BLACK:
+        if BLACK in color:
             king=self.blackKing
             pawns=self.blackPawns
             direction=self.BLACKDIRECTION
@@ -276,16 +275,16 @@ class Board:
 
     # returns True if the player is in check, false otherwise
     def _isInCheck(self,color):
-        if color == self.BLACK:
+        if BLACK in color:
             king=self.blackKing
             direction=self.BLACKDIRECTION
-            oppColor=self.WHITE
+            oppColor=WHITE
             oppPawns=self.whitePawns
             oppKing=self.whiteKing
         else:
             king=self.whiteKing
             direction=self.WHITEDIRECTION
-            oppColor=self.BLACK
+            oppColor=BLACK
             oppPawns=self.blackPawns
             oppKing=self.blackKing
         row=king[0]
@@ -302,7 +301,7 @@ class Board:
     # DRAW if the game ends in a draw,
     # CONTINUE otherwise
     def terminalTest(self, playerColor):
-        if not self.getAllValidMoves():
+        if not self.getAllValidMoves(playerColor):
             if self._isInCheck(playerColor):
                 return self.DEFEAT
             else:
