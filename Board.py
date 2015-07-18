@@ -14,6 +14,7 @@ class Board:
     KING = 'K'
     WHITEDIRECTION = -1
     BLACKDIRECTION = 1
+
     def __init__(self):
         self.whiteKing = [7,4] # the white king coordinates
         self.blackKing = [0,4]
@@ -156,23 +157,45 @@ class Board:
 
         return False
 
-    def doesMovePutInCheck(self, chessMove):
-        advPawn = None
+    def canIMoveTheKing(self, chessMove, advPieces):
+        if self.BLACKPAWN in advPieces:
+            direction = self.WHITEDIRECTION
+        else:
+            direction = self.BLACKDIRECTION
+
         toPos = chessMove.getToPos()
         toPosRow = toPos[0]
         toPosCol = toPos[1]
-
-        if chessMove.getPieceType() == self.WHITEKING:
-            advPawn = self.BLACKPAWN
-        elif chessMove.getPieceType() == self.BLACKKING:
-            advPawn = self.WHITEPAWN
-        else:
+        if self.getPiece( (toPosRow + direction, toPosCol + 1) ) in advPieces or self.getPiece( (toPosRow + direction, toPosCol - 1) ) in advPieces:
             return False
-
-        if self.getPiece( (toPosRow, toPosCol + 1) ) == advPawn or self.getPiece( (toPosRow, toPosCol - 1) ) == advPawn:
+        else:
             return True
+
+    def doesMovePutInCheck(self, chessMove):
+        if chessMove.getPieceType() == self.WHITEKING:
+            advPieces = []
+            advPieces.append(self.BLACKPAWN)
+            advPieces.append(self.BLACKKING)
+            return not self.canIMoveTheKing(chessMove, advPieces)
+        elif chessMove.getPieceType() == self.BLACKKING:
+            advPieces = []
+            advPieces.append(self.WHITEPAWN)
+            advPieces.append(self.WHITEKING)
+            return not self.canIMoveTheKing(chessMove, advPieces)
+        elif chessMove.getPieceType() == self.BLACKPAWN:
+            kingRow = self.blackKing[0]
+            kingCol = self.blackKing[1]
+            if self.getPiece( (kingRow + self.BLACKDIRECTION, kingCol + 1 ) ) == self.WHITEPAWN or self.getPiece( (kingRow + self.BLACKDIRECTION, kingCol - 1 ) ) == self.WHITEPAWN:
+                return True
         else:
-            return False
+            kingRow = self.whiteKing[0]
+            kingCol = self.whiteKing[1]
+            if self.getPiece( (kingRow + self.WHITEDIRECTION, kingCol + 1 ) ) == self.BLACKPAWN or self.getPiece( (kingRow + self.WHITEDIRECTION, kingCol - 1 ) ) == self.BLACKPAWN:
+                return True
+        return False
+
+
+
 
     # Returns the chessboard represented as a string matrix. Each
     def getWholeState(self):
