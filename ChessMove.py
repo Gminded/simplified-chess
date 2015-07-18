@@ -1,4 +1,8 @@
 class ChessMove:
+    #TYPES OF MOVES
+    CAPTURE = 1
+    ENPASSANT_CAPTURE = 2
+    MOVE = 3
     def __init__(self, moveTuple, pieceType):
         self.moveTuple = moveTuple
         self.moveType = None

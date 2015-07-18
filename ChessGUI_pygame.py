@@ -16,7 +16,7 @@ import os
 import sys
 from pygame.locals import *
 from ScrollingTextBox import ScrollingTextBox
-from ChessBoard import ChessBoard
+from Board import *
 
 class ChessGUI_pygame:
     def __init__(self,board, depth):
@@ -173,7 +173,7 @@ class ChessGUI_pygame:
 
     def GetPlayerInput(self,board,currentColor):
         #returns ((from_row,from_col),(to_row,to_col))
-        state = board.GetState()
+        state = board.getWholeState()
         fromSquareChosen = 0
         toSquareChosen = 0
         while not fromSquareChosen or not toSquareChosen:
