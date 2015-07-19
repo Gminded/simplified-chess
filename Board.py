@@ -155,9 +155,9 @@ class Board:
                         chessMove.moveType=chessMove.ENPASSANT_CAPTURE
                         return True
             #advance by 2
-            elif self.BLACK in pieceType and fromPosRow == 1  and fromPosRow + 2 == toPosRow and fromPosCol == toPosCol:
+            elif self.BLACK in pieceType and fromPosRow == 1  and fromPosRow + 2 == toPosRow and fromPosCol == toPosCol and toPosPiece == self.EMPTY:
                 return True
-            elif self.WHITE in pieceType and fromPosRow == 6  and fromPosRow - 2 == toPosRow and fromPosCol == toPosCol:
+            elif self.WHITE in pieceType and fromPosRow == 6  and fromPosRow - 2 == toPosRow and fromPosCol == toPosCol and toPosPiece == self.EMPTY:
                 return True
 
             return False
@@ -198,8 +198,8 @@ class Board:
         toPos = chessMove.getToPos()
         toPosRow = toPos[0]
         toPosCol = toPos[1]
-        if self.getPiece( (toPosRow + direction, toPosCol + 1) ) in advPieces or\
-                self.getPiece( (toPosRow + direction, toPosCol - 1) ) in advPieces:
+        if self.getPiece( [toPosRow + direction, toPosCol + 1] ) in advPieces or\
+                self.getPiece( [toPosRow + direction, toPosCol - 1] ) in advPieces:
             return False
         else:
             return True
@@ -218,14 +218,14 @@ class Board:
         elif chessMove.pieceType == self.BLACKPAWN:
             kingRow = self.blackKing[0]
             kingCol = self.blackKing[1]
-            if self.getPiece( (kingRow + self.BLACKDIRECTION, kingCol + 1 ) ) == self.WHITEPAWN or\
-                    self.getPiece( (kingRow + self.BLACKDIRECTION, kingCol - 1 ) ) == self.WHITEPAWN:
+            if self.getPiece( [kingRow + self.BLACKDIRECTION, kingCol + 1 ] ) == self.WHITEPAWN or\
+                    self.getPiece( [kingRow + self.BLACKDIRECTION, kingCol - 1 ] ) == self.WHITEPAWN:
                 return True
         else:
             kingRow = self.whiteKing[0]
             kingCol = self.whiteKing[1]
-            if self.getPiece( (kingRow + self.WHITEDIRECTION, kingCol + 1 ) ) == self.BLACKPAWN or\
-                    self.getPiece( (kingRow + self.WHITEDIRECTION, kingCol - 1 ) ) == self.BLACKPAWN:
+            if self.getPiece( [kingRow + self.WHITEDIRECTION, kingCol + 1 ] ) == self.BLACKPAWN or\
+                    self.getPiece( [kingRow + self.WHITEDIRECTION, kingCol - 1 ] ) == self.BLACKPAWN:
                 return True
         return False
 
