@@ -34,6 +34,13 @@ class ChessAI:
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
                 currentNode.resetNode()
+
+                # It's pointless to go on if we know are going to win or lose
+                if 500000000 <= utility or utility <= -500000000:
+                    print('Stopping early because of terminal state.')
+                    signal.alarm(0)
+                    break
+
         except RuntimeError:
             pass
         return bestMove
