@@ -2,9 +2,7 @@
 
 from Heuristic import Heuristic
 from ZobristHash import ZobristHash
-from Board import *
 import signal
-import copy
 
 class ChessAI:
     def __init__(self, name, color):
