@@ -146,8 +146,9 @@ class Board:
                         chessMove.moveType=chessMove.ENPASSANT_CAPTURE
                         return True
                 elif fromPosCol - 1 == toPosCol:
-                    if toPosPiece == self.BLACKPAWN or toPosPiece == advKing:
+                    if toPosPiece == advPawn or toPosPiece == advKing:
                         chessMove.moveType=chessMove.CAPTURE
+                        return True
                     elif self.previousMove.pieceType == advPawn and\
                             self.previousMove.getToPos() == ( fromPosRow, fromPosCol - 1) and\
                             self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol-1 ):
