@@ -23,12 +23,12 @@ class ZobristHash:
         self.hashTable = {}
 
     def hash(self, board):
-        state = board.state
         h = 0
         for row in range(8):
             for col in range(8):
-                if state[row][col] != 'e':
-                    piece = self.pieceId[state[row][col]]
+                pieceType = board.getPiece( [ row, col] )
+                if pieceType != board.EMPTY:
+                    piece = self.pieceId[pieceType]
                     h = h ^ self.zobristTable[row*8+col][piece]
         return h
 
