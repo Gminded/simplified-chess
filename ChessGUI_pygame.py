@@ -60,6 +60,9 @@ class ChessGUI_pygame:
         self.white_queen = pygame.image.load(os.path.join("images","Chess_tile_ql.png")).convert()
         self.white_queen = pygame.transform.scale(self.white_queen, (self.square_size,self.square_size))
 
+    def moveMessage(self,move,board):
+        return self.textBox.moveMessage(move,board)
+
     def PrintMessage(self,message):
         #prints a string to the area to the right of the board
         self.textBox.Add(message)
