@@ -135,10 +135,10 @@ class Board:
 
         #advance or capture with the black King or the white King
         if self.KING in pieceType:
-            if self.KING in pieceType:
-                advPawn = self.BLACKPAWN
-            elif self.WHITE in pieceType:
+            if self.BLACK in pieceType:
                 advPawn = self.WHITEPAWN
+            elif self.WHITE in pieceType:
+                advPawn = self.BLACKPAWN
 
             if toPosPiece == advPawn:
                 chessMove.moveType=chessMove.CAPTURE
