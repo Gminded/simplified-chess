@@ -21,6 +21,8 @@ class Board:
     WHITEDIRECTION = -1
     BLACKDIRECTION = 1
 
+    EMPTY = 'e'
+
     def __init__(self, previousMove):
         self.whiteKing = [7,4] # the white king coordinates
         self.blackKing = [0,4]
@@ -42,7 +44,7 @@ class Board:
             return self.WHITEPAWN
         if posTuple in self.blackPawns:
             return self.BLACKPAWN
-        return None
+        return self.EMPTY
 
     #apply the move chessMove to the chessboard
     def movePiece(self, chessMove):
@@ -112,7 +114,7 @@ class Board:
                 advKing = self.WHITEKING
 
             if fromPosRow + direction == toPosRow:
-                if fromPosCol == toPosCol and toPosPiece is None:
+                if fromPosCol == toPosCol and toPosPiece == self.EMPTY:
                     chessMove.moveType=chessMove.MOVE
                     return True
                 elif fromPosCol + 1 == toPosCol:
