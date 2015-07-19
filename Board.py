@@ -73,14 +73,14 @@ class Board:
             if moveType == chessMove.CAPTURE:
                 self.whitePawns.remove(toPos)
             elif moveType == chessMove.ENPASSANT_CAPTURE:
-                self.whitePawns.remove( [toPos[0], toPos[1] - 1] )
+                self.whitePawns.remove( [toPos[0] - self.BLACKDIRECTION, toPos[1]] )
         else:
             self.whitePawns.remove(fromPos)
             self.whitePawns.append(toPos)
             if moveType == chessMove.CAPTURE:
                 self.blackPawns.remove(toPos)
             elif moveType == chessMove.ENPASSANT_CAPTURE:
-                self.blackPawns.remove( [toPos[0], toPos[1] - 1] )
+                self.blackPawns.remove( [toPos[0] - self.WHITEDIRECTION, toPos[1]] )
         #store the previous move
         self.previousMove = chessMove
 
@@ -141,8 +141,8 @@ class Board:
                         chessMove.moveType=chessMove.CAPTURE
                         return True
                     elif self.previousMove.pieceType == advPawn and\
-                            self.previousMove.getToPos() == ( fromPosRow, fromPosCol + 1) and\
-                            self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol+1 ):
+                            self.previousMove.getToPos() == [ fromPosRow, fromPosCol + 1 ] and\
+                            self.previousMove.getFromPos() == [ fromPosRow - advDirection*2, fromPosCol+1 ]:
                         chessMove.moveType=chessMove.ENPASSANT_CAPTURE
                         return True
                 elif fromPosCol - 1 == toPosCol:
@@ -150,9 +150,9 @@ class Board:
                         chessMove.moveType=chessMove.CAPTURE
                         return True
                     elif self.previousMove.pieceType == advPawn and\
-                            self.previousMove.getToPos() == ( fromPosRow, fromPosCol - 1) and\
-                            self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol-1 ):
-                        chessMove.moveType=chessMove.ENPASSANT
+                            self.previousMove.getToPos() == [ fromPosRow, fromPosCol - 1 ] and\
+                            self.previousMove.getFromPos() == [ fromPosRow - advDirection*2, fromPosCol-1 ]:
+                        chessMove.moveType=chessMove.ENPASSANT_CAPTURE
                         return True
             #advance by 2
             elif self.BLACK in pieceType and fromPosRow == 1  and fromPosRow + 2 == toPosRow and fromPosCol == toPosCol:
