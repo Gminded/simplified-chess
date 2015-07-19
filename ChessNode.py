@@ -6,6 +6,9 @@ class ChessNode:
         self.board = copy.copy(board)
         self.utility = -1
         self.chessMove = chessMove
+        self.moveCounter = 0
+        self.lastWasTheBest = False
+        self.actions = None
 
     def GetState(self):
         return self.board.GetState()
@@ -28,39 +31,39 @@ class ChessNode:
     def setMove(self, chessMove):
         self.chessMove = chessMove
 
-    def NextAction(self, player_color, counter, actions, table, lastWasTheBest):
+    def NextAction(self, player_color, table):
 
-        if not lastWasTheBest and counter == 0:
-            if player_color == "white":
+        if not self.lastWasTheBest and self.moveCounter == 0:
+            if player_color == "w":
                 bestMove = table.lookupMinBestMove(self.board)
             else:
                 bestMove = table.lookupMaxBestMove(self.board)
 
-            actions = self.board.getAllValidMoves(player_color)
+            self.actions = self.board.getAllValidMoves(player_color)
 
             if bestMove != None:
-                for move in actions.moveTuple:
+                for move in self.actions.moveTuple:
                     for pos in move[1:]:
                         if move[0] == bestMove[0] and pos == bestMove[1]:
                             move.remove( bestMove[1] )
                         if len(move) == 1:
-                            actions.remove(move)
-                lastWasTheBest  = True
+                            self.actions.remove(move)
+                self.lastWasTheBest  = True
 
                 successor = ChessNode(self.board, bestMove)
                 successor.board.movePiece(bestMove)
-                return successor, counter,actions, lastWasTheBest
+                return successor
 
 
-        if not actions or counter >= len(actions):
-            return None, None, None, None, None
+        if not self.actions or self.moveCounter >= len(self.actions):
+            return None
 
-        lastWasTheBest = False
+        self.lastWasTheBest = False
 
-        move = actions[counter]
+        move = self.actions[self.moveCounter]
         successor = ChessNode(self.board, move)
         successor.board.movePiece(move)
 
         #advance
-        counter += 1
-        return successor, counter,actions, lastWasTheBest
+        self.moveCounter += 1
+        return successor
