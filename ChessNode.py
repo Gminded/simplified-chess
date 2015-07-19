@@ -30,7 +30,7 @@ class ChessNode:
     def setMove(self, chessMove):
         self.chessMove = chessMove
 
-    def resetNode(self):
+    def _resetNode(self):
         self.moveCounter = 0
         self.lastWasTheBest = False
         self.actions = None
@@ -62,6 +62,7 @@ class ChessNode:
 
 
         if not self.actions or self.moveCounter >= len(self.actions):
+            self._resetNode()
             return None
 
         self.lastWasTheBest = False

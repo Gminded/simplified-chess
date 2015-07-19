@@ -28,12 +28,11 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            #signal.alarm(150000)
-            while depth <=2 :
+            signal.alarm(150000)
+            while depth<=2:
                 utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
-                currentNode.resetNode()
 
                 # It's pointless to go on if we know are going to win or lose
                 if 500000000 <= utility or utility <= -500000000:
