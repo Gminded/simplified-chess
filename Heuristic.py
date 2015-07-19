@@ -22,12 +22,6 @@ class Heuristic:
 
         #Heuristic values
         score = 0
-        playerPawns = []
-        adversaryPawns = []
-        playerMoves = 0
-        adversaryMoves = 0
-        blockedPlayerPawns = 0
-        blockedAdversaryPawns = 0
         playerMinDistance = 10
         adversaryMinDistance = 10
         playerAvgDistance = 0
@@ -63,11 +57,6 @@ class Heuristic:
             #distance from adv King
             distance = abs( (node.board.blackKing[0] +node.board.blackKing[1] ) - ( pawnRow + pawnCol))
             playerAvgDistanceFromKing += distance
-
-
-            #counting number of blocked pawns
-            if pawnRow + direction < 8 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
-                blockedPlayerPawns+= 1
 
             #number of pawns which have a clear sight to the end of the board
             for pos in range(pawnRow + direction, 8):
@@ -106,10 +95,6 @@ class Heuristic:
             distance = abs( (node.board.whiteKing[0] +node.board.whiteKing[1] ) - ( pawnRow + pawnCol))
             adversaryAvgDistanceFromKing += distance
 
-            #counting number of blocked pawns
-            if pawnRow + direction >= 0 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
-                blockedAdversaryPawns+= 1
-
             #number of pawns which have a clear sight to the end of the board
             for pos in range(pawnRow + direction, direction, direction):
                 if node.board.state[ pos ][pawnCol] != "e":
@@ -142,7 +127,6 @@ class Heuristic:
         node.SetUtility( winWeight*score + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
                          int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
-                         blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
                          movesWeight*( playerMoves - adversaryMoves ) +
                          clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ) +
                          distanceFromKingWeight*(int( playerAvgDistanceFromKing ) ) )
