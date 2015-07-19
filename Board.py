@@ -91,6 +91,7 @@ class Board:
         toPosRow = toPos[0]
         toPosCol = toPos[1]
         direction = None
+        myPawns = None
         advPawn = None
         advKing = None
         advDirection = None
@@ -143,8 +144,13 @@ class Board:
         if self.KING in pieceType:
             if self.BLACK in pieceType:
                 advPawn = self.WHITEPAWN
+                myPawns = self.BLACKPAWN
             elif self.WHITE in pieceType:
                 advPawn = self.BLACKPAWN
+                myPawns = self.WHITEPAWN
+
+            if toPosPiece == myPawns:
+                return False
 
             if toPosPiece == advPawn:
                 chessMove.moveType=chessMove.CAPTURE
@@ -246,7 +252,7 @@ class Board:
             for r in (-1,0,1):
                 for c in (-1,0,1):
                     if not (r == c == 0):
-                        move=ChessMove((fromCoords,(row+r,col+c)),piece)
+                        move=ChessMove(( fromCoords,[row+r,col+c]),piece)
                         if self.isValidMove(move):
                             moves.append(move)
         elif self.PAWN in piece:
@@ -256,10 +262,10 @@ class Board:
             else:
                 direction=self.WHITEDIRECTION
             for c in [-1,0,1]:
-                destinations.append((row+direction,col+c))
-            destinations.append((row+2*direction,col))
+                destinations.append( [row+direction,col+c] )
+            destinations.append( [row+2*direction,col] )
             for destination in destinations:
-                move=ChessMove((fromCoords,destination),piece)
+                move=ChessMove( [fromCoords,destination] ,piece)
                 if self.isValidMove(move):
                     moves.append(move)
         return moves
