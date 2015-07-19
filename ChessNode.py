@@ -30,6 +30,11 @@ class ChessNode:
     def setMove(self, chessMove):
         self.chessMove = chessMove
 
+    def resetNode(self):
+        self.moveCounter = 0
+        self.lastWasTheBest = False
+        self.actions = None
+
     def NextAction(self, player_color, table):
 
         if not self.lastWasTheBest and self.moveCounter == 0:

@@ -33,6 +33,7 @@ class ChessAI:
                 utility = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
+                currentNode.resetNode()
         except RuntimeError:
             pass
         return bestMove
