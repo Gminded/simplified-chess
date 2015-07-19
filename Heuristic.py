@@ -1,5 +1,3 @@
-from Board import Board
-
 class Heuristic:
 
     @staticmethod
