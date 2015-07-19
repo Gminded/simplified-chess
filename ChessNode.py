@@ -56,9 +56,9 @@ class ChessNode:
                             self.actions.remove(move)
                 self.lastWasTheBest  = True
 
-            successor = ChessNode(self.board, bestMove)
-            successor.board.movePiece(bestMove)
-            return successor
+                successor = ChessNode(self.board, bestMove)
+                successor.board.movePiece(bestMove)
+                return successor
 
 
         if not self.actions or self.moveCounter >= len(self.actions):

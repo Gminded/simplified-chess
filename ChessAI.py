@@ -48,11 +48,12 @@ class ChessAI:
     def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
         v = -2000000000
         bestMove = None
+        maxUtility = v
         node = currentNode.NextAction("b", self.table)
         while node != None:
-            utility = self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit)
-            if utility > v:
-                v = utility
+            v = max( v, self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
+            if v > maxUtility:
+                maxUtility = v
                 bestMove = node.getMove()
             node = currentNode.NextAction("b", self.table)
         self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, True)
@@ -65,7 +66,7 @@ class ChessAI:
             color='w'
 
         #terminal test
-        if depth == 0 or currentNode.board.TerminalTest(color) == currentNode.board.DEFEAT:
+        if depth == 0 or currentNode.board.terminalTest(color) == currentNode.board.DEFEAT:
             Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
             self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, None)
             return currentNode.utility
@@ -78,7 +79,7 @@ class ChessAI:
             bestMove = None
             node = currentNode.NextAction("b", self.table)
             while node != None:
-                utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit)
+                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit) )
                 if v >= beta:
                     return v
                 if v > alpha:
@@ -94,7 +95,7 @@ class ChessAI:
             bestMove = None
             node = currentNode.NextAction("w", self.table)
             while node != None:
-                utility = self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)
+                v = min( v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)  )
                 if v <= alpha:
                     return v
                 if v < beta:
