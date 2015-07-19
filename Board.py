@@ -99,10 +99,25 @@ class Board:
         return self._isPossibleMove(chessMove) and\
                not self._doesMovePutInCheck(chessMove) and self._capturePromoted(chessMove)
 
-    def _capturePromoted(self,chessMove):
+    def _capturePromoted(self,move):
+        myColor = move.pieceType[0]
+        if myColor == self.WHITE:
+            oppColor = self.BLACK
+            oppPawns = self.blackPawns
+            lastRow = 7
+        else:
+            oppColor = self.WHITE
+            oppPawns = self.whitePawns
+            lastRow = 0
+        #look for an enemy pawn in last line. if there is it must be captured
+        for col in range(8):
+            if [lastRow, col] in oppPawns:
+                if move.getToPos() == [lastRow,col]:
+                    return True
+                else:
+                    return False
+        #if there is no enemy pawn in the last line any move is OK
         return True
-    #TODO implement capturePromoted in a way that returns true if the move captures the enemy promoted pawn
-    #if there is one.
 
     # checks if the move is correct but ignores the fact that
     # it could put the player in check
