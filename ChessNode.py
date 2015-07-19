@@ -59,7 +59,7 @@ class ChessNode:
 
         move = actions[counter]
         successor = ChessNode(self.board, move)
-        successor.board.MovePiece(move)
+        successor.board.movePiece(move)
 
         #advance
         counter += 1
