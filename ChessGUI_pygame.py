@@ -133,10 +133,14 @@ class ChessGUI_pygame:
                     self.screen.blit(self.black_pawn,(screenX,screenY))
                 if board[r][c] == 'bK':
                     self.screen.blit(self.black_king,(screenX,screenY))
+                if board[r][c] == 'bQ' or board[r][c] == 'bP' and r == 7:
+                    self.screen.blit(self.black_queen,(screenX,screenY))
                 if board[r][c] == 'wP':
                     self.screen.blit(self.white_pawn,(screenX,screenY))
                 if board[r][c] == 'wK':
                     self.screen.blit(self.white_king,(screenX,screenY))
+                if board[r][c] == 'wQ' or board[r][c] == 'wP' and r == 0:
+                    self.screen.blit(self.white_queen,(screenX,screenY))
 
         pygame.display.flip()
 
