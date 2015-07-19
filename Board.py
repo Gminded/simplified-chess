@@ -90,6 +90,10 @@ class Board:
         fromPosCol = fromPos[1]
         toPosRow = toPos[0]
         toPosCol = toPos[1]
+        direction = None
+        advPawn = None
+        advKing = None
+        advDirection = None
         toPosPiece = self.getPiece(toPos)
         pieceType = chessMove.pieceType
 
@@ -287,7 +291,7 @@ class Board:
                 return self.DEFEAT
             else:
                 return self.DRAW
-        return CONTINUE
+        return self.CONTINUE
 
     def convertToAlgebraicNotationCol(self,col):
         columns=['a','b','c','d','e','f','g','h']
