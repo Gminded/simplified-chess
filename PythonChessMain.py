@@ -58,8 +58,8 @@ class PythonChessMain:
                 moveTuple = self.player[currentPlayerIndex].GetMove(currentNode)
             else:
                 moveTuple = self.Gui.GetPlayerInput(self.board, currentColor)
-
-            moveReport = self.board.MovePiece(moveTuple)
+            move = ChessMove(moveTuple, board[moveTuple[0][0]][moveTuple[0][1]])
+            moveReport = self.board.movePiece(move)
             self.Gui.PrintMessage(moveReport)
             # END OF PLAY TIME
             currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0

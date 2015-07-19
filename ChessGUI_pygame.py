@@ -208,7 +208,11 @@ class ChessGUI_pygame:
                             fromTuple = squareClicked
 
             elif fromSquareChosen and not toSquareChosen:
-                possibleDestinations = self.board.getListOfValidMoves(state[r][c],fromTuple)
+                moves = self.board.getListOfValidMoves(state[r][c],fromTuple)
+                possibleDestinations = []
+                for move in moves:
+                    moveTuple = move.moveTuple
+                    possibleDestinations.append(moveTuple[1]) #take only the destination coordinates
                 self.Draw(state,possibleDestinations)
                 if squareClicked != []:
                     (r,c) = squareClicked
