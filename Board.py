@@ -341,12 +341,30 @@ class Board:
                     return True
         return False
 
+    def _isPlayerPromoting(self, playerColor):
+        if playerColor == self.WHITE:
+            lastRow = 0
+            pawns = self.whitePawns
+        else:
+            lastRow = 7
+            pawns = self.blackPawns
+
+        for col in range(8):
+            if [lastRow, col] in pawns:
+                return True
+        return False
+
+
     # returns DEFEAT if the player is defeated,
     # DRAW if the game ends in a draw,
     # CONTINUE otherwise
     def terminalTest(self, playerColor):
+        if playerColor == self.WHITE:
+            otherPlayer = self.BLACK
+        else:
+            otherPlayer = self.WHITE
         if not self.getAllValidMoves(playerColor):
-            if self._isInCheck(playerColor):
+            if self._isPlayerPromoting(otherPlayer) or self._isInCheck(playerColor):
                 return self.DEFEAT
             else:
                 return self.DRAW
