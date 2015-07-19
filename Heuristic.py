@@ -12,7 +12,6 @@ class Heuristic:
 
         #weights
         winWeight = 10000
-        endangeredPawnsWeight = 0
         minDistanceWeight = 60
         avgDistanceWeight = 40
         pawnWeight = 10
@@ -33,10 +32,8 @@ class Heuristic:
         adversaryMinDistance = 10
         playerAvgDistance = 0
         adversaryAvgDistance = 0
-        playerPawnsEndangered = 0
         playerPawnsClearSight = 0
         adversaryPawnsClearSight = 0
-        adversaryPawnsEndangered = 0
         playerAvgDistanceFromKing = 0
         adversaryAvgDistanceFromKing = 0
 
@@ -47,7 +44,7 @@ class Heuristic:
         adversaryPawns = node.board.whitePawns
 
         #checking victory state
-        if node.board.DEFEAT == node.board.TerminalTest(color):
+        if node.board.DEFEAT == node.board.terminalTest(color):
             if color == playerColor:
                 score = -1
             else:
@@ -67,16 +64,6 @@ class Heuristic:
             distance = abs( (node.board.blackKing[0] +node.board.blackKing[1] ) - ( pawnRow + pawnCol))
             playerAvgDistanceFromKing += distance
 
-
-            #counting number of pawns which can be captured during the next turn (and the one after)
-            if pawnRow + direction < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction ][ pawnCol + 1 ] != "e":
-                playerPawnsEndangered += 1
-            if pawnRow + direction < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction ][ pawnCol - 1 ] != "e":
-                playerPawnsEndangered += 1
-            if pawnRow + direction*2 < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction*2 ][ pawnCol + 1 ] != "e":
-                playerPawnsEndangered += 1
-            if pawnRow + direction*2 < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction*2 ][ pawnCol - 1 ] != "e":
-                playerPawnsEndangered += 1
 
             #counting number of blocked pawns
             if pawnRow + direction < 8 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
@@ -167,6 +154,5 @@ class Heuristic:
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
                          movesWeight*( playerMoves - adversaryMoves ) +
-                         endangeredPawnsWeight*(  adversaryPawnsEndangered - playerPawnsEndangered ) +
                          clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ) +
                          distanceFromKingWeight*(int( playerAvgDistanceFromKing ) ) )
