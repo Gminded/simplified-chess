@@ -235,7 +235,7 @@ class Board:
     def getListOfValidMoves(self,piece,fromCoords):
         moves=[]
         row=fromCoords[0]
-        col=fromCoords[0]
+        col=fromCoords[1]
         if self.KING in piece:
             for r in (-1,0,1):
                 for c in (-1,0,1):
