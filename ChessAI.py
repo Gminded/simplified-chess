@@ -43,6 +43,7 @@ class ChessAI:
         counter = 0
         inner = 1
         moves = []
+        v = -1000000
         lastWasTheBest = False
         bestMove = None
         node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
@@ -64,7 +65,7 @@ class ChessAI:
         #terminal test
         if depth == 0 or currentNode.board.TerminalTest(color) == currentNode.board.DEFEAT:
             Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
-            self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, maxPlayer)
+            self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, None)
             return currentNode.utility
 
         # If this is a terminal test don't go any deeper, because the game ended.
@@ -86,7 +87,7 @@ class ChessAI:
                     alpha = v
                     bestMove = node.GetMoveTuple()
                 node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("black", counter, inner, moves, self.table, lastWasTheBest)
-            self.table.insertUtility(currentNode.board, None, depthLimit, bestMove ,maxPlayer)
+            self.table.insertUtility(currentNode.board, None, depthLimit, bestMove , None)
             return v
 
         # Min
@@ -100,14 +101,11 @@ class ChessAI:
             node, counter, actions, inner, lastWasTheBest = currentNode.NextAction("white", counter, inner, moves, self.table, lastWasTheBest)
             while node != None:
                 utility = self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)
-                v = min(v, utility)
                 if v <= alpha:
-                    bestMove = node.GetMoveTuple()
-                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                     return v
                 if v < beta:
                     beta = v
                     bestMove = node.GetMoveTuple()
-                    self.table.insertUtility(currentNode.board, v, depthLimit, bestMove ,maxPlayer)
                 node, counter, moves, inner, lastWasTheBest = currentNode.NextAction("white", counter, inner, moves, self.table, lastWasTheBest)
+            self.table.insertUtility(currentNode.board, v, depthLimit, None , bestMove)
             return v

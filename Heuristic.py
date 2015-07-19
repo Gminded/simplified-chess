@@ -54,7 +54,7 @@ class Heuristic:
         adversaryPawns = node.board.whitePawns
 
         #checking victory state
-        if DEFEAT == node.board.TerminalTest(color):
+        if node.board.DEFEAT == node.board.TerminalTest(color):
             if color == 'black':
                 score = -1
             else:
