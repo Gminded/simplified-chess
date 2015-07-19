@@ -96,7 +96,13 @@ class Board:
 
     #true if the move is a valid one
     def isValidMove(self, chessMove):
-        return self._isPossibleMove(chessMove) and not self._doesMovePutInCheck(chessMove)
+        return self._isPossibleMove(chessMove) and\
+               not self._doesMovePutInCheck(chessMove) and self._capturePromoted(chessMove)
+
+    def _capturePromoted(self,chessMove):
+        return True
+    #TODO implement capturePromoted in a way that returns true if the move captures the enemy promoted pawn
+    #if there is one.
 
     # checks if the move is correct but ignores the fact that
     # it could put the player in check

@@ -48,14 +48,14 @@ class Heuristic:
         oldboard = node.GetOldState()
 
         #my pieces
-        playerColor = "black"
-        adversaryColor = "white"
+        playerColor = "b"
+        adversaryColor = "w"
         playerPawns = node.board.blackPawns
         adversaryPawns = node.board.whitePawns
 
         #checking victory state
         if node.board.DEFEAT == node.board.TerminalTest(color):
-            if color == 'black':
+            if color == 'b':
                 score = -1
             else:
                 score = 1

@@ -16,8 +16,8 @@ class PythonChessMain:
     def SetUp(self):
         # players set up
         self.player = [0, 0]
-        self.player[0] = ChessPlayer("Human", "white")
-        self.player[1] = ChessAI("AI", "black")
+        self.player[0] = ChessPlayer("Human", "w")
+        self.player[1] = ChessAI("AI", "b")
         # GUI setup
         self.guitype = 'pygame'
         GameParams = TkinterGameSetupParams()

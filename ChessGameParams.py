@@ -47,10 +47,10 @@ class TkinterGameSetupParams:
     def ok(self):
         self.player1Name = self.entry_player1Name.get()
         #hardcoded so that player 1 is always white
-        self.player1Color = "white"
+        self.player1Color = "w"
         self.player1Type = self.tk_player1Type.get()
         self.player2Name = self.entry_player2Name.get()
-        self.player2Color = "black"
+        self.player2Color = "b"
         self.player2Type = self.tk_player2Type.get()
 
         if self.player1Name != "" and self.player2Name != "":

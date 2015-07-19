@@ -49,13 +49,13 @@ class ChessAI:
             if utility > v:
                 v = utility
                 bestMove = node.getMove()
-            node, counter, moves, lastWasTheBest = currentNode.NextAction("black", counter, moves, self.table, lastWasTheBest)
+            node, counter, moves, lastWasTheBest = currentNode.NextAction("b", counter, moves, self.table, lastWasTheBest)
         self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, True)
         return v
 
     def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
         if maxPlayer:
-            color='black'
+            color='b'
         else:
             color='white'
 
@@ -74,7 +74,7 @@ class ChessAI:
             moves = []
             bestMove = None
             lastWasTheBest = False
-            node, counter, moves, lastWasTheBest = currentNode.NextAction("black", counter, moves, self.table, lastWasTheBest)
+            node, counter, moves, lastWasTheBest = currentNode.NextAction("b", counter, moves, self.table, lastWasTheBest)
             while node != None:
                 utility = self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit)
                 if v >= beta:
@@ -82,7 +82,7 @@ class ChessAI:
                 if v > alpha:
                     alpha = v
                     bestMove = node.getMove()
-                node, counter, lastWasTheBest = currentNode.NextAction("black", counter, moves, self.table, lastWasTheBest)
+                node, counter, lastWasTheBest = currentNode.NextAction("b", counter, moves, self.table, lastWasTheBest)
             self.table.insertUtility(currentNode.board, None, depthLimit, bestMove , None)
             return v
 
@@ -93,7 +93,7 @@ class ChessAI:
             moves = []
             bestMove = None
             lastWasTheBest = False
-            node, counter, actions, lastWasTheBest = currentNode.NextAction("white", counter, moves, self.table, lastWasTheBest)
+            node, counter, actions, lastWasTheBest = currentNode.NextAction("w", counter, moves, self.table, lastWasTheBest)
             while node != None:
                 utility = self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)
                 if v <= alpha:
@@ -101,6 +101,6 @@ class ChessAI:
                 if v < beta:
                     beta = v
                     bestMove = node.getMove()
-                node, counter, moves, lastWasTheBest = currentNode.NextAction("white", counter, moves, self.table, lastWasTheBest)
+                node, counter, moves, lastWasTheBest = currentNode.NextAction("w", counter, moves, self.table, lastWasTheBest)
             self.table.insertUtility(currentNode.board, v, depthLimit, None , bestMove)
             return v
