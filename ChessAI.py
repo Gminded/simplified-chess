@@ -57,7 +57,7 @@ class ChessAI:
         if maxPlayer:
             color='b'
         else:
-            color='white'
+            color='w'
 
         #terminal test
         if depth == 0 or currentNode.board.TerminalTest(color) == currentNode.board.DEFEAT:
