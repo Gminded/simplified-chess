@@ -16,7 +16,7 @@ class ChessNode:
         return self.board.GetOldState()
 
     def SetState(self, board):
-        self.board = copy.copy(board)
+        self.board = copy.deepcopy(board)
 
     def GetUtility(self):
         return self.utility
