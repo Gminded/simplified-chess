@@ -176,6 +176,8 @@ class Board:
 
             if toPosPiece == advPawn:
                 chessMove.moveType=chessMove.CAPTURE
+            elif toPosPiece == self.EMPTY:
+                return False
             else:
                 chessMove.moveType=chessMove.MOVE
 
@@ -205,17 +207,17 @@ class Board:
             return True
 
     def _doesMovePutInCheck(self, chessMove):
-        if chessMove.pieceType == self.WHITEKING:
+        if self.WHITEKING in chessMove.pieceType:
             advPieces = []
             advPieces.append(self.BLACKPAWN)
             advPieces.append(self.BLACKKING)
             return not self._canIMoveTheKing(chessMove, advPieces)
-        elif chessMove.pieceType == self.BLACKKING:
+        elif self.BLACKKING in chessMove.pieceType:
             advPieces = []
             advPieces.append(self.WHITEPAWN)
             advPieces.append(self.WHITEKING)
             return not self._canIMoveTheKing(chessMove, advPieces)
-        elif chessMove.pieceType == self.BLACKPAWN:
+        elif self.BLACKPAWN in chessMove.pieceType:
             kingRow = self.blackKing[0]
             kingCol = self.blackKing[1]
             if self.getPiece( [kingRow + self.BLACKDIRECTION, kingCol + 1 ] ) == self.WHITEPAWN or\
