@@ -177,8 +177,10 @@ class Board:
                         return True
             #advance by 2
             elif self.BLACK in pieceType and fromPosRow == 1  and fromPosRow + 2 == toPosRow and fromPosCol == toPosCol and toPosPiece == self.EMPTY:
+                chessMove.moveType = chessMove.MOVE
                 return True
             elif self.WHITE in pieceType and fromPosRow == 6  and fromPosRow - 2 == toPosRow and fromPosCol == toPosCol and toPosPiece == self.EMPTY:
+                chessMove.moveType = chessMove.MOVE
                 return True
 
             return False
@@ -339,12 +341,30 @@ class Board:
                     return True
         return False
 
+    def _isPlayerPromoting(self, playerColor):
+        if playerColor == self.WHITE:
+            lastRow = 0
+            pawns = self.whitePawns
+        else:
+            lastRow = 7
+            pawns = self.blackPawns
+
+        for col in range(8):
+            if [lastRow, col] in pawns:
+                return True
+        return False
+
+
     # returns DEFEAT if the player is defeated,
     # DRAW if the game ends in a draw,
     # CONTINUE otherwise
     def terminalTest(self, playerColor):
+        if playerColor == self.WHITE:
+            otherPlayer = self.BLACK
+        else:
+            otherPlayer = self.WHITE
         if not self.getAllValidMoves(playerColor):
-            if self._isInCheck(playerColor):
+            if self._isPlayerPromoting(otherPlayer) or self._isInCheck(playerColor):
                 return self.DEFEAT
             else:
                 return self.DRAW
