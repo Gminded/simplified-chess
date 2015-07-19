@@ -46,7 +46,7 @@ class ChessAI:
         return bestMove
 
     def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
-        v = -1000000
+        v = -2000000000
         bestMove = None
         node = currentNode.NextAction("b", self.table)
         while node != None:
@@ -74,7 +74,7 @@ class ChessAI:
         
         # Max
         if maxPlayer:
-            v = -1000000
+            v = -2000000000
             bestMove = None
             node = currentNode.NextAction("b", self.table)
             while node != None:
@@ -90,7 +90,7 @@ class ChessAI:
 
         # Min
         else:
-            v = 1000000
+            v = 2000000000
             bestMove = None
             node = currentNode.NextAction("w", self.table)
             while node != None:
