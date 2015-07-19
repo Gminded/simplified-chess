@@ -48,20 +48,39 @@ class Board:
 
     #apply the move chessMove to the chessboard
     def movePiece(self, chessMove):
+        #this is just impossible to reach
+        #but still useful because it gives semantic to chessMove
+        if not self._isPossibleMove(chessMove):
+            return False
+
         fromPos = chessMove.getFromPos()
         toPos = chessMove.getToPos()
+        toPosPiece = self.getPiece(toPos)
         pieceType = chessMove.pieceType
+        moveType = chessMove.moveType
 
         if pieceType == self.WHITEKING:
             self.whiteKing = toPos
+            if moveType == chessMove.CAPTURE:
+                self.blackPawns.remove(toPos)
         elif pieceType == self.BLACKKING:
             self.blackKing = toPos
-        elif pieceType == self.BLACKPAWN and fromPos in self.blackPawns:
+            if moveType == chessMove.CAPTURE:
+                self.whitePawns.remove(toPos)
+        elif pieceType == self.BLACKPAWN:
             self.blackPawns.remove(fromPos)
             self.blackPawns.append(toPos)
+            if moveType == chessMove.CAPTURE:
+                self.whitePawns.remove(toPos)
+            elif moveType == chessMove.ENPASSANT_CAPTURE:
+                self.whitePawns.remove( [toPos[0], toPos[1] - 1] )
         else:
             self.whitePawns.remove(fromPos)
             self.whitePawns.append(toPos)
+            if moveType == chessMove.CAPTURE:
+                self.blackPawns.remove(toPos)
+            elif moveType == chessMove.ENPASSANT_CAPTURE:
+                self.blackPawns.remove( [toPos[0], toPos[1] - 1] )
         #store the previous move
         self.previousMove = chessMove
 
