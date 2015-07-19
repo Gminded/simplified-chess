@@ -24,8 +24,6 @@ class Heuristic:
         adversaryMinDistance = 10
         playerAvgDistance = 0
         adversaryAvgDistance = 0
-        playerPawnsClearSight = 0
-        adversaryPawnsClearSight = 0
         playerAvgDistanceFromKing = 0
         adversaryAvgDistanceFromKing = 0
 
@@ -56,19 +54,6 @@ class Heuristic:
             distance = abs( (node.board.blackKing[0] +node.board.blackKing[1] ) - ( pawnRow + pawnCol))
             playerAvgDistanceFromKing += distance
 
-            #number of pawns which have a clear sight to the end of the board
-            for pos in range(pawnRow + direction, 8):
-                if node.board.state[ pos ][pawnCol] != "e":
-                    if pawnCol + 1 < 8:
-                        if node.board.state[ pos ][pawnCol +1] != "e":
-                            break
-                    if pawnCol -1 >= 0:
-                        if node.board.state[ pos ][pawnCol -1] != "e":
-                            break
-                else:
-                    if pos == 7:
-                        playerPawnsClearSight +=1
-
             #counting minDistance from the other end of the board
             distance = 7 - pawnRow
             playerAvgDistance += distance
@@ -92,19 +77,6 @@ class Heuristic:
             #distance from adv King
             distance = abs( (node.board.whiteKing[0] +node.board.whiteKing[1] ) - ( pawnRow + pawnCol))
             adversaryAvgDistanceFromKing += distance
-
-            #number of pawns which have a clear sight to the end of the board
-            for pos in range(pawnRow + direction, direction, direction):
-                if node.board.state[ pos ][pawnCol] != "e":
-                    if pawnCol + 1 < 8:
-                        if node.board.state[ pos ][pawnCol +1] != "e":
-                            break
-                    if pawnCol -1 >= 0:
-                        if node.board.state[ pos ][pawnCol -1] != "e":
-                            break
-                else:
-                    if pos == 7:
-                        adversaryPawnsClearSight +=1
 
             #counting minDistance from the other end of the board
             distance = pawnRow
