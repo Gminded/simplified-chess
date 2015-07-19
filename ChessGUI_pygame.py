@@ -49,22 +49,14 @@ class ChessGUI_pygame:
         self.black_pawn = pygame.transform.scale(self.black_pawn, (self.square_size,self.square_size))
         self.black_king = pygame.image.load(os.path.join("images","Chess_tile_kd.png")).convert()
         self.black_king = pygame.transform.scale(self.black_king, (self.square_size,self.square_size))
-        self.black_queen = pygame.image.load(os.path.join("images","Chess_tile_qd.png"))
-        self.black_queen = pygame.transform.scale(self.black_queen, (self.square_size,self.square_size))
 
         self.white_pawn = pygame.image.load(os.path.join("images","Chess_tile_pl.png")).convert()
         self.white_pawn = pygame.transform.scale(self.white_pawn, (self.square_size,self.square_size))
         self.white_king = pygame.image.load(os.path.join("images","Chess_tile_kl.png")).convert()
         self.white_king = pygame.transform.scale(self.white_king, (self.square_size,self.square_size))
-        self.white_queen = pygame.image.load(os.path.join("images","Chess_tile_ql.png"))
-        self.white_queen = pygame.transform.scale(self.white_queen, (self.square_size,self.square_size))
-
-    def moveMessage(self,move,board):
-        return self.textBox.moveMessage(move,board)
 
         self.black_queen = pygame.image.load(os.path.join("images","Chess_tile_qd.png")).convert()
         self.black_queen = pygame.transform.scale(self.black_queen, (self.square_size,self.square_size))
-
         self.white_queen = pygame.image.load(os.path.join("images","Chess_tile_ql.png")).convert()
         self.white_queen = pygame.transform.scale(self.white_queen, (self.square_size,self.square_size))
 
