@@ -44,7 +44,7 @@ class PythonChessMain:
     def MainLoop(self):
         currentPlayerIndex = 0
         turnCount = 0
-        currentNode = ChessNode(self.board, copyFlag=False)  # setup initial node
+        currentNode = ChessNode(self.board, None)  # setup initial node
         while self.board.CONTINUE == self.board.terminalTest(self.player[currentPlayerIndex].color):
             board = self.board.getWholeState()
             currentColor = self.player[currentPlayerIndex].GetColor()
