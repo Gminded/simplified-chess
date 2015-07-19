@@ -176,7 +176,7 @@ class Board:
 
             if toPosPiece == advPawn:
                 chessMove.moveType=chessMove.CAPTURE
-            elif toPosPiece == self.EMPTY:
+            elif toPosPiece == myPawns:
                 return False
             else:
                 chessMove.moveType=chessMove.MOVE
