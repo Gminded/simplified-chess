@@ -48,7 +48,7 @@ class ChessNode:
                 lastWasTheBest  = True
 
                 successor = ChessNode(self.board, bestMove)
-                successor.board.MovePiece(bestMove)
+                successor.board.movePiece(bestMove)
                 return successor, counter,actions, lastWasTheBest
 
 

@@ -43,7 +43,7 @@ class ChessAI:
         v = -1000000
         lastWasTheBest = False
         bestMove = None
-        node, counter, moves, lastWasTheBest = currentNode.NextAction("black", counter, moves, self.table, lastWasTheBest)
+        node, counter, moves, lastWasTheBest = currentNode.NextAction("b", counter, moves, self.table, lastWasTheBest)
         while node != None:
             utility = self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit)
             if utility > v:
