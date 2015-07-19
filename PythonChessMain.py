@@ -63,6 +63,7 @@ class PythonChessMain:
             moveReport = self.Gui.moveMessage(move,self.board)
             self.Gui.PrintMessage(moveReport)
             # END OF PLAY TIME
+            currentNode = ChessNode(self.board, None)
             currentPlayerIndex = (currentPlayerIndex + 1) % 2  # this will cause the currentPlayerIndex to toggle between 1 and 0
 
         termination = self.board.terminalTest(self.player[currentPlayerIndex].color)
