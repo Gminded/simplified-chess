@@ -28,9 +28,9 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(1500)
+            signal.alarm(15)
             while True:
-                utility = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
+                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
                 currentNode.resetNode()
@@ -46,7 +46,7 @@ class ChessAI:
         return bestMove
 
     def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
-        v = -2000000000
+        v = -20000000
         bestMove = None
         maxUtility = v
         node = currentNode.NextAction("b", self.table)
@@ -57,9 +57,9 @@ class ChessAI:
                 bestMove = node.getMove()
             node = currentNode.NextAction("b", self.table)
         self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, True)
-        return v
+        return maxUtility, bestMove.moveTuple
 
-    def AlphaBetaSearch(self, alpha=-10000, beta=10000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
+    def AlphaBetaSearch(self, alpha=-20000000, beta=20000000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
         if maxPlayer:
             color='b'
         else:
@@ -75,7 +75,7 @@ class ChessAI:
         
         # Max
         if maxPlayer:
-            v = -2000000000
+            v = -20000000
             bestMove = None
             node = currentNode.NextAction("b", self.table)
             while node != None:
@@ -91,7 +91,7 @@ class ChessAI:
 
         # Min
         else:
-            v = 2000000000
+            v = 20000000
             bestMove = None
             node = currentNode.NextAction("w", self.table)
             while node != None:
