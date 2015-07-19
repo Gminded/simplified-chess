@@ -46,17 +46,19 @@ class ChessNode:
             self.actions = self.board.getAllValidMoves(player_color)
 
             if bestMove != None:
-                for move in self.actions.moveTuple:
-                    for pos in move[1:]:
-                        if move[0] == bestMove[0] and pos == bestMove[1]:
-                            move.remove( bestMove[1] )
-                        if len(move) == 1:
+                bestMoveCoords = bestMove.moveTuple
+                for move in self.actions:
+                    moveCoords = move.moveTuple
+                    for pos in moveCoords[1:]:
+                        if moveCoords[0] == bestMoveCoords[0] and pos == bestMoveCoords[1]:
+                            moveCoords.remove( bestMoveCoords[1] )
+                        if len(moveCoords) == 1:
                             self.actions.remove(move)
                 self.lastWasTheBest  = True
 
-                successor = ChessNode(self.board, bestMove)
-                successor.board.movePiece(bestMove)
-                return successor
+            successor = ChessNode(self.board, bestMove)
+            successor.board.movePiece(bestMove)
+            return successor
 
 
         if not self.actions or self.moveCounter >= len(self.actions):
