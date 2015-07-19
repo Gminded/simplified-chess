@@ -1,9 +1,8 @@
-from Heuristic import Heuristic
 import copy
 
 class ChessNode:
     def __init__(self, board, chessMove):
-        self.board = copy.copy(board)
+        self.board = copy.deepcopy(board)
         self.utility = -1
         self.chessMove = chessMove
         self.moveCounter = 0
