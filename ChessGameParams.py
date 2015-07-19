@@ -7,7 +7,6 @@ from Tkinter import *
 class TkinterGameSetupParams:
 
     def __init__(self):
-        self.treeDepth = 2
         self.root = Tk()
         self.root.title("Welcome to Python Chess!")
         self.frame = Frame(self.root)
@@ -41,13 +40,9 @@ class TkinterGameSetupParams:
         Radiobutton(self.frame, text="AI",variable=self.tk_player2Type,value="AI").grid(row=3,column=3)
         self.tk_player2Type.set("AI")
 
-        Label(self.frame, text=u"Tree depth α-β").grid(row=4,column=0)
-        self.tk_treeDepth = Scale(self.frame, variable=self.treeDepth, orient=HORIZONTAL, from_=2, to=10 )
-        self.tk_treeDepth.grid(row=4,column=1)
-
 
         b = Button(self.frame, text="Start the Game!", command=self.ok)
-        b.grid(row=5,column=1)
+        b.grid(row=4,column=1)
 
     def ok(self):
         self.player1Name = self.entry_player1Name.get()
@@ -57,7 +52,6 @@ class TkinterGameSetupParams:
         self.player2Name = self.entry_player2Name.get()
         self.player2Color = "black"
         self.player2Type = self.tk_player2Type.get()
-        self.treeDepth = self.tk_treeDepth.get()
 
         if self.player1Name != "" and self.player2Name != "":
             self.frame.destroy()
@@ -72,7 +66,7 @@ class TkinterGameSetupParams:
         self.root.wait_window(self.frame) #waits for frame to be destroyed
         self.root.destroy() #noticed that with "text" gui mode, the tk window stayed...this gets rid of it.
         return (self.player1Name, self.player1Color, self.player1Type,
-                self.player2Name, self.player2Color, self.player2Type, self.treeDepth)
+                self.player2Name, self.player2Color, self.player2Type)
 
 
 

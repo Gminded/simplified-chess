@@ -30,7 +30,7 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(15)
+            signal.alarm(1500)
             while True:
                 utility = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)

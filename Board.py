@@ -131,6 +131,12 @@ class Board:
                             self.previousMove.getFromPos() == ( fromPosRow - advDirection*2, fromPosCol-1 ):
                         chessMove.moveType=chessMove.ENPASSANT
                         return True
+            #advance by 2
+            elif self.BLACK in pieceType and fromPosRow == 1  and fromPosRow + 2 == toPosRow and fromPosCol == toPosCol:
+                return True
+            elif self.WHITE in pieceType and fromPosRow == 6  and fromPosRow - 2 == toPosRow and fromPosCol == toPosCol:
+                return True
+
             return False
 
         #advance or capture with the black King or the white King

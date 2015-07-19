@@ -19,7 +19,7 @@ from ScrollingTextBox import ScrollingTextBox
 from Board import *
 
 class ChessGUI_pygame:
-    def __init__(self,board, depth):
+    def __init__(self,board):
         os.environ['SDL_VIDEO_CENTERED'] = '1' #should center pygame window on the screen
         pygame.init()
         self.board = board
@@ -27,7 +27,7 @@ class ChessGUI_pygame:
         self.screen = pygame.display.set_mode((850*self.hidpi_factor, 600*self.hidpi_factor), pygame.DOUBLEBUF)
         self.boardStart_x = 50*self.hidpi_factor
         self.boardStart_y = 50*self.hidpi_factor
-        pygame.display.set_caption('Simplified Chess ( Depth '+str(depth)+' )')
+        pygame.display.set_caption('Simplified Chess')
 
         self.textBox = ScrollingTextBox(self.screen,525*self.hidpi_factor,825*self.hidpi_factor,50*self.hidpi_factor,450*self.hidpi_factor, self.hidpi_factor)
         self.LoadImages()
