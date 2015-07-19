@@ -106,16 +106,6 @@ class Heuristic:
             distance = abs( (node.board.whiteKing[0] +node.board.whiteKing[1] ) - ( pawnRow + pawnCol))
             adversaryAvgDistanceFromKing += distance
 
-            #counting number of pawns which can be captured during the next turn (and the one after)
-            if pawnRow + direction >= 0 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction ][ pawnCol + 1 ] != "e":
-                adversaryPawnsEndangered += 1
-            if pawnRow + direction >= 0 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction ][ pawnCol - 1 ] != "e":
-                adversaryPawnsEndangered += 1
-            if pawnRow + direction*2 >= 0 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction*2 ][ pawnCol + 1 ] != "e":
-                adversaryPawnsEndangered += 1
-            if pawnRow + direction*2 >= 0 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction*2 ][ pawnCol - 1 ] != "e":
-                adversaryPawnsEndangered += 1
-
             #counting number of blocked pawns
             if pawnRow + direction >= 0 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
                 blockedAdversaryPawns+= 1
