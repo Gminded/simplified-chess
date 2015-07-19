@@ -74,7 +74,7 @@ class ChessGUI_pygame:
         (X,Y) = screenPositionTuple
         row = (Y-self.boardStart_y) / self.square_size
         col = (X-self.boardStart_x) / self.square_size
-        return (row,col)
+        return [row,col]
 
 
     def Draw(self,board,highlightSquares=[]):
@@ -131,26 +131,10 @@ class ChessGUI_pygame:
                 (screenX,screenY) = self.ConvertToScreenCoords((r,c))
                 if board[r][c] == 'bP':
                     self.screen.blit(self.black_pawn,(screenX,screenY))
-                if board[r][c] == 'bR':
-                    self.screen.blit(self.black_rook,(screenX,screenY))
-                if board[r][c] == 'bT':
-                    self.screen.blit(self.black_knight,(screenX,screenY))
-                if board[r][c] == 'bB':
-                    self.screen.blit(self.black_bishop,(screenX,screenY))
-                if board[r][c] == 'bQ' or board[r][c] == 'bP' and r == 7:
-                    self.screen.blit(self.black_queen,(screenX,screenY))
                 if board[r][c] == 'bK':
                     self.screen.blit(self.black_king,(screenX,screenY))
                 if board[r][c] == 'wP':
                     self.screen.blit(self.white_pawn,(screenX,screenY))
-                if board[r][c] == 'wR':
-                    self.screen.blit(self.white_rook,(screenX,screenY))
-                if board[r][c] == 'wT':
-                    self.screen.blit(self.white_knight,(screenX,screenY))
-                if board[r][c] == 'wB':
-                    self.screen.blit(self.white_bishop,(screenX,screenY))
-                if board[r][c] == 'wQ' or board[r][c] == 'wP' and r == 0:
-                    self.screen.blit(self.white_queen,(screenX,screenY))
                 if board[r][c] == 'wK':
                     self.screen.blit(self.white_king,(screenX,screenY))
 
@@ -239,10 +223,3 @@ class ChessGUI_pygame:
                         fromSquareChosen = 0
 
         return (fromTuple,toTuple)
-
-    def GetClickedSquare(self,mouseX,mouseY):
-        #test function
-        print "User clicked screen position x =",mouseX,"y =",mouseY
-        (row,col) = self.ConvertToChessCoords((mouseX,mouseY))
-        if col < 8 and col >= 0 and row < 8 and row >= 0:
-            print "  Chess board units row =",row,"col =",col
