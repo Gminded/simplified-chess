@@ -30,7 +30,7 @@ class Board:
         self.blackPawns = []
         self.previousMove = previousMove
 
-        for col in range(0,8):
+        for col in range(8):
             self.whitePawns.append([6,col])
             self.blackPawns.append([1,col])
 
@@ -81,8 +81,41 @@ class Board:
                 self.blackPawns.remove(toPos)
             elif moveType == chessMove.ENPASSANT_CAPTURE:
                 self.blackPawns.remove( [toPos[0] - self.WHITEDIRECTION, toPos[1]] )
-        #store the previous move
-        self.previousMove = chessMove
+        return toPosPiece
+
+    #It's the opposite of movePiece: it restores the state before a move
+    def undoMove(self,move):
+        fromPos=move.moveTuple[0]
+        toPos=move.moveTuple[1]
+        piece=move.pieceType
+        moveType=move.moveType
+
+        # Always move the piece back to its place, for any move!
+        if self.BLACKKING in piece:
+            self.blackKing=fromPos
+        elif self.WHITEKING in piece:
+            self.whiteKing=fromPos
+        elif self.BLACKPAWN in piece:
+            self.blackPawns.remove(toPos)
+            self.blackPawns.append(fromPos)
+        elif self.WHITEPAWN in piece:
+            self.whitePawns.remove(toPos)
+            self.whitePawns.append(fromPos)
+
+        if moveType == move.CAPTURE:
+            if self.BLACK in piece:
+                self.whitePawns.append(toPos)
+            else:
+                self.blackPawns.append(toPos)
+        elif moveType == move.ENPASSANT_CAPTURE:
+            fromRow=fromPos[0]
+            toCol=toPos[1]
+            capturedPos=[fromRow,toCol]
+            if self.BLACK in piece:
+                self.whitePawns.append(capturedPos)
+            else:
+                self.blackPawns.append(capturedPos)
+
 
     #returns True if the move is defined in the chessBoard
     def _isInBoard(self, chessMove):
