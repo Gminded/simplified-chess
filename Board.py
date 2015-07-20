@@ -84,12 +84,13 @@ class Board:
         return toPosPiece
 
     #It's the opposite of movePiece: it restores the state before a move
-    def undoMove(self,move):
+    def undoMove(self,move,previousMove):
         fromPos=move.moveTuple[0]
         toPos=move.moveTuple[1]
         piece=move.pieceType
         moveType=move.moveType
 
+        self.previousMove=previousMove
         # Always move the piece back to its place, for any move!
         if self.BLACKKING in piece:
             self.blackKing=fromPos

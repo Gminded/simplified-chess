@@ -53,8 +53,11 @@ class ChessAI:
         bestMove = None
         maxUtility = v
         node = currentNode.NextAction("b", self.table)
+        previousMove = node.board.previousMove
         while node != None:
-            v = max( v, self.AlphaBetaSearch( currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
+            v = max( v, self.AlphaBetaSearch(previousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
+            #Restore previous state before continuing
+            node.board.undoMove(node.getMove(),previousMove)
             if v > maxUtility:
                 maxUtility = v
                 bestMove = node.getMove()
@@ -62,7 +65,8 @@ class ChessAI:
         self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, True)
         return maxUtility, bestMove.moveTuple
 
-    def AlphaBetaSearch(self, alpha=-20000000, beta=20000000, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
+    def AlphaBetaSearch(self, previousMove, alpha=-20000000, beta=20000000,\
+                        currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
         if maxPlayer:
             color='b'
         else:
@@ -91,7 +95,9 @@ class ChessAI:
             bestMove = None
             node = currentNode.NextAction("b", self.table)
             while node != None:
-                v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit) )
+                v = max(v, self.AlphaBetaSearch(previousMove, alpha, beta, node, False, depth-1, depthLimit))
+                #Restore previous state before continuing
+                node.board.undoMove(node.getMove(),previousMove)
                 if v >= beta:
                     return v
                 if v > alpha:
@@ -107,7 +113,9 @@ class ChessAI:
             bestMove = None
             node = currentNode.NextAction("w", self.table)
             while node != None:
-                v = min( v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)  )
+                v = min(v, self.AlphaBetaSearch(previousMove, alpha, beta, node, True, depth-1, depthLimit))
+                #Restore previous state before continuing
+                node.board.undoMove(node.getMove(),previousMove)
                 if v <= alpha:
                     return v
                 if v < beta:
