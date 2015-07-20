@@ -299,7 +299,7 @@ class Board:
             for r in (-1,0,1):
                 for c in (-1,0,1):
                     if not (r == c == 0):
-                        move=ChessMove(( fromCoords,[row+r,col+c]),piece)
+                        move=ChessMove([fromCoords,[row+r,col+c]],piece)
                         if self.isValidMove(move):
                             moves.append(move)
         elif self.PAWN in piece:
