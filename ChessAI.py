@@ -4,7 +4,6 @@ from Heuristic import Heuristic
 from ZobristHash import ZobristHash
 from ChessBoard import *
 import signal
-import copy
 
 class ChessAI:
     def __init__(self, name, color):
@@ -89,7 +88,7 @@ class ChessAI:
         #Cut off
         if depth == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
-            self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, maxPlayer)
+            self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, None)
             return currentNode.utility
         
         # Max
