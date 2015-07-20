@@ -89,4 +89,4 @@ class Heuristic:
                          int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          movesWeight*( playerMoves - adversaryMoves ) +
-                         distanceFromKingWeigth*(int( playerAvgDistanceFromKing ) ) )
+                         distanceFromKingWeigth*(int(playerAvgDistanceFromKing) - adversaryAvgDistanceFromKing) )

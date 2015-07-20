@@ -84,6 +84,7 @@ class ChessAI:
                 currentNode.utility-=self.DEFEATWEIGHT
             else: #minPlayer: we are losing so the value is positive
                 currentNode.utility+=self.DEFEATWEIGHT
+            return currentNode.utility
 
         #Cut off
         if depth == 0:

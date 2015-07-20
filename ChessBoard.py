@@ -223,13 +223,31 @@ class ChessBoard:
 
 
         for toTuple in moves:
-            if 'K' in piece:
-                check=self.DoesMovePutPlayerInCheck(color, toTuple, fromTuple, toTuple)
-            else:
-                check=self.DoesMovePutPlayerInCheck(color, myKingCoords, fromTuple, toTuple)
-            if not check and self._IsCorrectMove(color,fromTuple,toTuple):
-                legalDestinationSpaces.append(toTuple)
+            if self._IsCorrectMove(color,fromTuple,toTuple):
+                if 'K' in piece:
+                    check=self.DoesMovePutPlayerInCheck(color, toTuple, fromTuple, toTuple)
+                else:
+                    check=self.DoesMovePutPlayerInCheck(color, myKingCoords, fromTuple, toTuple)
+                if not check and self._capturePromoted(color,fromTuple,toTuple):
+                    legalDestinationSpaces.append(toTuple)
         return legalDestinationSpaces
+
+    # If the oppenent promoted a pawn this move must capture it: return true if it does, false otherwise.
+    # If the opponent didn't promote a pawn always return true.
+    def _capturePromoted(self,color, fromTuple, toTuple):
+        if color == 'b':
+            startRow = 0
+            oppColor = 'w'
+        else:
+            startRow = 7
+            oppColor = 'b'
+        for col in range(8):
+            if oppColor+'P' in self.state[startRow][col]:
+                if toTuple == [startRow,col]:
+                    return True
+                else:
+                    return False
+        return True
 
     # Less redundant check for correctness
     def _IsCorrectMove(self,color,fromTuple,toTuple):
