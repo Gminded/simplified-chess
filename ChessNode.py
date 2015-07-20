@@ -52,7 +52,7 @@ class ChessNode:
     def NextAction(self, player_color, counter, inner, actions, table, lastWasTheBest):
 
         if not lastWasTheBest and counter == 0 and inner == 1:
-            if player_color == "white":
+            if player_color == "w":
                 maxPlayer = False
                 my_pieces = copy.copy( self.board.whitePawns )
                 my_pieces.append(self.board.whiteKing)
@@ -106,7 +106,7 @@ class ChessNode:
 
     #return successor nodes
     def Actions(self, player_color, table):
-        if player_color == "white":
+        if player_color == "w":
             my_pieces = copy.copy( self.board.whitePawns )
             my_pieces.append(self.board.whiteKing)
         else:
@@ -139,7 +139,7 @@ class ChessNode:
                     successors.append(successor)
                 else:
                     for k in successors:
-                        if player_color == "black":
+                        if player_color == "b":
                             if successor.utility > k.utility:
                                 posToInsert = count
                                 inserted = True
