@@ -5,7 +5,7 @@ class Heuristic:
         #retrieve the utility value if it was already computed
         cachedValue = table.lookup(node.board)
         if cachedValue != None and not cachedValue[0] is None:
-            return cachedValue
+            return cachedValue[0]
 
         #weights
         minDistanceWeight = 5

@@ -31,8 +31,8 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(15)
-            while True:
+            #signal.alarm(15)
+            while depth<=3:
                 utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -77,7 +77,7 @@ class ChessAI:
             utility = Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
             if maxPlayer: #we are losing so the value is negative
                 utility -=self.DEFEATWEIGHT
-            else: #minPlayer: we are losing so the value is positive
+            else: #minPlayer: we are winning so the value is positive
                 utility +=self.DEFEATWEIGHT
             self.table.insertUtility(currentNode.board, utility, depthLimit, None, None)
             return utility
