@@ -1,4 +1,5 @@
 from ChessBoard import DEFEAT
+from ChessBoard import WON
 
 class Heuristic:
 
@@ -11,55 +12,24 @@ class Heuristic:
             return cachedValue
 
         #weights
-        winWeight = 1000000000
-        endangeredPawnsWeight = 0
-        minDistanceWeight = 60
-        avgDistanceWeight = 40
-        enpassantWeight = 10
-        pawnWeight = 10
-        blockedPawnsWeight = 2
+        minDistanceWeight = 5
+        avgDistanceWeight = 5
+        pawnWeight = 40
         movesWeight = 1
-        clearSightWeight = 40
-        distanceFromKingWeigth = 5
+        distanceFromKingWeigth = -5
 
-        #Heuristic values
-        playerEnpassant = 0
-        adversaryEnpassant = 0
-        score = 0
-        playerPawns = []
-        adversaryPawns = []
-        playerMoves = 0
-        adversaryMoves = 0
-        blockedPlayerPawns = 0
-        blockedAdversaryPawns = 0
         playerMinDistance = 10
         adversaryMinDistance = 10
         playerAvgDistance = 0
         adversaryAvgDistance = 0
-        playerPawnsEndangered = 0
-        playerPawnsClearSight = 0
-        adversaryPawnsClearSight = 0
-        adversaryPawnsEndangered = 0
         playerAvgDistanceFromKing = 0
         adversaryAvgDistanceFromKing = 0
 
-        #board state
-        board = node.GetState()
-        oldboard = node.GetOldState()
-
         #my pieces
-        playerColor = 'b'
-        adversaryColor = 'w'
+        playerColor = "b"
+        adversaryColor = "w"
         playerPawns = node.board.blackPawns
         adversaryPawns = node.board.whitePawns
-
-        #checking victory state
-        if DEFEAT == node.board.TerminalTest(color):
-            pass
-            if color == 'b':
-                score = -1
-            else:
-                score = 1
 
         #checking number of legal moves
         playerMoves = node.LegalMoves(playerColor)
@@ -71,41 +41,9 @@ class Heuristic:
             pawnRow = pawn[0]
             pawnCol = pawn[1]
 
-            #Checking enpassant
-            if node.board.IsEnpassantPawn(pawn):
-                playerEnpassant += 1
-
             #distance from adv King
             distance = abs( (node.board.blackKing[0] +node.board.blackKing[1] ) - ( pawnRow + pawnCol))
             playerAvgDistanceFromKing += distance
-
-
-            #counting number of pawns which can be captured during the next turn (and the one after)
-            if pawnRow + direction < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction ][ pawnCol + 1 ] != "e":
-                playerPawnsEndangered += 1
-            if pawnRow + direction < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction ][ pawnCol - 1 ] != "e":
-                playerPawnsEndangered += 1
-            if pawnRow + direction*2 < 6 and pawnCol + 1 < 8 and node.board.state[ pawnRow + direction*2 ][ pawnCol + 1 ] != "e":
-                playerPawnsEndangered += 1
-            if pawnRow + direction*2 < 6 and pawnCol - 1 >= 0 and node.board.state[ pawnRow + direction*2 ][ pawnCol - 1 ] != "e":
-                playerPawnsEndangered += 1
-
-            #counting number of blocked pawns
-            if pawnRow + direction < 8 and node.board.state[ pawnRow + direction ][ pawnCol ] != "e":
-                blockedPlayerPawns+= 1
-
-            #number of pawns which have a clear sight to the end of the board
-            for pos in range(pawnRow + direction, 8):
-                if node.board.state[ pos ][pawnCol] != "e":
-                    if pawnCol + 1 < 8:
-                        if node.board.state[ pos ][pawnCol +1] != "e":
-                            break
-                    if pawnCol -1 >= 0:
-                        if node.board.state[ pos ][pawnCol -1] != "e":
-                            break
-                else:
-                    if pos == 7:
-                        playerPawnsClearSight +=1
 
             #counting minDistance from the other end of the board
             distance = 7 - pawnRow
@@ -147,10 +85,8 @@ class Heuristic:
             adversaryAvgDistanceFromKing = 0
 
         #computing value
-        node.SetUtility( winWeight*score + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
+        node.SetUtility(minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
                          int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
-                         enpassantWeight*( playerEnpassant - adversaryEnpassant ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
-                         blockedPawnsWeight*( blockedAdversaryPawns - blockedPlayerPawns ) +
-                         movesWeight*( playerMoves - adversaryMoves ) + endangeredPawnsWeight*(  adversaryPawnsEndangered - playerPawnsEndangered ) +
-                         clearSightWeight*( playerPawnsClearSight - adversaryPawnsClearSight ) - distanceFromKingWeigth*(int( playerAvgDistanceFromKing ) ) )
+                         movesWeight*( playerMoves - adversaryMoves ) +
+                         distanceFromKingWeigth*(int( playerAvgDistanceFromKing ) ) )
