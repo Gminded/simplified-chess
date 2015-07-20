@@ -190,13 +190,12 @@ class ChessBoard:
         if color[0:1] in piece:
             if 'P' in piece:
                 if 0 <= row+direction <= 7:
-                    moves.append((row+direction, col))
+                    moves.append( [row+direction, col] )
                     if 0 <= col - 1 <= 7:
-                        moves.append((row+direction, col-1))
+                        moves.append([row+direction, col-1])
                     if 0 <= col + 1 <= 7:
-                        moves.append((row+direction, col+1))
-                if 0 <= row+direction <= 7:
-                    moves.append((row+direction*2, col))
+                        moves.append([row+direction, col+1])
+                    moves.append([row+direction*2, col])
             elif 'K' in piece:
                 addrow=[0]
                 if 0 < row: addrow.append(-1)
@@ -207,20 +206,20 @@ class ChessBoard:
                 for r in addrow:
                     for c in addcol:
                         if not (r==0 and c==0):
-                            moves.append((row+r, col+c))
+                            moves.append([row+r, col+c])
 
         #check enpassant
         if self.IsEnpassantPawn( fromTuple ):
             if color[0:1] == 'b':
                 if col+1 <= 7 and 'P' in self.state[row][col+1] and 'w' in self.state[row][col+1]:
-                    moves.append( ( row, col+1 ) )
+                    moves.append( [ row, col+1 ] )
                 if col-1 >= 0 and 'P' in self.state[row][col-1] and 'w' in self.state[row][col-1]:
-                    moves.append( ( row, col-1 ) )
+                    moves.append( [ row, col-1 ] )
             else:
                 if col+1 <= 7 and 'P' in self.state[row][col+1] and 'b' in self.state[row][col+1]:
-                    moves.append( ( row, col+1 ) )
+                    moves.append( [ row, col+1 ] )
                 if col-1 >= 0 and 'P' in self.state[row][col-1] and 'b' in self.state[row][col-1]:
-                    moves.append( ( row, col-1 ) )
+                    moves.append( [ row, col-1 ] )
 
 
         for toTuple in moves:
