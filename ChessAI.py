@@ -14,7 +14,8 @@ class ChessAI:
         self.color = color
         self.type = 'AI'
         self.table = ZobristHash(size=2**24)
-        #self.heuristicTable = ZobristHash(size=2**24)
+        self.DEFEATWEIGHT=1000000000
+        self.prunedAlphaBeta=0
 
     def GetName(self):
         return self.name
@@ -28,6 +29,7 @@ class ChessAI:
     def GetMove(self, currentNode):
         depth = 1
         bestMove = None
+        self.prunedAlphaBeta=0
         try:
             def handler(signum, frame):
                 print "signal received"
@@ -48,11 +50,9 @@ class ChessAI:
                     signal.alarm(0) #disable alarm because we're done
                     break
 
-                #new hashtables
-                #self.heuristicTable = copy.copy(self.table)
-                #self.table.hashTable = {}
         except RuntimeError:
             pass
+        print('Number of branches pruned due to alpha-beta: '+str(self.prunedAlphaBeta))
         return bestMove
 
     def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
@@ -84,20 +84,27 @@ class ChessAI:
         #    return cachedValue[0]
 
         if maxPlayer:
-            color='black'
+            color='b'
         else:
-            color='white'
+            color='w'
 
-        #start = time.time()
-        #terminal test1
-        if depth == 0 or currentNode.board.TerminalTest(color) == DEFEAT:
+        # If this is a terminal test don't go any deeper, because the game ended.
+        if currentNode.board.TerminalTest(color) == DEFEAT:
+            Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
+            if maxPlayer: #we are losing so the value is negative
+                currentNode.utility-=self.DEFEATWEIGHT
+            else: #minPlayer: we are losing so the value is positive
+                currentNode.utility+=self.DEFEATWEIGHT
+
+        #Cut off
+        if depth == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
             self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, maxPlayer)
             return currentNode.utility
         #end = time.time()
         #htime += (end - start)
 
-        # If this is a terminal test don't go any deeper, because the game ended.
+
         
         # Max
         if maxPlayer:
