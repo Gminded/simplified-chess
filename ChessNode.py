@@ -56,10 +56,12 @@ class ChessNode:
                 maxPlayer = False
                 my_pieces = copy.copy( self.board.whitePawns )
                 my_pieces.append(self.board.whiteKing)
+                bestMove = table.lookupMinBestMove(self.board)
             else:
                 maxPlayer = True
                 my_pieces = copy.copy( self.board.blackPawns )
                 my_pieces.append(self.board.blackKing)
+                bestMove = table.lookupMaxBestMove(self.board)
 
             actions = []
             for piece in my_pieces:
@@ -68,8 +70,7 @@ class ChessNode:
                     moves.insert(0, ( piece[0], piece[1]) )
                     actions.append(moves)
 
-            bestMove, player = table.lookupBestMove(self.board)
-            if bestMove != None and maxPlayer == player :
+            if bestMove != None:
                 for move in actions:
                     for pos in move[1:]:
                         if move[0] == bestMove[0] and pos == bestMove[1]:
