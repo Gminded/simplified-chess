@@ -11,6 +11,7 @@ class ChessAI:
         self.type = 'AI'
         self.table = ZobristHash(size=2**24)
         self.DEFEATWEIGHT=1000000000
+        self.prunedAlphaBeta=0 #count of branches pruned due to alpha-beta
 
     def GetName(self):
         return self.name
@@ -24,13 +25,14 @@ class ChessAI:
     def GetMove(self, currentNode):
         depth = 1
         bestMove = None
+        self.prunedAlphaBeta=0
         try:
             def handler(signum, frame):
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(150000)
-            while depth<=2:
+            signal.alarm(1500)
+            while True:
                 utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -43,6 +45,7 @@ class ChessAI:
 
         except RuntimeError:
             pass
+        print('Number of branches pruned due to alpha-beta: '+str(self.prunedAlphaBeta))
         return bestMove
 
     def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
@@ -90,6 +93,7 @@ class ChessAI:
             while node != None:
                 v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit) )
                 if v >= beta:
+                    self.prunedAlphaBeta+=1
                     return v
                 if v > alpha:
                     alpha = v
@@ -106,6 +110,7 @@ class ChessAI:
             while node != None:
                 v = min( v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit)  )
                 if v <= alpha:
+                    self.prunedAlphaBeta+=1
                     return v
                 if v < beta:
                     beta = v
