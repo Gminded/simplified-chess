@@ -24,12 +24,14 @@ class ZobristHash:
 
     def hash(self, board):
         h = 0
-        for row in range(8):
-            for col in range(8):
-                pieceType = board.getPiece( [ row, col] )
-                if pieceType != board.EMPTY:
-                    piece = self.pieceId[pieceType]
-                    h = h ^ self.zobristTable[row*8+col][piece]
+        for pawn in board.whitePawns:
+            h = h ^ self.zobristTable[ pawn[0]*8 + pawn[1] ][0]
+        for pawn in board.blackPawns:
+            h = h ^ self.zobristTable[ pawn[0]*8 + pawn[1] ][2]
+
+        h = h ^ self.zobristTable[ board.whiteKing[0]*8 + board.whiteKing[1] ][1]
+        h = h ^ self.zobristTable[ board.blackKing[0]*8 + board.blackKing[1] ][3]
+
         return h
 
     def insertUtility(self, board, utility, depth, maxBestMove, minBestMove):
