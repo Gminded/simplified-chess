@@ -52,12 +52,12 @@ class ChessAI:
         v = -20000000
         bestMove = None
         maxUtility = v
+        myPreviousMove = currentNode.board.previousMove
         node = currentNode.NextAction("b", self.table)
-        previousMove = node.board.previousMove
         while node != None:
-            v = max( v, self.AlphaBetaSearch(node.getMove(), currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
+            v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
             #Restore previous state before continuing
-            node.board.undoMove(node.getMove(),previousMove)
+            node.board.undoMove(node.getMove(),myPreviousMove)
             if v > maxUtility:
                 maxUtility = v
                 bestMove = node.getMove()
@@ -93,9 +93,10 @@ class ChessAI:
         if maxPlayer:
             v = -20000000
             bestMove = None
+            myPreviousMove = currentNode.board.previousMove
             node = currentNode.NextAction("b", self.table)
             while node != None:
-                v = max(v, self.AlphaBetaSearch(node.getMove(), alpha, beta, node, False, depth-1, depthLimit))
+                v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, depthLimit))
                 #Restore previous state before continuing
                 node.board.undoMove(node.getMove(),previousMove)
                 if v >= beta:
@@ -111,9 +112,10 @@ class ChessAI:
         else:
             v = 20000000
             bestMove = None
+            myPreviousMove = currentNode.board.previousMove
             node = currentNode.NextAction("w", self.table)
             while node != None:
-                v = min(v, self.AlphaBetaSearch(node.getMove(), alpha, beta, node, True, depth-1, depthLimit))
+                v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, depthLimit))
                 #Restore previous state before continuing
                 node.board.undoMove(node.getMove(),previousMove)
                 if v <= alpha:
