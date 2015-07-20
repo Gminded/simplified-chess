@@ -5,7 +5,6 @@ class Heuristic:
         #retrieve the utility value if it was already computed
         cachedValue = table.lookup(node.board)
         if cachedValue != None and not cachedValue[0] is None:
-            node.SetUtility(cachedValue[0]) #utility
             return cachedValue
 
         #weights
@@ -62,11 +61,6 @@ class Heuristic:
         direction = -1
         for pawn in adversaryPawns:
             pawnRow = pawn[0]
-            pawnCol = pawn[1]
-
-            #distance from adv King
-            distance = abs( (node.board.whiteKing[0] +node.board.whiteKing[1] ) - ( pawnRow + pawnCol))
-            adversaryAvgDistanceFromKing += distance
 
             #counting minDistance from the other end of the board
             distance = pawnRow
@@ -78,13 +72,8 @@ class Heuristic:
         else:
             adversaryAvgDistance = 10
 
-        if len(adversaryPawns) != 0:
-            adversaryAvgDistanceFromKing = adversaryAvgDistanceFromKing / len(adversaryPawns)
-        else:
-            adversaryAvgDistanceFromKing = 0
-
         #computing value
-        node.SetUtility(minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
+        return (minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
                          int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          movesWeight*( playerMoves - adversaryMoves ) +

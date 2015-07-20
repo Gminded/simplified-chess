@@ -1,13 +1,13 @@
 import copy
+from ChessMove import ChessMove
 
 class ChessNode:
     def __init__(self, board, chessMove):
-        self.board = copy.deepcopy(board)
-        self.utility = -1
+        self.board = board
         self.chessMove = chessMove
         self.moveCounter = 0
         self.lastWasTheBest = False
-        self.actions = None
+        self.actions = []
 
     def GetState(self):
         return self.board.GetState()
@@ -16,13 +16,7 @@ class ChessNode:
         return self.board.GetOldState()
 
     def SetState(self, board):
-        self.board = copy.deepcopy(board)
-
-    def GetUtility(self):
-        return self.utility
-
-    def SetUtility(self, utility):
-        self.utility = utility
+        self.board = board
 
     def getMove(self):
         return self.chessMove
@@ -33,7 +27,7 @@ class ChessNode:
     def _resetNode(self):
         self.moveCounter = 0
         self.lastWasTheBest = False
-        self.actions = None
+        self.actions = []
 
     def NextAction(self, player_color, table):
 
@@ -43,7 +37,14 @@ class ChessNode:
             else:
                 bestMove = table.lookupMaxBestMove(self.board)
 
-            self.actions = self.board.getAllValidMoves(player_color)
+            possible_actions = self.board.getAllValidMoves(player_color)
+
+            #ordering by type of move
+            for action in possible_actions:
+                if action.moveType == ChessMove.CAPTURE or action.moveType == ChessMove.ENPASSANT_CAPTURE:
+                    self.actions.append(action)
+                    possible_actions.remove(action)
+            self.actions.extend(possible_actions)
 
             if bestMove != None:
                 bestMoveCoords = bestMove.moveTuple
