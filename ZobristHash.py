@@ -1,4 +1,4 @@
-from random import *
+from random import SystemRandom
 
 class ZobristHash:
 

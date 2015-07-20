@@ -3,6 +3,7 @@
 from Heuristic import Heuristic
 from ZobristHash import ZobristHash
 import signal
+import copy
 
 class ChessAI:
     def __init__(self, name, color):
@@ -24,6 +25,7 @@ class ChessAI:
     def GetMove(self, currentNode):
         depth = 1
         bestMove = None
+        boardBackup = copy.deepcopy(currentNode.board)
         try:
             def handler(signum, frame):
                 print "signal received"
@@ -43,6 +45,7 @@ class ChessAI:
 
         except RuntimeError:
             pass
+        currentNode.board = boardBackup
         return bestMove
 
     def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
