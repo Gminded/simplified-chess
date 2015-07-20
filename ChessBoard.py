@@ -1,27 +1,28 @@
 #! /usr/bin/env python
 import string
+import copy
 
-DEFEAT='defeat'
-DRAW='draw'
-NONE='none'
-WON='won'
+DEFEAT = 'defeat'
+DRAW = 'draw'
+NONE = 'none'
+WON = 'won'
 
 # To make a complete copy of the previous state.
 def complete_copy(inList):
     if isinstance(inList, list):
-        return list( map(complete_copy, inList) )
+        return list(map(complete_copy, inList))
     else:
         return inList
 
 class ChessBoard:
-    def __init__(self,setupType=0):
-        self.whiteKing = [7,4] # the white king coordinates
-        self.blackKing = [0,4]
-        self.whitePawns = [] # all of the white pawns coordinates expressed as lists
+    def __init__(self, setupType=0):
+        self.whiteKing = [7, 4]  # the white king coordinates
+        self.blackKing = [0, 4]
+        self.whitePawns = []  # all of the white pawns coordinates expressed as lists
         self.blackPawns = []
-        for col in range(0,8):
-            self.whitePawns.append([6,col])
-            self.blackPawns.append([1,col])
+        for col in range(0, 8):
+            self.whitePawns.append([6, col])
+            self.blackPawns.append([1, col])
 
         self.state = [['bK','e','e','e','e','e','e','e'],\
                         ['e','e','wP','e','e','e','e','e'],\
@@ -242,8 +243,10 @@ class ChessBoard:
                return False
         fromPiece = self.state[fromRow][fromCol]
         toPiece = self.state[toRow][toCol]
-        if color == 'b': enemyColor='w'
-        else: enemyColor='b'
+        if color == 'b':
+            enemyColor = 'w'
+        else:
+            enemyColor = 'b'
 
         if 'P' in fromPiece:
             #Pawn
@@ -291,9 +294,11 @@ class ChessBoard:
         captLeft=False
         captRight=True
         # left and right of the piece. -1 stands for a square outside of the self.state.
-        left=col-1
-        if col+1 <= 7: right=col+1
-        else: right=-1
+        left = col - 1
+        if col + 1 <= 7:
+            right = col + 1
+        else:
+            right = -1
         # The following "if" hell finds if an en passant move is possible.
         if  'P' in piece or 'p' in piece:
             if 'b' in piece and row==4:
@@ -460,96 +465,70 @@ class ChessBoard:
 
         return check
 
+    def IsInCheck(self, color):
+        # check if 'color' is in check
+        # scan through squares for all enemy pieces; if there IsLegalMove to color's king, then return True.
+        if color == "b":
+            myColor = 'b'
+            enemyColor = 'w'
+            enemyColorFull = 'w'
+            kingTuple = self.blackKing
+            advPawns = self.whitePawns
+        else:
+            myColor = 'w'
+            enemyColor = 'b'
+            enemyColorFull = 'b'
+            kingTuple = self.whiteKing
+            advPawns = self.blackPawns
 
-    def IsInCheck(self,color):
-            #check if 'color' is in check
-            #scan through squares for all enemy pieces; if there IsLegalMove to color's king, then return True.
-            if color == "b":
-                    myColor = 'b'
-                    enemyColor = 'w'
-                    enemyColorFull = 'w'
-            else:
-                    myColor = 'w'
-                    enemyColor = 'b'
-                    enemyColorFull = 'b'
-
-            kingTuple = (0,0)
-            #First, get current player's king location
-            for row in range(8):
-                    for col in range(8):
-                            piece = self.state[row][col]
-                            if 'K' in piece and myColor in piece:
-                                    kingTuple = (row,col)
-
-            #Check if any of enemy player's pieces has a legal move to current player's king
-            for row in range(8):
-                    for col in range(8):
-                            piece = self.state[row][col]
-                            if enemyColor in piece:
-                                    if self.IsLegalMove(enemyColorFull,(row,col),kingTuple):
-                                            return True
-            return False
-
-    def IsClearPath(self,fromTuple,toTuple):
-            #Return true if there is nothing in a straight line between fromTuple and toTuple, non-inclusive
-            #Direction could be +/- vertical, +/- horizontal, +/- diagonal
-            fromSquare_r = fromTuple[0]
-            fromSquare_c = fromTuple[1]
-            toSquare_r = toTuple[0]
-            toSquare_c = toTuple[1]
-            fromPiece = self.state[fromSquare_r][fromSquare_c]
-
-            if abs(fromSquare_r - toSquare_r) <= 1 and abs(fromSquare_c - toSquare_c) <= 1:
-                    #The base case: just one square apart
+        # Check if any of enemy player's pieces has a legal move to current player's king
+        for piece in advPawns:
+            if self.IsLegalMove(enemyColorFull, piece, kingTuple):
                     return True
-            else:
-                    if toSquare_r > fromSquare_r and toSquare_c == fromSquare_c:
-                            #vertical +
-                            newTuple = (fromSquare_r+1,fromSquare_c)
-                    elif toSquare_r < fromSquare_r and toSquare_c == fromSquare_c:
-                            #vertical -
-                            newTuple = (fromSquare_r-1,fromSquare_c)
-                    elif toSquare_r == fromSquare_r and toSquare_c > fromSquare_c:
-                            #horizontal +
-                            newTuple = (fromSquare_r,fromSquare_c+1)
-                    elif toSquare_r == fromSquare_r and toSquare_c < fromSquare_c:
-                            #horizontal -
-                            newTuple = (fromSquare_r,fromSquare_c-1)
-                    elif toSquare_r > fromSquare_r and toSquare_c > fromSquare_c:
-                            #diagonal "SE"
-                            newTuple = (fromSquare_r+1,fromSquare_c+1)
-                    elif toSquare_r > fromSquare_r and toSquare_c < fromSquare_c:
-                            #diagonal "SW"
-                            newTuple = (fromSquare_r+1,fromSquare_c-1)
-                    elif toSquare_r < fromSquare_r and toSquare_c > fromSquare_c:
-                            #diagonal "NE"
-                            newTuple = (fromSquare_r-1,fromSquare_c+1)
-                    elif toSquare_r < fromSquare_r and toSquare_c < fromSquare_c:
-                            #diagonal "NW"
-                            newTuple = (fromSquare_r-1,fromSquare_c-1)
+        return False
 
-            if self.state[newTuple[0]][newTuple[1]] != 'e':
-                    return False
-            else:
-                    return self.IsClearPath(newTuple,toTuple)
+    def IsClearPath(self, fromTuple, toTuple):
+        # Return true if there is nothing in a straight line between fromTuple and toTuple, non-inclusive
+        # Direction could be +/- vertical, +/- horizontal, +/- diagonal
+        fromSquare_r = fromTuple[0]
+        fromSquare_c = fromTuple[1]
+        toSquare_r = toTuple[0]
+        toSquare_c = toTuple[1]
+        fromPiece = self.state[fromSquare_r][fromSquare_c]
 
+        if abs(fromSquare_r - toSquare_r) <= 1 and abs(fromSquare_c - toSquare_c) <= 1:
+            # The base case: just one square apart
+            return True
+        else:
+            if toSquare_r > fromSquare_r and toSquare_c == fromSquare_c:
+                # vertical +
+                newTuple = (fromSquare_r + 1, fromSquare_c)
+            elif toSquare_r < fromSquare_r and toSquare_c == fromSquare_c:
+                # vertical -
+                newTuple = (fromSquare_r - 1, fromSquare_c)
+            elif toSquare_r == fromSquare_r and toSquare_c > fromSquare_c:
+                # horizontal +
+                newTuple = (fromSquare_r, fromSquare_c + 1)
+            elif toSquare_r == fromSquare_r and toSquare_c < fromSquare_c:
+                # horizontal -
+                newTuple = (fromSquare_r, fromSquare_c - 1)
+            elif toSquare_r > fromSquare_r and toSquare_c > fromSquare_c:
+                # diagonal "SE"
+                newTuple = (fromSquare_r + 1, fromSquare_c + 1)
+            elif toSquare_r > fromSquare_r and toSquare_c < fromSquare_c:
+                # diagonal "SW"
+                newTuple = (fromSquare_r + 1, fromSquare_c - 1)
+            elif toSquare_r < fromSquare_r and toSquare_c > fromSquare_c:
+                # diagonal "NE"
+                newTuple = (fromSquare_r - 1, fromSquare_c + 1)
+            elif toSquare_r < fromSquare_r and toSquare_c < fromSquare_c:
+                # diagonal "NW"
+                newTuple = (fromSquare_r - 1, fromSquare_c - 1)
 
-    def quickWinLoseTest(self):
-        lost = False
-        won = False
-        for pawn in self.whitePawns:
-            if pawn[0] == 0:
-                lost = True
-                break
-        for pawn in self.blackPawns:
-            if pawn[0] == 7:
-                won = True
-                break
-        if lost:
-            return DEFEAT
-        if won:
-            return WON
-        return NONE
+        if self.state[newTuple[0]][newTuple[1]] != 'e':
+            return False
+        else:
+            return self.IsClearPath(newTuple, toTuple)
 
     # color is the color of the current player. The function returns DEFEAT if the current player (color)
     # is defeated in this state. This means that in this state the other player has achieved victory.
@@ -573,20 +552,14 @@ class ChessBoard:
         if myColor=='b':
             validMoves.extend(self.GetListOfValidMoves(color, (self.blackKing[0],self.blackKing[1])))
             for pawn in self.blackPawns:
-                row=pawn[0]
-                col=pawn[1]
-                piece = self.state[row][col]
-                validMoves.extend(self.GetListOfValidMoves(color,(row,col)))
+                validMoves.extend(self.GetListOfValidMoves(color, pawn ))
         else:
-            validMoves.extend(self.GetListOfValidMoves(color, (self.whiteKing[0],self.whiteKing[1])))
+            validMoves.extend(self.GetListOfValidMoves(color, (self.whiteKing[0], self.whiteKing[1])))
             for pawn in self.whitePawns:
-                row=pawn[0]
-                col=pawn[1]
-                piece = self.state[row][col]
-                validMoves.extend(self.GetListOfValidMoves(color,(row,col)))
-        if promoted and (startRow,promotedCol) in validMoves:
-            canCapture=True
-        if len(validMoves)==0:
+                validMoves.extend(self.GetListOfValidMoves(color, pawn))
+        if promoted and [startRow, promotedCol] in validMoves:
+            canCapture = True
+        if len(validMoves) == 0:
             if self.IsInCheck(color):
                 return DEFEAT
             else:
@@ -594,4 +567,3 @@ class ChessBoard:
         if (promoted and not canCapture):
             return DEFEAT
         return NONE #if the game did not end yet
-
