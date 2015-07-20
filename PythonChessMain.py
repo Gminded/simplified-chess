@@ -17,12 +17,11 @@ class PythonChessMain:
         self.player = [0, 0]
         self.player[0] = ChessPlayer("Human", "w")
         self.player[1] = ChessAI("AI", "b")
-        self.treeDepth = 2
         # GUI setup
         self.guitype = 'pygame'
         GameParams = TkinterGameSetupParams()
-        (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type, self.treeDepth) = GameParams.GetGameSetupParams()
-        self.Gui = ChessGUI_pygame(self.Board, self.treeDepth)
+        (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type) = GameParams.GetGameSetupParams()
+        self.Gui = ChessGUI_pygame(self.Board)
         self.player = [0, 0]
         if player1Type == 'human':
             self.player[0] = ChessPlayer(player1Name, player1Color)
