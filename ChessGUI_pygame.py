@@ -71,10 +71,10 @@ class ChessGUI_pygame:
         #converts a screen pixel location (X,Y) into a chessSquare tuple (row,col)
         #x is horizontal, y is vertical
         #(x=0,y=0) is upper-left corner of the screen
-        (X,Y) = screenPositionTuple
+        [X,Y] = screenPositionTuple
         row = (Y-self.boardStart_y) / self.square_size
         col = (X-self.boardStart_x) / self.square_size
-        return (row,col)
+        return [row,col]
 
 
     def Draw(self,board,highlightSquares=[]):
@@ -198,7 +198,7 @@ class ChessGUI_pygame:
             if not fromSquareChosen and not toSquareChosen:
                 self.Draw(state)
                 if squareClicked != []:
-                    (r,c) = squareClicked
+                    [r,c] = squareClicked
                     if currentColor == 'b' and 'b' in state[r][c]:
                         if len(self.Board.GetListOfValidMoves(currentColor,squareClicked))>0:
                             fromSquareChosen = 1
@@ -212,7 +212,7 @@ class ChessGUI_pygame:
                 possibleDestinations = self.Board.GetListOfValidMoves(currentColor,fromTuple)
                 self.Draw(state,possibleDestinations)
                 if squareClicked != []:
-                    (r,c) = squareClicked
+                    [r,c] = squareClicked
                     if squareClicked in possibleDestinations:
                         toSquareChosen = 1
                         toTuple = squareClicked
