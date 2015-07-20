@@ -23,7 +23,7 @@ class ChessBoard:
             self.whitePawns.append([6,col])
             self.blackPawns.append([1,col])
 
-        self.state = [  ['bK','e','e','e','e','e','e','e'],\
+        self.state = [['bK','e','e','e','e','e','e','e'],\
                         ['e','e','wP','e','e','e','e','e'],\
                         ['e','e','e','e','e','e','e','e'],\
                         ['wK','e','e','e','e','e','e','e'],\
@@ -180,7 +180,7 @@ class ChessBoard:
         col=fromTuple[1]
         piece = self.state[row][col]
         moves=[]
-        if color=='black':
+        if color=='b':
             direction=1
             myKingCoords=self.blackKing
         else:
@@ -326,9 +326,9 @@ class ChessBoard:
         toPiece = self.state[toRow][toCol]
         enemyColor = ""
 
-        if color == "black":
+        if color == "b":
                 enemyColor = 'w'
-        if color == "white":
+        if color == "w":
                 enemyColor = 'b'
 
         if fromTuple == toTuple:
@@ -336,7 +336,7 @@ class ChessBoard:
 
         if "P" in fromPiece:
             #Pawn
-            if color == "black":
+            if color == "b":
                 #en passant
                 if 'b' in fromPiece and fromRow==4 and toRow==5 and abs(toCol-fromCol)==1 and 'e'==self.state[toRow][toCol]:
                     if 'wP' == self.state[fromRow][toCol] and 'e' == self.state[6][toCol] and 'wP' == self.oldstate[6][toCol]:
@@ -352,7 +352,7 @@ class ChessBoard:
                         #attacking
                         return True
 
-            elif color == "white":
+            elif color == "w":
                 #en passant
                 if 'w' in fromPiece and fromRow==3 and toRow==2 and abs(toCol-fromCol)==1 and 'e'==self.state[toRow][toCol]:
                     if 'bP' == self.state[fromRow][toCol] and 'e' == self.state[1][toCol] and 'bP' == self.oldstate[1][toCol]:
@@ -464,14 +464,14 @@ class ChessBoard:
     def IsInCheck(self,color):
             #check if 'color' is in check
             #scan through squares for all enemy pieces; if there IsLegalMove to color's king, then return True.
-            if color == "black":
+            if color == "b":
                     myColor = 'b'
                     enemyColor = 'w'
-                    enemyColorFull = 'white'
+                    enemyColorFull = 'w'
             else:
                     myColor = 'w'
                     enemyColor = 'b'
-                    enemyColorFull = 'black'
+                    enemyColorFull = 'b'
 
             kingTuple = (0,0)
             #First, get current player's king location
@@ -557,7 +557,7 @@ class ChessBoard:
     def TerminalTest(self, color):
         promoted=False #true if the opponent promoted a pawn
         canCapture=False #true if we can capture it
-        if color=='black':
+        if color=='b':
             myColor='b'
             opponentColor='w'
             startRow=0
