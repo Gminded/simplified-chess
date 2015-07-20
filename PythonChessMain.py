@@ -15,8 +15,8 @@ class PythonChessMain:
     def SetUp(self):
         # players set up
         self.player = [0, 0]
-        self.player[0] = ChessPlayer("Human", "white")
-        self.player[1] = ChessAI("AI", "black")
+        self.player[0] = ChessPlayer("Human", "w")
+        self.player[1] = ChessAI("AI", "b")
         self.treeDepth = 2
         # GUI setup
         self.guitype = 'pygame'
@@ -52,7 +52,7 @@ class PythonChessMain:
             self.Gui.PrintMessage("-----%s-----" % baseMsg)
             self.Gui.Draw(board)
             # hardcoded so that player 1 is always white
-            if currentColor == 'white':
+            if currentColor == 'w':
                 turnCount = turnCount + 1
             # PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
