@@ -34,7 +34,7 @@ class ChessNode:
 
     #returns just the number of legal moves (for heuristic quickness)
     def LegalMoves(self, playerColor):
-        if playerColor == "white":
+        if playerColor == "w":
             my_pieces = self.board.whitePawns
             myKing = self.board.whiteKing
         else:

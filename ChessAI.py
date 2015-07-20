@@ -104,6 +104,7 @@ class ChessAI:
             while node != None:
                 v = max( v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1, depthLimit) )
                 if v >= beta:
+                    self.prunedAlphaBeta+=1
                     return v
                 if v > alpha:
                     alpha = v
@@ -124,6 +125,7 @@ class ChessAI:
             while node != None:
                 v = min( v, self.AlphaBetaSearch( alpha, beta, node, True, depth-1, depthLimit) )
                 if v <= alpha:
+                    self.prunedAlphaBeta+=1
                     return v
                 if v < beta:
                     beta = v
