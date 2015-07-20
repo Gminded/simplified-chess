@@ -187,7 +187,7 @@ class ChessBoard:
         else:
             direction=-1
             myKingCoords=self.whiteKing
-        if color[0:1] in piece:
+        if color in piece:
             if 'P' in piece:
                 if 0 <= row+direction <= 7:
                     moves.append( [row+direction, col] )
@@ -210,7 +210,7 @@ class ChessBoard:
 
         #check enpassant
         if self.IsEnpassantPawn( fromTuple ):
-            if color[0:1] == 'b':
+            if color == 'b':
                 if col+1 <= 7 and 'P' in self.state[row][col+1] and 'w' in self.state[row][col+1]:
                     moves.append( [ row, col+1 ] )
                 if col-1 >= 0 and 'P' in self.state[row][col-1] and 'w' in self.state[row][col-1]:
@@ -224,10 +224,10 @@ class ChessBoard:
 
         for toTuple in moves:
             if 'K' in piece:
-                check=self.DoesMovePutPlayerInCheck(color[0:1], toTuple, fromTuple, toTuple)
+                check=self.DoesMovePutPlayerInCheck(color, toTuple, fromTuple, toTuple)
             else:
-                check=self.DoesMovePutPlayerInCheck(color[0:1], myKingCoords, fromTuple, toTuple)
-            if not check and self._IsCorrectMove(color[0:1],fromTuple,toTuple):
+                check=self.DoesMovePutPlayerInCheck(color, myKingCoords, fromTuple, toTuple)
+            if not check and self._IsCorrectMove(color,fromTuple,toTuple):
                 legalDestinationSpaces.append(toTuple)
         return legalDestinationSpaces
 

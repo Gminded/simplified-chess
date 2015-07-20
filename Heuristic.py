@@ -1,5 +1,4 @@
 from ChessBoard import DEFEAT
-from ChessBoard import WON
 
 class Heuristic:
 
