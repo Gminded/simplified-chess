@@ -52,8 +52,8 @@ class ChessAI:
         v = -20000000
         bestMove = None
         maxUtility = v
+        previousMove = currentNode.board.previousMove
         node = currentNode.NextAction("b", self.table)
-        previousMove = node.board.previousMove
         while node != None:
             v = max( v, self.AlphaBetaSearch(node.getMove(), currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
             #Restore previous state before continuing

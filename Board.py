@@ -210,10 +210,23 @@ class Board:
                         chessMove.moveType=chessMove.ENPASSANT_CAPTURE
                         return True
             #advance by 2
-            elif self.BLACK in pieceType and fromPosRow == 1  and fromPosRow + 2 == toPosRow and fromPosCol == toPosCol and toPosPiece == self.EMPTY:
+            elif self.BLACK in pieceType and fromPosRow == 1  and\
+                 fromPosRow + 2 == toPosRow and fromPosCol == toPosCol and toPosPiece == self.EMPTY:
+                if self.blackKing == [fromPosRow+direction,fromPosCol] or self.whiteKing == [fromPosRow+direction,fromPosCol]:
+                    return False
+                for pawns in self.whitePawns, self.blackPawns:
+                    for pawn in pawns:
+                        if pawn == [fromPosRow+direction,fromPosCol]:
+                            return False
                 chessMove.moveType = chessMove.MOVE
                 return True
             elif self.WHITE in pieceType and fromPosRow == 6  and fromPosRow - 2 == toPosRow and fromPosCol == toPosCol and toPosPiece == self.EMPTY:
+                if self.blackKing == [fromPosRow+direction,fromPosCol] or self.whiteKing == [fromPosRow+direction,fromPosCol]:
+                    return False
+                for pawns in self.whitePawns, self.blackPawns:
+                    for pawn in pawns:
+                        if pawn == [fromPosRow+direction,fromPosCol]:
+                            return False
                 chessMove.moveType = chessMove.MOVE
                 return True
 
