@@ -9,10 +9,9 @@ class Heuristic:
             return cachedValue
 
         #weights
-        winWeight = 10000
-        minDistanceWeight = 60
-        avgDistanceWeight = 40
-        pawnWeight = 10
+        minDistanceWeight = 5
+        avgDistanceWeight = 5
+        pawnWeight = 40
         movesWeight = 1
         distanceFromKingWeight = -5
 
@@ -30,13 +29,6 @@ class Heuristic:
         adversaryColor = node.board.WHITE
         playerPawns = node.board.blackPawns
         adversaryPawns = node.board.whitePawns
-
-        #checking victory state
-        if node.board.DEFEAT == node.board.terminalTest(color):
-            if color == playerColor:
-                score = -1
-            else:
-                score = 1
 
         #checking number of legal moves
         playerMoves = len(node.board.getAllValidMoves(playerColor))
@@ -92,7 +84,7 @@ class Heuristic:
             adversaryAvgDistanceFromKing = 0
 
         #computing value
-        node.SetUtility( winWeight*score + minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
+        node.SetUtility(minDistanceWeight*( adversaryMinDistance -  playerMinDistance ) +
                          int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          movesWeight*( playerMoves - adversaryMoves ) +

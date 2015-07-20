@@ -10,6 +10,7 @@ class ChessAI:
         self.color = color
         self.type = 'AI'
         self.table = ZobristHash(size=2**24)
+        self.DEFEATWEIGHT=1000000000
 
     def GetName(self):
         return self.name
@@ -64,13 +65,22 @@ class ChessAI:
         else:
             color='w'
 
-        #terminal test
-        if depth == 0 or currentNode.board.terminalTest(color) == currentNode.board.DEFEAT:
+        # If this is a terminal state don't go any deeper, because the game ended.
+        if currentNode.board.terminalTest(color) == currentNode.board.DEFEAT:
+            Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
+            if maxPlayer: #we are losing so the value is negative
+                currentNode.utility-=self.DEFEATWEIGHT
+            else: #minPlayer: we are losing so the value is positive
+                currentNode.utility+=self.DEFEATWEIGHT
+            self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, None)
+            return currentNode.utility
+
+        # Cut off
+        if depth == 0:
             Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
             self.table.insertUtility(currentNode.board, currentNode.utility, depthLimit, None, None)
             return currentNode.utility
 
-        # If this is a terminal test don't go any deeper, because the game ended.
         
         # Max
         if maxPlayer:
