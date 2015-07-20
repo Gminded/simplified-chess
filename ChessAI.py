@@ -31,8 +31,8 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            #signal.alarm(15)
-            while depth<=3:
+            signal.alarm(13)
+            while True:
                 utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -48,7 +48,7 @@ class ChessAI:
         currentNode.board = boardBackup
         return bestMove
 
-    def AlphaBetaInit(self, currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
+    def AlphaBetaInit(self, currentNode=None, depth=0, depthLimit=0):
         v = -20000000
         bestMove = None
         maxUtility = v
