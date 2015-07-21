@@ -30,23 +30,22 @@ class ChessAI:
         self.statesVisited = 1
         try:
             def handler(signum, frame):
-                print "signal received"
+                print "timeout triggered"
                 raise KeyboardInterrupt
             signal.signal(signal.SIGALRM, handler)
             signal.alarm(12)
             while True:
                 utility, bestMove = self.AlphaBetaInit(depth=depth, board=board)
-                print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
 
                 # It's pointless to go on if we know we are going to win or lose
                 if 500000000 <= utility or utility <= -500000000:
-                    print('Stopping early because of terminal state.')
                     signal.alarm(0)
                     break
 
         except KeyboardInterrupt:
             pass
+        print "search arrived at depth "+str(depth)+" with utility "+str(utility)
         print('states visited: '+str(self.statesVisited))
         print('hash table hits: '+str(self.table.hits))
         print('hash table size: '+str(len(self.table.hashTable)))
