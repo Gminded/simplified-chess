@@ -75,7 +75,7 @@ class ChessAI:
                 maxUtility = v
                 bestMove = move
             move = currentNode.NextAction("b", self.table, board, depth)
-        self.table.insert(board, v, 0, bestMove, None)
+        self.table.insert(board, v,depth, bestMove, None)
         return maxUtility, bestMove.moveTuple
 
     def AlphaBetaSearch(self, previousMove, alpha=-20000000, beta=20000000,\
