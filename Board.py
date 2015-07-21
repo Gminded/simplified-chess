@@ -300,14 +300,20 @@ class Board:
         elif self.BLACKPAWN in chessMove.pieceType:
             kingRow = self.blackKing[0]
             kingCol = self.blackKing[1]
-            if self.getPiece( [kingRow + self.BLACKDIRECTION, kingCol + 1 ] ) == self.WHITEPAWN or\
-                    self.getPiece( [kingRow + self.BLACKDIRECTION, kingCol - 1 ] ) == self.WHITEPAWN:
+            if self.getPiece([kingRow + self.BLACKDIRECTION, kingCol+1]) == self.WHITEPAWN and\
+                    not [kingRow + self.BLACKDIRECTION, kingCol+1] == chessMove.getToPos():
                 return True
-        else:
+            elif self.getPiece([kingRow + self.BLACKDIRECTION, kingCol-1]) == self.WHITEPAWN and\
+                    not [kingRow + self.BLACKDIRECTION, kingCol-1] == chessMove.getToPos():
+                return True
+        else: #WHITEPAWN
             kingRow = self.whiteKing[0]
             kingCol = self.whiteKing[1]
-            if self.getPiece( [kingRow + self.WHITEDIRECTION, kingCol + 1 ] ) == self.BLACKPAWN or\
-                    self.getPiece( [kingRow + self.WHITEDIRECTION, kingCol - 1 ] ) == self.BLACKPAWN:
+            if self.getPiece([kingRow + self.WHITEDIRECTION, kingCol+1]) == self.BLACKPAWN and\
+                    not [kingRow + self.WHITEDIRECTION, kingCol+1] == chessMove.getToPos():
+                return True
+            elif self.getPiece([kingRow + self.WHITEDIRECTION, kingCol-1]) == self.BLACKPAWN and\
+                    not [kingRow + self.WHITEDIRECTION, kingCol-1] == chessMove.getToPos():
                 return True
         return False
 
