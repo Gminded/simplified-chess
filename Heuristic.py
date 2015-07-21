@@ -3,9 +3,9 @@ class Heuristic:
     @staticmethod
     def ShannonHeuristic(node, table, depth, color, board):
         #retrieve the utility value if it was already computed
-        cachedValue = table.lookup(board)
-        if cachedValue != None and not cachedValue[0] is None:
-            return cachedValue[0]
+        #cachedValue = table.lookup(board)
+        #if cachedValue != None and not cachedValue[0] is None:
+        #    return cachedValue[0]
 
         #weights
         minDistanceWeight = 5

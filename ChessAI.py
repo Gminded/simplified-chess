@@ -30,10 +30,10 @@ class ChessAI:
         try:
             def handler(signum, frame):
                 print "signal received"
-                raise RuntimeError
+                raise KeyboardInterrupt
             signal.signal(signal.SIGALRM, handler)
-            #signal.alarm(8)
-            while depth<=2:
+            signal.alarm(8)
+            while True:
                 utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -44,7 +44,7 @@ class ChessAI:
                     signal.alarm(0)
                     break
 
-        except RuntimeError:
+        except KeyboardInterrupt:
             pass
         return bestMove, boardBackup
 
