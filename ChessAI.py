@@ -22,18 +22,18 @@ class ChessAI:
     def GetType(self):
         return self.type
 
-    def GetMove(self, currentNode):
+    def GetMove(self, currentNode, board):
         depth = 1
         bestMove = None
-        boardBackup = copy.deepcopy(currentNode.board)
+        boardBackup = copy.deepcopy(board)
         try:
             def handler(signum, frame):
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(10)
-            while True:
-                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
+            #signal.alarm(10)
+            while depth<=3:
+                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth, board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
 
@@ -45,47 +45,47 @@ class ChessAI:
 
         except RuntimeError:
             pass
-        currentNode.board = boardBackup
+        board = boardBackup
         return bestMove
 
-    def AlphaBetaInit(self, currentNode=None, depth=0, depthLimit=0):
+    def AlphaBetaInit(self, currentNode=None, depth=0, depthLimit=0, board=None):
         v = -20000000
         maxUtility = v
-        myPreviousMove = currentNode.board.previousMove
-        node = currentNode.NextAction("b", self.table)
+        myPreviousMove = board.previousMove
+        node = currentNode.NextAction("b", self.table, board)
         bestMove = node.getMove()
         while node != None:
-            v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
+            v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit, board=board) )
             #Restore previous state before continuing
-            node.board.undoMove(node.getMove(),myPreviousMove)
+            board.undoMove(node.getMove(),myPreviousMove)
             if v > maxUtility:
                 maxUtility = v
                 bestMove = node.getMove()
-            node = currentNode.NextAction("b", self.table)
-        self.table.insertUtility(currentNode.board, v, depthLimit, bestMove, True)
+            node = currentNode.NextAction("b", self.table, board)
+        self.table.insert(board, v, depthLimit, bestMove, True)
         return maxUtility, bestMove.moveTuple
 
     def AlphaBetaSearch(self, previousMove, alpha=-20000000, beta=20000000,\
-                        currentNode=None, maxPlayer=True, depth=0, depthLimit=0):
+                        currentNode=None, maxPlayer=True, depth=0, depthLimit=0, board=None):
         if maxPlayer:
             color='b'
         else:
             color='w'
 
         # If this is a terminal state don't go any deeper, because the game ended.
-        if currentNode.board.terminalTest(color) == currentNode.board.DEFEAT:
-            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
+        if board.terminalTest(color) == board.DEFEAT:
+            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color, board)
             if maxPlayer: #we are losing so the value is negative
                 utility -=self.DEFEATWEIGHT
             else: #minPlayer: we are winning so the value is positive
                 utility +=self.DEFEATWEIGHT
-            self.table.insertUtility(currentNode.board, utility, depthLimit, None, None)
+            self.table.insert(board, utility, depthLimit, None, None)
             return utility
 
         # Cut off
         if depth == 0:
-            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color)
-            self.table.insertUtility(currentNode.board, utility, depthLimit, None, None)
+            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color, board)
+            self.table.insert(board, utility, depthLimit, None, None)
             return utility
 
         
@@ -93,38 +93,38 @@ class ChessAI:
         if maxPlayer:
             v = -20000000
             bestMove = None
-            myPreviousMove = currentNode.board.previousMove
-            node = currentNode.NextAction("b", self.table)
+            myPreviousMove = board.previousMove
+            node = currentNode.NextAction("b", self.table, board)
             while node != None:
-                v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, depthLimit))
+                v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, depthLimit, board))
                 #Restore previous state before continuing
-                node.board.undoMove(node.getMove(),previousMove)
+                board.undoMove(node.getMove(),previousMove)
                 if v >= beta:
-                    self.table.insertUtility(currentNode.board, None, depthLimit, node.getMove() , None)
+                    self.table.insert(board, None, depthLimit, node.getMove() , None)
                     return v
                 if v > alpha:
                     alpha = v
                     bestMove = node.getMove()
-                node = currentNode.NextAction("b", self.table)
-            self.table.insertUtility(currentNode.board, None, depthLimit, bestMove , None)
+                node = currentNode.NextAction("b", self.table, board)
+            self.table.insert(board, None, depthLimit, bestMove , None)
             return v
 
         # Min
         else:
             v = 20000000
             bestMove = None
-            myPreviousMove = currentNode.board.previousMove
-            node = currentNode.NextAction("w", self.table)
+            myPreviousMove = board.previousMove
+            node = currentNode.NextAction("w", self.table, board)
             while node != None:
-                v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, depthLimit))
+                v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, depthLimit, board))
                 #Restore previous state before continuing
-                node.board.undoMove(node.getMove(),previousMove)
+                board.undoMove(node.getMove(),previousMove)
                 if v <= alpha:
-                    self.table.insertUtility(currentNode.board, None, depthLimit, None , node.getMove() )
+                    self.table.insert(board, None, depthLimit, node.getMove() , None)
                     return v
                 if v < beta:
                     beta = v
                     bestMove = node.getMove()
-                node = currentNode.NextAction("w", self.table)
-            self.table.insertUtility(currentNode.board, None, depthLimit, None , bestMove)
+                node = currentNode.NextAction("w", self.table, board)
+            self.table.insert(board, None, depthLimit, None , bestMove)
             return v

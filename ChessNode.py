@@ -2,21 +2,11 @@ import copy
 from ChessMove import ChessMove
 
 class ChessNode:
-    def __init__(self, board, chessMove):
-        self.board = board
+    def __init__(self, chessMove):
         self.chessMove = chessMove
         self.moveCounter = 0
         self.lastWasTheBest = False
         self.actions = []
-
-    def GetState(self):
-        return self.board.GetState()
-
-    def GetOldState(self):
-        return self.board.GetOldState()
-
-    def SetState(self, board):
-        self.board = board
 
     def getMove(self):
         return self.chessMove
@@ -29,15 +19,15 @@ class ChessNode:
         self.lastWasTheBest = False
         self.actions = []
 
-    def NextAction(self, player_color, table):
+    def NextAction(self, player_color, table, board):
 
         if not self.lastWasTheBest and self.moveCounter == 0:
             if player_color == "w":
-                bestMove = table.lookupMinBestMove(self.board)
+                bestMove = table.lookupMinBestMove(board)
             else:
-                bestMove = table.lookupMaxBestMove(self.board)
+                bestMove = table.lookupMaxBestMove(board)
 
-            possible_actions = self.board.getAllValidMoves(player_color)
+            possible_actions = board.getAllValidMoves(player_color)
 
             #ordering by type of move
             for action in possible_actions:
@@ -57,8 +47,8 @@ class ChessNode:
                             self.actions.remove(move)
                 self.lastWasTheBest  = True
 
-                successor = ChessNode(self.board, bestMove)
-                successor.board.movePiece(bestMove)
+                successor = ChessNode(bestMove)
+                board.movePiece(bestMove)
                 return successor
 
 
@@ -69,8 +59,8 @@ class ChessNode:
         self.lastWasTheBest = False
 
         move = self.actions[self.moveCounter]
-        successor = ChessNode(self.board, move)
-        successor.board.movePiece(move)
+        successor = ChessNode(move)
+        board.movePiece(move)
 
         #advance
         self.moveCounter += 1

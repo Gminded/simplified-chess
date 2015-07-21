@@ -34,7 +34,7 @@ class ZobristHash:
 
         return h
 
-    def insertUtility(self, board, utility, depth, maxBestMove, minBestMove):
+    def insert(self, board, utility, depth, maxBestMove, minBestMove):
         key = self.hash(board)
         ret = self.lookup( board )
         if ret != None:
