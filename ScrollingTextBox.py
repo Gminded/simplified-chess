@@ -11,8 +11,6 @@
  
 import pygame
 import string
-from Board import Board
-from pygame.locals import *
 
 class ScrollingTextBox:
     def __init__(self,screen,xmin,xmax,ymin,ymax, hidpi_factor):
