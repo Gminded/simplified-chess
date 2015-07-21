@@ -88,7 +88,7 @@ class ChessAI:
 
         # If this is a terminal state don't go any deeper, because the game ended.
         if board.terminalTest(color) == board.DEFEAT:
-            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depth, color, board)
+            utility = Heuristic.ShannonHeuristic(currentNode, self.table, board)
             if maxPlayer: #we are losing so the value is negative
                 utility -=self.DEFEATWEIGHT
             else: #minPlayer: we are winning so the value is positive
@@ -97,7 +97,7 @@ class ChessAI:
 
         # Cut off
         if depth == 0:
-            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depth, color, board)
+            utility = Heuristic.ShannonHeuristic(currentNode, self.table, board)
             return utility
 
         
