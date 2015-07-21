@@ -19,13 +19,13 @@ class ChessNode:
         self.lastWasTheBest = False
         self.actions = []
 
-    def NextAction(self, player_color, table, board):
+    def NextAction(self, player_color, table, board, ply):
 
         if not self.lastWasTheBest and self.moveCounter == 0:
             if player_color == "w":
-                bestMove = table.lookupMinBestMove(board)
+                bestMove = None#table.lookupMinBestMove(board, ply)
             else:
-                bestMove = table.lookupMaxBestMove(board)
+                bestMove = None#table.lookupMaxBestMove(board, ply)
 
             possible_actions = board.getAllValidMoves(player_color)
 
@@ -46,10 +46,7 @@ class ChessNode:
                         if len(moveCoords) == 1:
                             self.actions.remove(move)
                 self.lastWasTheBest  = True
-
-                successor = ChessNode(bestMove)
-                board.movePiece(bestMove)
-                return successor
+                return bestMove
 
 
         if not self.actions or self.moveCounter >= len(self.actions):
@@ -59,9 +56,7 @@ class ChessNode:
         self.lastWasTheBest = False
 
         move = self.actions[self.moveCounter]
-        successor = ChessNode(move)
-        board.movePiece(move)
 
         #advance
         self.moveCounter += 1
-        return successor
+        return move

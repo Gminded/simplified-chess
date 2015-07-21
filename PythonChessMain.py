@@ -55,7 +55,7 @@ class PythonChessMain:
                 turnCount = turnCount + 1
             # PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
-                moveTuple = self.player[currentPlayerIndex].GetMove(self.currentNode, self.board)
+                moveTuple, self.board = self.player[currentPlayerIndex].GetMove(self.currentNode, self.board)
             else:
                 moveTuple = self.Gui.GetPlayerInput(self.board, currentColor)
             move = ChessMove(moveTuple, board[moveTuple[0][0]][moveTuple[0][1]])
