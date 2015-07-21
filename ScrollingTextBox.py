@@ -74,7 +74,7 @@ class ScrollingTextBox:
             messageString = fromPiece_fullString+ " moves from "+fromString+\
                                             " to "+toString
         else:
-            toPiece_fullString = self.getFullString(board.getPiece(toCoord))
+            toPiece_fullString = self.getFullString(state[toCoord[0]][toCoord[1]])
             messageString = fromPiece_fullString+ " from "+fromString+\
                                         " captures "+toPiece_fullString+" at "+toString+"!"
 
