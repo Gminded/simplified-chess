@@ -55,16 +55,16 @@ class ScrollingTextBox:
             name = name + "king"
         return name
 
-    def moveMessage(self,chessMove,board):
+    def moveMessage(self,chessMove,board,state):
         fromCoord=chessMove.getFromPos()
         toCoord=chessMove.getToPos()
         fromPiece_fullString = self.getFullString(chessMove.pieceType)
         fromRow=board.convertToAlgebraicNotationRow(fromCoord[0])
         fromCol=board.convertToAlgebraicNotationCol(fromCoord[1])
-        fromString=fromRow+fromCol
+        fromString=fromCol+fromRow
         toRow=board.convertToAlgebraicNotationRow(toCoord[0])
         toCol=board.convertToAlgebraicNotationCol(toCoord[1])
-        toString=toRow+toCol
+        toString=toCol+toRow
         if chessMove.moveType == chessMove.ENPASSANT_CAPTURE:
             capturedString=fromRow+toCol
             messageString = fromPiece_fullString+ " moves from "+fromString+\
