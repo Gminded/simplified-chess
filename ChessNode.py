@@ -42,7 +42,7 @@ class ChessNode:
                     moveCoords = move.moveTuple
                     for pos in moveCoords[1:]:
                         if moveCoords[0] == bestMoveCoords[0] and pos == bestMoveCoords[1]:
-                            moveCoords.remove( bestMoveCoords[1] )
+                            moveCoords.remove(bestMoveCoords[1])
                         if len(moveCoords) == 1:
                             self.actions.remove(move)
                 self.lastWasTheBest  = True

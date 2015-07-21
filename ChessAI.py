@@ -98,7 +98,7 @@ class ChessAI:
             while node != None:
                 v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, depthLimit, board))
                 #Restore previous state before continuing
-                board.undoMove(node.getMove(),previousMove)
+                board.undoMove(node.getMove(),myPreviousMove)
                 if v >= beta:
                     self.table.insert(board, None, depthLimit, node.getMove() , None)
                     return v
@@ -118,7 +118,7 @@ class ChessAI:
             while node != None:
                 v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, depthLimit, board))
                 #Restore previous state before continuing
-                board.undoMove(node.getMove(),previousMove)
+                board.undoMove(node.getMove(),myPreviousMove)
                 if v <= alpha:
                     self.table.insert(board, None, depthLimit, node.getMove() , None)
                     return v
