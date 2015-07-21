@@ -15,7 +15,6 @@ class Heuristic:
         distanceFromKingWeight = -5
 
         #Heuristic values
-        score = 0
         playerMinDistance = 10
         adversaryMinDistance = 10
         playerAvgDistance = 0
@@ -77,4 +76,4 @@ class Heuristic:
                          int( avgDistanceWeight*(adversaryAvgDistance - playerAvgDistance) ) +
                          pawnWeight*( len(playerPawns) - len(adversaryPawns) ) +
                          movesWeight*( playerMoves - adversaryMoves ) +
-                         distanceFromKingWeight*(int( playerAvgDistanceFromKing ) ) )
+                         distanceFromKingWeight*(int( playerAvgDistanceFromKing - adversaryAvgDistanceFromKing) ) )
