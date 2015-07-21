@@ -50,10 +50,10 @@ class ChessAI:
 
     def AlphaBetaInit(self, currentNode=None, depth=0, depthLimit=0):
         v = -20000000
-        bestMove = None
         maxUtility = v
         myPreviousMove = currentNode.board.previousMove
         node = currentNode.NextAction("b", self.table)
+        bestMove = node.getMove()
         while node != None:
             v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit) )
             #Restore previous state before continuing
