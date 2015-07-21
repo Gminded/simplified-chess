@@ -23,7 +23,7 @@ class ChessAI:
     def GetType(self):
         return self.type
 
-    def GetMove(self, currentNode, board):
+    def GetMove(self, board):
         depth = 1
         bestMove = None
         boardBackup = copy.deepcopy(board)
@@ -34,7 +34,7 @@ class ChessAI:
             signal.signal(signal.SIGALRM, handler)
             signal.alarm(8)
             while True:
-                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, board=board)
+                utility, bestMove = self.AlphaBetaInit(depth=depth, board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
 
@@ -48,13 +48,14 @@ class ChessAI:
             pass
         return bestMove, boardBackup
 
-    def AlphaBetaInit(self, currentNode=None, depth=0, board=None):
+    def AlphaBetaInit(self, depth=0, board=None):
         v = -20000000
         maxUtility = v
         myPreviousMove = board.previousMove
+        currentNode = ChessNode(myPreviousMove)
         bestMove = move = currentNode.NextAction("b", self.table, board, depth)
         while move != None:
-            board.movePiece( move )
+            board.movePiece(move)
             node = ChessNode(move)
             v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, board=board) )
             #Restore previous state before continuing

@@ -12,7 +12,6 @@ class PythonChessMain:
     def __init__(self):
         #set an invalid but harmless move as the previous move
         self.board = Board(ChessMove(((0,0),(0,0)), 'bK'))
-        self.currentNode = ChessNode( None )
 
     def SetUp(self):
         # players set up
@@ -55,7 +54,7 @@ class PythonChessMain:
                 turnCount = turnCount + 1
             # PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
-                moveTuple, self.board = self.player[currentPlayerIndex].GetMove(self.currentNode, self.board)
+                moveTuple, self.board = self.player[currentPlayerIndex].GetMove(self.board)
             else:
                 moveTuple = self.Gui.GetPlayerInput(self.board, currentColor)
             move = ChessMove(moveTuple, board[moveTuple[0][0]][moveTuple[0][1]])

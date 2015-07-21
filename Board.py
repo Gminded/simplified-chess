@@ -68,8 +68,6 @@ class Board:
             if moveType == chessMove.CAPTURE:
                 self.whitePawns.remove(toPos)
         elif pieceType == self.BLACKPAWN:
-            if not fromPos in self.blackPawns:
-                print('put breakpoint here')
             self.blackPawns.remove(fromPos)
             self.blackPawns.append(toPos)
             if moveType == chessMove.CAPTURE:
