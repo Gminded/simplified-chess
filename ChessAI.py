@@ -57,7 +57,7 @@ class ChessAI:
         maxUtility = v
         myPreviousMove = board.previousMove
         currentNode = ChessNode(myPreviousMove)
-        bestMove = move = currentNode.NextAction("b", self.table, board, depth)
+        bestMove = move = currentNode.NextAction("b", self.table, board)
         while move != None:
             board.movePiece(move)
             node = ChessNode(move)
@@ -74,7 +74,7 @@ class ChessAI:
             if v > maxUtility:
                 maxUtility = v
                 bestMove = move
-            move = currentNode.NextAction("b", self.table, board, depth)
+            move = currentNode.NextAction("b", self.table, board)
         self.table.insert(board, v,depth, bestMove, None)
         return maxUtility, bestMove.moveTuple
 
@@ -107,7 +107,7 @@ class ChessAI:
             v = -20000000
             bestMove = None
             myPreviousMove = board.previousMove
-            move = currentNode.NextAction("b", self.table, board, depth)
+            move = currentNode.NextAction("b", self.table, board)
             while move != None:
                 board.movePiece(move)
                 node = ChessNode( move )
@@ -126,7 +126,7 @@ class ChessAI:
                 if v > alpha:
                     alpha = v
                     bestMove = move
-                move = currentNode.NextAction("b", self.table, board, depth)
+                move = currentNode.NextAction("b", self.table, board)
             self.table.insert(board, v, depth, bestMove , None)
             return v
 
@@ -135,7 +135,7 @@ class ChessAI:
             v = 20000000
             bestMove = None
             myPreviousMove = board.previousMove
-            move = currentNode.NextAction("w", self.table, board, depth)
+            move = currentNode.NextAction("w", self.table, board)
             while move != None:
                 board.movePiece(move)
                 node = ChessNode(move)
@@ -154,6 +154,6 @@ class ChessAI:
                 if v < beta:
                     beta = v
                     bestMove = move
-                move = currentNode.NextAction("w", self.table, board, depth)
+                move = currentNode.NextAction("w", self.table, board)
             self.table.insert(board, v, depth, None , bestMove)
             return v

@@ -19,8 +19,8 @@ class ChessNode:
         self.lastWasTheBest = False
         self.actions = []
 
-    def NextAction(self, player_color, table, board, ply):
-
+    def NextAction(self, player_color, table, board):
+        bestMove = None
         if not self.lastWasTheBest and self.moveCounter == 0:
             if player_color == "w":
                 entry = table.lookup(board)
