@@ -66,7 +66,7 @@ class ChessAI:
             if entry is not None and depth <= entry[self.table.SEARCH_DEPTH]:
                 v = max(v, entry[self.table.SCORE])
             else:
-                v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depth, board=board) )
+                v = max( v, self.AlphaBetaSearch(currentNode=node, maxPlayer=False, depth=depth-1, board=board) )
                 #Store exact utility value in table
                 self.table.insert(board, v, depth, None , None)
             #Restore previous state before continuing
@@ -78,14 +78,8 @@ class ChessAI:
         self.table.insert(board, v,depth, bestMove, None)
         return maxUtility, bestMove.moveTuple
 
-    def AlphaBetaSearch(self, previousMove, alpha=-20000000, beta=20000000,\
-                        currentNode=None, maxPlayer=True, depth=0, depthLimit=0, board=None):
-        #use transposition table scores only if the values present into the entry
-        #is significant
-        #score = self.table.lookupScore(board, depth)
-        #if not score is None:
-        #   return score
-
+    def AlphaBetaSearch(self, alpha=-20000000, beta=20000000,
+                        currentNode=None, maxPlayer=True, depth=0, board=None):
         self.statesVisited+=1
 
         if maxPlayer:
@@ -100,13 +94,11 @@ class ChessAI:
                 utility -=self.DEFEATWEIGHT
             else: #minPlayer: we are winning so the value is positive
                 utility +=self.DEFEATWEIGHT
-            #self.table.insert(board, utility, depth, None, None)
             return utility
 
         # Cut off
         if depth == 0:
             utility = Heuristic.ShannonHeuristic(currentNode, self.table, depth, color, board)
-            #self.table.insert(board, utility, depth, None, None)
             return utility
 
         
@@ -124,13 +116,12 @@ class ChessAI:
                 if entry is not None and depth <= entry[self.table.SEARCH_DEPTH]:
                     v = max(v, entry[self.table.SCORE])
                 else:
-                    v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, depthLimit, board))
+                    v = max(v, self.AlphaBetaSearch( alpha, beta, node, False, depth-1,  board))
                     #Store exact utility value in table
                     self.table.insert(board, v, depth, None , None)
                 #Restore previous state before continuing
                 board.undoMove(node.getMove(),myPreviousMove)
                 if v >= beta:
-                    self.table.insert(board, None, depth, move , None)
                     return v
                 if v > alpha:
                     alpha = v
@@ -153,13 +144,12 @@ class ChessAI:
                 if entry is not None and depth <= entry[self.table.SEARCH_DEPTH]:
                     v = min(v, entry[self.table.SCORE])
                 else:
-                    v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, depthLimit, board))
+                    v = min(v, self.AlphaBetaSearch(alpha, beta, node, True, depth-1, board))
                     #Store exact utility value in table
                     self.table.insert(board, v, depth, None , None)
                 #Restore previous state before continuing
                 board.undoMove(node.getMove(),myPreviousMove)
                 if v <= alpha:
-                    self.table.insert(board, None, depth, None , move)
                     return v
                 if v < beta:
                     beta = v
