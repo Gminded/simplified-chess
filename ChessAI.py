@@ -27,13 +27,14 @@ class ChessAI:
         depth = 1
         bestMove = None
         boardBackup = copy.deepcopy(board)
+        self.statesVisited = 1
         try:
             def handler(signum, frame):
                 print "signal received"
                 raise KeyboardInterrupt
             signal.signal(signal.SIGALRM, handler)
             #signal.alarm(8)
-            while depth <= 30:
+            while depth <= 3:
                 utility, bestMove = self.AlphaBetaInit(depth=depth, board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -46,6 +47,9 @@ class ChessAI:
 
         except KeyboardInterrupt:
             pass
+        print('states visited: '+str(self.statesVisited))
+        print('hash table hits: '+str(self.table.hits))
+        print('hash table size: '+str(len(self.table.hashTable)))
         return bestMove, boardBackup
 
     def AlphaBetaInit(self, depth=0, board=None):
@@ -81,6 +85,8 @@ class ChessAI:
         #score = self.table.lookupScore(board, depth)
         #if not score is None:
         #   return score
+
+        self.statesVisited+=1
 
         if maxPlayer:
             color='b'

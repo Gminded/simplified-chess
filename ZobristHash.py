@@ -12,6 +12,7 @@ class ZobristHash:
                 }
         self.randomBits = 64
         self.hashTableLimit = size
+        self.hits = 0
         self.SCORE = 0
         self.SEARCH_DEPTH = 1
         self.MAX_BEST_MOVE = 2
@@ -98,6 +99,7 @@ class ZobristHash:
     def lookup(self, board):
         key = self.hash(board)
         if key in self.hashTable:
+            self.hits+=1
             return self.hashTable[key]
         else:
             return None
