@@ -34,7 +34,7 @@ class ChessAI:
                 raise KeyboardInterrupt
             signal.signal(signal.SIGALRM, handler)
             #signal.alarm(8)
-            while depth <= 3:
+            while depth <= 10:
                 utility, bestMove = self.AlphaBetaInit(depth=depth, board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -50,6 +50,11 @@ class ChessAI:
         print('states visited: '+str(self.statesVisited))
         print('hash table hits: '+str(self.table.hits))
         print('hash table size: '+str(len(self.table.hashTable)))
+        depths=[]
+        for key in self.table.hashTable:
+            if self.table.hashTable[key][self.table.SEARCH_DEPTH] not in depths:
+                depths.append(self.table.hashTable[key][self.table.SEARCH_DEPTH])
+        print(depths)
         return bestMove, boardBackup
 
     def AlphaBetaInit(self, depth=0, board=None):

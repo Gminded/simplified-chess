@@ -1,4 +1,4 @@
-from random import SystemRandom
+from random import *
 
 class ZobristHash:
 
@@ -22,9 +22,10 @@ class ZobristHash:
 
         #generate table
         self.zobristTable = [ [ 0 for x in range(4) ] for x in range(64) ]
+        seed()
         for i in range(64):
             for j in range(4):
-                self.zobristTable[i][j] = SystemRandom().getrandbits(self.randomBits)
+                self.zobristTable[i][j] = getrandbits(self.randomBits)
 
         #init hashTable
         self.hashTable = {}
@@ -53,7 +54,7 @@ class ZobristHash:
         else:
             hasMin = True
         if ret != None:
-            if searchDepth > ret[1]:
+            if searchDepth > ret[self.SEARCH_DEPTH]:
                 if hasMax:
                     self.hashTable[key] = [ret[self.SCORE], searchDepth, maxBestMove,\
                                           ret[self.MIN_BEST_MOVE], True, ret[self.HAS_MIN]]
