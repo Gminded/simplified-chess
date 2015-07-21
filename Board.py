@@ -47,7 +47,7 @@ class Board:
         return self.EMPTY
 
     #apply the move chessMove to the chessboard
-    def movePiece(self, chessMove):
+    def movePiece(self, chessMove, simulate=False):
         #this is just impossible to reach
         #but still useful because it gives semantic to chessMove
         if not self._isPossibleMove(chessMove):
@@ -81,17 +81,19 @@ class Board:
                 self.blackPawns.remove(toPos)
             elif moveType == chessMove.ENPASSANT_CAPTURE:
                 self.blackPawns.remove( [toPos[0] - self.WHITEDIRECTION, toPos[1]] )
-        self.previousMove = chessMove
+        if not simulate:
+            self.previousMove = chessMove
         return toPosPiece
 
     #It's the opposite of movePiece: it restores the state before a move
-    def undoMove(self,move,previousMove):
+    def undoMove(self,move,previousMove=None):
         fromPos=move.moveTuple[0]
         toPos=move.moveTuple[1]
         piece=move.pieceType
         moveType=move.moveType
 
-        self.previousMove=previousMove
+        if previousMove: #Is None when simulating a move (like in doesMovePutInCheck)
+            self.previousMove=previousMove
         # Always move the piece back to its place, for any move!
         if self.BLACKKING in piece:
             self.blackKing=fromPos
@@ -263,56 +265,38 @@ class Board:
 
         return False
 
-    def _canIMoveTheKing(self, chessMove, advPieces):
-        if self.BLACKPAWN in advPieces:
+    def _doesMovePutInCheck(self, move):
+        check = False
+        # We have to simulate the move in order to check the check correctly.
+        self.movePiece(move)
+        if self.WHITE in move.pieceType:
             direction = self.WHITEDIRECTION
+            oppPawns = self.blackPawns
             oppKing = self.blackKing
-        else:
+            myKing = self.whiteKing
+        else: #BLACK
             direction = self.BLACKDIRECTION
+            oppPawns = self.whitePawns
             oppKing = self.whiteKing
-        toPos = chessMove.getToPos()
-        toPosRow = toPos[0]
-        toPosCol = toPos[1]
-        if self.getPiece( [toPosRow + direction, toPosCol + 1] ) in advPieces or\
-                self.getPiece( [toPosRow + direction, toPosCol - 1] ) in advPieces:
-            return False
-        if oppKing == [toPosRow + direction, toPosCol] or\
-            oppKing == [toPosRow, toPosCol + 1] or\
-            oppKing == [toPosRow, toPosCol - 1] or\
-            oppKing == [toPosRow - direction, toPosCol + 1] or\
-            oppKing == [toPosRow - direction, toPosCol] or\
-            oppKing == [toPosRow - direction, toPosCol - 1]:
-            return False
-        else:
-            return True
-
-    def _doesMovePutInCheck(self, chessMove):
-        if self.WHITEKING in chessMove.pieceType:
-            advPieces = []
-            advPieces.append(self.BLACKPAWN)
-            advPieces.append(self.BLACKKING)
-            return not self._canIMoveTheKing(chessMove, advPieces)
-        elif self.BLACKKING in chessMove.pieceType:
-            advPieces = []
-            advPieces.append(self.WHITEPAWN)
-            advPieces.append(self.WHITEKING)
-            return not self._canIMoveTheKing(chessMove, advPieces)
-        elif self.BLACKPAWN in chessMove.pieceType:
-            kingRow = self.blackKing[0]
-            kingCol = self.blackKing[1]
-            if self.getPiece( [kingRow + self.BLACKDIRECTION, kingCol + 1 ] ) == self.WHITEPAWN or\
-                    self.getPiece( [kingRow + self.BLACKDIRECTION, kingCol - 1 ] ) == self.WHITEPAWN:
-                return True
-        else:
-            kingRow = self.whiteKing[0]
-            kingCol = self.whiteKing[1]
-            if self.getPiece( [kingRow + self.WHITEDIRECTION, kingCol + 1 ] ) == self.BLACKPAWN or\
-                    self.getPiece( [kingRow + self.WHITEDIRECTION, kingCol - 1 ] ) == self.BLACKPAWN:
-                return True
-        return False
-
-
-
+            myKing = self.blackKing
+        myKingRow = myKing[0]
+        myKingCol = myKing[1]
+        for oppPawn in oppPawns:
+            if oppPawn == [myKingRow + direction, myKingCol-1] or\
+                    oppPawn == [myKingRow + direction, myKingCol+1]:
+                check = True
+        if not check:
+            if oppKing == [myKingRow + direction, myKingCol] or\
+                oppKing == [myKingRow + direction, myKingCol-1] or\
+                oppKing == [myKingRow + direction, myKingCol+1] or\
+                oppKing == [myKingRow, myKingCol + 1] or\
+                oppKing == [myKingRow, myKingCol - 1] or\
+                oppKing == [myKingRow - direction, myKingCol + 1] or\
+                oppKing == [myKingRow - direction, myKingCol] or\
+                oppKing == [myKingRow - direction, myKingCol - 1]:
+                check = True
+        self.undoMove(move) #we were only simulating
+        return check
 
     # Returns the chessboard represented as a string matrix. Each
     def getWholeState(self):
