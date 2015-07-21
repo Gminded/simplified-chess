@@ -268,7 +268,7 @@ class Board:
     def _doesMovePutInCheck(self, move):
         check = False
         # We have to simulate the move in order to check the check correctly.
-        self.movePiece(move)
+        self.movePiece(move, simulate=True)
         if self.WHITE in move.pieceType:
             direction = self.WHITEDIRECTION
             oppPawns = self.blackPawns
