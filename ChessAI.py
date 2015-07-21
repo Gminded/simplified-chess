@@ -31,8 +31,8 @@ class ChessAI:
                 print "signal received"
                 raise RuntimeError
             signal.signal(signal.SIGALRM, handler)
-            #signal.alarm(10)
-            while depth <3:
+            signal.alarm(10)
+            while True:
                 utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -100,6 +100,7 @@ class ChessAI:
                 #Restore previous state before continuing
                 node.board.undoMove(node.getMove(),previousMove)
                 if v >= beta:
+                    self.table.insertUtility(currentNode.board, None, depthLimit, node.getMove() , None)
                     return v
                 if v > alpha:
                     alpha = v
@@ -119,10 +120,11 @@ class ChessAI:
                 #Restore previous state before continuing
                 node.board.undoMove(node.getMove(),previousMove)
                 if v <= alpha:
+                    self.table.insertUtility(currentNode.board, None, depthLimit, None , node.getMove() )
                     return v
                 if v < beta:
                     beta = v
                     bestMove = node.getMove()
                 node = currentNode.NextAction("w", self.table)
-            self.table.insertUtility(currentNode.board, v, depthLimit, None , bestMove)
+            self.table.insertUtility(currentNode.board, None, depthLimit, None , bestMove)
             return v
