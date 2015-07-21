@@ -33,7 +33,7 @@ class ChessAI:
             signal.signal(signal.SIGALRM, handler)
             #signal.alarm(10)
             while depth<=3:
-                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, depthLimit=depth, board=board)
+                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
 
@@ -48,25 +48,25 @@ class ChessAI:
         board = boardBackup
         return bestMove
 
-    def AlphaBetaInit(self, currentNode=None, depth=0, depthLimit=0, board=None):
+    def AlphaBetaInit(self, currentNode=None, depth=0, board=None):
         v = -20000000
         maxUtility = v
         myPreviousMove = board.previousMove
         node = currentNode.NextAction("b", self.table, board)
         bestMove = node.getMove()
         while node != None:
-            v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depthLimit, board=board) )
+            v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, board=board) )
             #Restore previous state before continuing
             board.undoMove(node.getMove(),myPreviousMove)
             if v > maxUtility:
                 maxUtility = v
                 bestMove = node.getMove()
             node = currentNode.NextAction("b", self.table, board)
-        self.table.insert(board, v, depthLimit, bestMove, True)
+        self.table.insert(board, v, depth, bestMove, True)
         return maxUtility, bestMove.moveTuple
 
     def AlphaBetaSearch(self, previousMove, alpha=-20000000, beta=20000000,\
-                        currentNode=None, maxPlayer=True, depth=0, depthLimit=0, board=None):
+                        currentNode=None, maxPlayer=True, depth=0, board=None):
         if maxPlayer:
             color='b'
         else:
@@ -74,18 +74,18 @@ class ChessAI:
 
         # If this is a terminal state don't go any deeper, because the game ended.
         if board.terminalTest(color) == board.DEFEAT:
-            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color, board)
+            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depth, color, board)
             if maxPlayer: #we are losing so the value is negative
                 utility -=self.DEFEATWEIGHT
             else: #minPlayer: we are winning so the value is positive
                 utility +=self.DEFEATWEIGHT
-            self.table.insert(board, utility, depthLimit, None, None)
+            self.table.insert(board, utility, depth, None, None)
             return utility
 
         # Cut off
         if depth == 0:
-            utility = Heuristic.ShannonHeuristic(currentNode, self.table, depthLimit, color, board)
-            self.table.insert(board, utility, depthLimit, None, None)
+            utility = Heuristic.ShannonHeuristic(currentNode, self.table, color, board)
+            self.table.insert(board, utility, depth, None, None)
             return utility
 
         
@@ -96,17 +96,17 @@ class ChessAI:
             myPreviousMove = board.previousMove
             node = currentNode.NextAction("b", self.table, board)
             while node != None:
-                v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, depthLimit, board))
+                v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, board))
                 #Restore previous state before continuing
                 board.undoMove(node.getMove(),previousMove)
                 if v >= beta:
-                    self.table.insert(board, None, depthLimit, node.getMove() , None)
+                    self.table.insert(board, None, depth, node.getMove() , None)
                     return v
                 if v > alpha:
                     alpha = v
                     bestMove = node.getMove()
                 node = currentNode.NextAction("b", self.table, board)
-            self.table.insert(board, None, depthLimit, bestMove , None)
+            self.table.insert(board, None, depth, bestMove , None)
             return v
 
         # Min
@@ -116,15 +116,15 @@ class ChessAI:
             myPreviousMove = board.previousMove
             node = currentNode.NextAction("w", self.table, board)
             while node != None:
-                v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, depthLimit, board))
+                v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, board))
                 #Restore previous state before continuing
                 board.undoMove(node.getMove(),previousMove)
                 if v <= alpha:
-                    self.table.insert(board, None, depthLimit, node.getMove() , None)
+                    self.table.insert(board, None, depth, node.getMove() , None)
                     return v
                 if v < beta:
                     beta = v
                     bestMove = node.getMove()
                 node = currentNode.NextAction("w", self.table, board)
-            self.table.insert(board, None, depthLimit, None , bestMove)
+            self.table.insert(board, None, depth, None , bestMove)
             return v
