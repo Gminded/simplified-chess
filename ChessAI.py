@@ -37,7 +37,7 @@ class ChessAI:
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
 
-                # It's pointless to go on if we know are going to win or lose
+                # It's pointless to go on if we know we are going to win or lose
                 if 500000000 <= utility or utility <= -500000000:
                     print('Stopping early because of terminal state.')
                     signal.alarm(0)
@@ -98,7 +98,7 @@ class ChessAI:
             while node != None:
                 v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, board))
                 #Restore previous state before continuing
-                board.undoMove(node.getMove(),previousMove)
+                board.undoMove(node.getMove(),myPreviousMove)
                 if v >= beta:
                     self.table.insert(board, None, depth, node.getMove() , None)
                     return v
@@ -118,7 +118,7 @@ class ChessAI:
             while node != None:
                 v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, board))
                 #Restore previous state before continuing
-                board.undoMove(node.getMove(),previousMove)
+                board.undoMove(node.getMove(),myPreviousMove)
                 if v <= alpha:
                     self.table.insert(board, None, depth, node.getMove() , None)
                     return v

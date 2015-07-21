@@ -193,7 +193,7 @@ class ChessGUI_pygame:
             if not fromSquareChosen and not toSquareChosen:
                 self.Draw(state)
                 if squareClicked != []:
-                    (r,c) = squareClicked
+                    [r,c] = squareClicked
                     if currentColor == 'b' and 'b' in state[r][c]:
                         if len(board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
@@ -211,7 +211,7 @@ class ChessGUI_pygame:
                     possibleDestinations.append(moveTuple[1]) #take only the destination coordinates
                 self.Draw(state,possibleDestinations)
                 if squareClicked != []:
-                    (r,c) = squareClicked
+                    [r,c] = squareClicked
                     if squareClicked in possibleDestinations:
                         toSquareChosen = 1
                         toTuple = squareClicked
