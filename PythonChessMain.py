@@ -18,10 +18,11 @@ class PythonChessMain:
         self.player = [0, 0]
         self.player[0] = ChessPlayer("Human", "w")
         self.player[1] = ChessAI("AI", "b")
+        self.AIThinkTime = 10
         # GUI setup
         self.guitype = 'pygame'
         GameParams = TkinterGameSetupParams()
-        (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type) = GameParams.GetGameSetupParams()
+        (player1Name, player1Color, player1Type, player2Name, player2Color, player2Type, self.AIThinkTime) = GameParams.GetGameSetupParams()
         self.Gui = ChessGUI_pygame(self.board)
         self.player = [0, 0]
         if player1Type == 'human':
@@ -54,7 +55,7 @@ class PythonChessMain:
                 turnCount = turnCount + 1
             # PLAY TIME
             if self.player[currentPlayerIndex].GetType() == 'AI':
-                moveTuple, self.board = self.player[currentPlayerIndex].GetMove(self.board)
+                moveTuple, self.board = self.player[currentPlayerIndex].GetMove(self.board, self.AIThinkTime)
             else:
                 moveTuple = self.Gui.GetPlayerInput(self.board, currentColor)
             move = ChessMove(moveTuple, board[moveTuple[0][0]][moveTuple[0][1]])

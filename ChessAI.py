@@ -23,7 +23,7 @@ class ChessAI:
     def GetType(self):
         return self.type
 
-    def GetMove(self, board):
+    def GetMove(self, board, timeout):
         depth = 1
         bestMove = None
         boardBackup = copy.deepcopy(board)
@@ -33,7 +33,7 @@ class ChessAI:
                 print "timeout triggered"
                 raise KeyboardInterrupt
             signal.signal(signal.SIGALRM, handler)
-            signal.alarm(12)
+            signal.alarm(timeout)
             while True:
                 utility, bestMove = self.AlphaBetaInit(depth=depth, board=board)
                 depth +=1
