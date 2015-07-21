@@ -195,16 +195,16 @@ class ChessGUI_pygame:
                 if squareClicked != []:
                     (r,c) = squareClicked
                     if currentColor == 'b' and 'b' in state[r][c]:
-                        if len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
+                        if len(board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                     elif currentColor == 'w' and 'w' in state[r][c]:
-                        if len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
+                        if len(board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
 
             elif fromSquareChosen and not toSquareChosen:
-                moves = self.board.getListOfValidMoves(state[r][c],fromTuple)
+                moves = board.getListOfValidMoves(state[r][c],fromTuple)
                 possibleDestinations = []
                 for move in moves:
                     moveTuple = move.moveTuple
@@ -218,7 +218,7 @@ class ChessGUI_pygame:
                     elif currentColor == 'b' and 'b' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
+                        elif len(board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:
@@ -226,7 +226,7 @@ class ChessGUI_pygame:
                     elif currentColor == 'w' and 'w' in state[r][c]:
                         if squareClicked == fromTuple:
                             fromSquareChosen = 0
-                        elif len(self.board.getListOfValidMoves(state[r][c],squareClicked))>0:
+                        elif len(board.getListOfValidMoves(state[r][c],squareClicked))>0:
                             fromSquareChosen = 1
                             fromTuple = squareClicked
                         else:
