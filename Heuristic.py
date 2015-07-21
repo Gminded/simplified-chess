@@ -8,8 +8,8 @@ class Heuristic:
         #    return cachedValue[0]
 
         #weights
-        minDistanceWeight = 5
-        avgDistanceWeight = 5
+        minDistanceWeight = 3
+        avgDistanceWeight = 7
         pawnWeight = 40
         movesWeight = 1
         distanceFromKingWeight = -5
@@ -17,7 +17,7 @@ class Heuristic:
         #Heuristic values
         playerMinDistance = 10
         adversaryMinDistance = 10
-        playerAvgDistance = 0
+        playerAvgDistance = 10
         adversaryAvgDistance = 0
         playerAvgDistanceFromKing = 0
         adversaryAvgDistanceFromKing = 0
@@ -48,12 +48,12 @@ class Heuristic:
             if distance < playerMinDistance:
                 playerMinDistance = distance
         if len(playerPawns) != 0:
-            playerAvgDistance = float(playerAvgDistance) / len(playerPawns)
+            playerAvgDistance = float(playerAvgDistance) / float(len(playerPawns))
         else:
             playerAvgDistance = 10
 
         if len(playerPawns) != 0:
-            playerAvgDistanceFromKing = playerAvgDistanceFromKing / len(playerPawns)
+            playerAvgDistanceFromKing = playerAvgDistanceFromKing / float(len(playerPawns))
         else:
             playerAvgDistanceFromKing = 0
 
