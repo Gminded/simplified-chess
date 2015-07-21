@@ -70,33 +70,6 @@ class ZobristHash:
         else:
             self.hashTable[key] = [score, searchDepth, maxBestMove, minBestMove, hasMax, hasMin]
 
-    def lookupMaxBestMove(self, board, ply):
-        key = self.hash(board)
-        if key in self.hashTable:
-            ret = self.lookup(board)
-            if ret[1] >= ply:
-                return ret[2]
-            else:
-                return None
-
-    def lookupMinBestMove(self, board, ply):
-        key = self.hash(board)
-        if key in self.hashTable:
-            ret = self.lookup(board)
-            if ret[1] >= ply:
-                return ret[3]
-            else:
-                return None
-
-    def lookupScore(self, board, ply):
-        key = self.hash(board)
-        if key in self.hashTable:
-            ret = self.lookup(board)
-            if ret[1] >= ply:
-                return ret[1]
-            else:
-                return None
-
     def lookup(self, board):
         key = self.hash(board)
         if key in self.hashTable:

@@ -23,9 +23,11 @@ class ChessNode:
 
         if not self.lastWasTheBest and self.moveCounter == 0:
             if player_color == "w":
-                bestMove = None#table.lookupMinBestMove(board, ply)
+                entry = table.lookup(board)
+                bestMove = entry[table.MIN_BEST_MOVE]
             else:
-                bestMove = None#table.lookupMaxBestMove(board, ply)
+                entry = table.lookup(board)
+                bestMove = entry[table.MAX_BEST_MOVE]
 
             possible_actions = board.getAllValidMoves(player_color)
 

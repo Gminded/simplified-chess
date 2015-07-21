@@ -130,7 +130,7 @@ class ChessAI:
                 #Restore previous state before continuing
                 board.undoMove(node.getMove(),myPreviousMove)
                 if v >= beta:
-                    #self.table.insert(board, None, depth, node.getMove() , None)
+                    self.table.insert(board, None, depth, move , None)
                     return v
                 if v > alpha:
                     alpha = v
@@ -159,7 +159,7 @@ class ChessAI:
                 #Restore previous state before continuing
                 board.undoMove(node.getMove(),myPreviousMove)
                 if v <= alpha:
-                    #self.table.insert(board, None, depth, node.getMove() , None)
+                    self.table.insert(board, None, depth, None , move)
                     return v
                 if v < beta:
                     beta = v
