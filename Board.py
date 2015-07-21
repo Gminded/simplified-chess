@@ -266,13 +266,22 @@ class Board:
     def _canIMoveTheKing(self, chessMove, advPieces):
         if self.BLACKPAWN in advPieces:
             direction = self.WHITEDIRECTION
+            oppKing = self.blackKing
         else:
             direction = self.BLACKDIRECTION
+            oppKing = self.whiteKing
         toPos = chessMove.getToPos()
         toPosRow = toPos[0]
         toPosCol = toPos[1]
         if self.getPiece( [toPosRow + direction, toPosCol + 1] ) in advPieces or\
                 self.getPiece( [toPosRow + direction, toPosCol - 1] ) in advPieces:
+            return False
+        if oppKing == [toPosRow + direction, toPosCol] or\
+            oppKing == [toPosRow, toPosCol + 1] or\
+            oppKing == [toPosRow, toPosCol - 1] or\
+            oppKing == [toPosRow - direction, toPosCol + 1] or\
+            oppKing == [toPosRow - direction, toPosCol] or\
+            oppKing == [toPosRow - direction, toPosCol - 1]:
             return False
         else:
             return True
