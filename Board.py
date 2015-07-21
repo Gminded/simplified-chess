@@ -81,6 +81,7 @@ class Board:
                 self.blackPawns.remove(toPos)
             elif moveType == chessMove.ENPASSANT_CAPTURE:
                 self.blackPawns.remove( [toPos[0] - self.WHITEDIRECTION, toPos[1]] )
+        self.previousMove = chessMove
         return toPosPiece
 
     #It's the opposite of movePiece: it restores the state before a move
