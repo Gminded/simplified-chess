@@ -43,11 +43,8 @@ class PythonChessMain:
     def MainLoop(self):
         currentPlayerIndex = 0
         turnCount = 0
-        aiobj = ChessAI('ai','b')
         while self.board.CONTINUE == self.board.terminalTest(self.player[currentPlayerIndex].color):
             board = self.board.getWholeState()
-            # Print hash value
-            print(aiobj.table.hash(self.board))
             currentColor = self.player[currentPlayerIndex].GetColor()
             baseMsg = "TURN %s - %s (%s)" % (str(turnCount), self.player[currentPlayerIndex].GetName(), currentColor)
             self.Gui.PrintMessage("-----%s-----" % baseMsg)

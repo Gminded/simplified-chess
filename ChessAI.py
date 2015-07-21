@@ -33,8 +33,8 @@ class ChessAI:
                 print "signal received"
                 raise KeyboardInterrupt
             signal.signal(signal.SIGALRM, handler)
-            #signal.alarm(8)
-            while depth <= 10:
+            signal.alarm(12)
+            while True:
                 utility, bestMove = self.AlphaBetaInit(depth=depth, board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
@@ -50,11 +50,6 @@ class ChessAI:
         print('states visited: '+str(self.statesVisited))
         print('hash table hits: '+str(self.table.hits))
         print('hash table size: '+str(len(self.table.hashTable)))
-        depths=[]
-        for key in self.table.hashTable:
-            if self.table.hashTable[key][self.table.SEARCH_DEPTH] not in depths:
-                depths.append(self.table.hashTable[key][self.table.SEARCH_DEPTH])
-        print(depths)
         return bestMove, boardBackup
 
     def AlphaBetaInit(self, depth=0, board=None):
@@ -68,19 +63,19 @@ class ChessAI:
             node = ChessNode(move)
             # Use transposition table not to search already visisted states
             entry = self.table.lookup(board)
-            if entry is not None and depth <= entry[self.table.SEARCH_DEPTH]:
-                v = max(v, entry[self.table.SCORE])
-            else:
-                v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depth, board=board) )
+            #if entry is not None and depth <= entry[self.table.SEARCH_DEPTH]:
+            #    v = max(v, entry[self.table.SCORE])
+            #else:
+            v = max( v, self.AlphaBetaSearch(myPreviousMove, currentNode=node, maxPlayer=False, depth=depth-1, depthLimit=depth, board=board) )
                 #Store exact utility value in table
-                self.table.insert(board, v, depth, None , None)
+                #self.table.insert(board, v, 0, None , None)
             #Restore previous state before continuing
             board.undoMove(move,myPreviousMove)
             if v > maxUtility:
                 maxUtility = v
                 bestMove = move
             move = currentNode.NextAction("b", self.table, board, depth)
-        self.table.insert(board, v, depth, bestMove, None)
+        #self.table.insert(board, v, 0, bestMove, None)
         return maxUtility, bestMove.moveTuple
 
     def AlphaBetaSearch(self, previousMove, alpha=-20000000, beta=20000000,\
@@ -126,7 +121,7 @@ class ChessAI:
                 node = ChessNode( move )
                 # Use transposition table not to search already visisted states
                 entry = self.table.lookup(board)
-                if entry is not None and depthLimit-depth <= entry[self.table.SEARCH_DEPTH]:
+                if entry is not None and depth <= entry[self.table.SEARCH_DEPTH]:
                     v = max(v, entry[self.table.SCORE])
                 else:
                     v = max(v, self.AlphaBetaSearch( myPreviousMove, alpha, beta, node, False, depth-1, depthLimit, board))
@@ -155,7 +150,7 @@ class ChessAI:
                 node = ChessNode(move)
                 # Use transposition table not to search already visisted states
                 entry = self.table.lookup(board)
-                if entry is not None and depthLimit-depth <= entry[self.table.SEARCH_DEPTH]:
+                if entry is not None and depth <= entry[self.table.SEARCH_DEPTH]:
                     v = min(v, entry[self.table.SCORE])
                 else:
                     v = min(v, self.AlphaBetaSearch(myPreviousMove, alpha, beta, node, True, depth-1, depthLimit, board))
