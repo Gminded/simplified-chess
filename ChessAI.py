@@ -33,7 +33,7 @@ class ChessAI:
             signal.signal(signal.SIGALRM, handler)
             #signal.alarm(10)
             while depth<=3:
-                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth, board=board)
+                utility, bestMove = self.AlphaBetaInit(currentNode=currentNode, depth=depth,t board=board)
                 print "search arrived at depth "+str(depth)+" with utility "+str(utility)
                 depth +=1
 
